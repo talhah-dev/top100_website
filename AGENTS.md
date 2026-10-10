@@ -7,3 +7,18 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+
+# Frontend & UI Guidelines
+
+## Component Library (shadcn/ui)
+- **Use shadcn/ui components by default**: Always prioritize shadcn/ui primitives.
+- **Installing missing components**: If a component is not installed, install it using the CLI command:
+  ```bash
+  npx shadcn@latest add <component-name>
+  ```
+  *(Example: `npx shadcn@latest add button`)*
+
+# Code Style Guidelines
+- **Simplicity & Conciseness**: Write simple, straightforward, and minimal code. Avoid over-engineering or complex boilerplate.
+- **No Comments in Code**: Do not write comments inside the code files.
