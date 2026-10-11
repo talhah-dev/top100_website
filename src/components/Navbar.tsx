@@ -89,7 +89,7 @@ export function Navbar() {
           <Link href="#stay">PLACES TO STAY</Link>
           <Link href="#eat">PLACES TO EAT</Link>
           <Link href="/search">MAP</Link>
-          <Link href="#book">THE BOOK</Link>
+          <Link href="/book">THE BOOK</Link>
         </div>
 
         <div className="actions">
@@ -137,7 +137,7 @@ export function Navbar() {
         <Link href="#stay" onClick={() => setMenuOpen(false)}>Places to Stay</Link>
         <Link href="#eat" onClick={() => setMenuOpen(false)}>Places to Eat</Link>
         <Link href="/search" onClick={() => setMenuOpen(false)}>Map</Link>
-        <Link href="#book" onClick={() => setMenuOpen(false)}>The Book</Link>
+        <Link href="/book" onClick={() => setMenuOpen(false)}>The Book</Link>
         <Link href="#app" onClick={() => setMenuOpen(false)} style={{ color: "var(--gold)" }}>
           Get the App
         </Link>

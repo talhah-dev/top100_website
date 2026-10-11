@@ -84,10 +84,10 @@ export function Footer() {
         <div>
           <h4>Top 100</h4>
           <ul>
-            <li><Link href="#about">About Us</Link></li>
-            <li><Link href="#book">Buy the Book</Link></li>
+            <li><Link href="/about">About Us</Link></li>
+            <li><Link href="/book">Buy the Book</Link></li>
             <li><Link href="#app">Get the Free App</Link></li>
-            <li><Link href="#contact">Contact Us</Link></li>
+            <li><Link href="/contact">Contact Us</Link></li>
           </ul>
         </div>
       </div>
