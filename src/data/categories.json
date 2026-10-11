@@ -1,0 +1,70 @@
+[
+  {
+    "name": "Accommodation",
+    "count": 12300
+  },
+  {
+    "name": "Eating Out",
+    "count": 9531
+  },
+  {
+    "name": "Attractions",
+    "count": 7922
+  },
+  {
+    "name": "Guest House / B&Bs",
+    "count": 6033
+  },
+  {
+    "name": "Hotels",
+    "count": 2947
+  },
+  {
+    "name": "Self Catering",
+    "count": 2367
+  },
+  {
+    "name": "Features",
+    "count": 1785
+  },
+  {
+    "name": "Romance",
+    "count": 1739
+  },
+  {
+    "name": "Caravans / Campsites / Glamping",
+    "count": 1464
+  },
+  {
+    "name": "Historical Places",
+    "count": 165
+  },
+  {
+    "name": "Country House",
+    "count": 127
+  },
+  {
+    "name": "Hostels",
+    "count": 99
+  },
+  {
+    "name": "Iconic",
+    "count": 68
+  },
+  {
+    "name": "Restaurant with Rooms",
+    "count": 41
+  },
+  {
+    "name": "Garden",
+    "count": 39
+  },
+  {
+    "name": "Pet Friendly",
+    "count": 14
+  },
+  {
+    "name": "Museums",
+    "count": 5
+  }
+]

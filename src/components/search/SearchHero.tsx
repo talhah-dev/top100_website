@@ -5,6 +5,8 @@ import React from "react";
 interface SearchHeroProps {
   query?: string;
   onQueryChange?: (val: string) => void;
+  category?: string;
+  onCategoryChange?: (val: string) => void;
   viewMode?: "grid" | "map";
   onViewModeChange?: (mode: "grid" | "map") => void;
   onSearch?: () => void;
@@ -13,6 +15,8 @@ interface SearchHeroProps {
 export function SearchHero({
   query = "",
   onQueryChange,
+  category = "All",
+  onCategoryChange,
   viewMode = "grid",
   onViewModeChange,
   onSearch,
@@ -46,9 +50,25 @@ export function SearchHero({
             value={query}
             onChange={(e) => onQueryChange?.(e.target.value)}
           />
-          <div className="search-select-field">
-            <span>What would you like to do?</span>
-            <i className="chev">&#9662;</i>
+          <div className="search-select-field relative flex items-center">
+            <select
+              value={category}
+              onChange={(e) => onCategoryChange?.(e.target.value)}
+              className="w-full bg-transparent text-sm text-[var(--cream)] border-none outline-none appearance-none cursor-pointer pr-6"
+              style={{ color: "var(--cream, #fff)" }}
+            >
+              <option value="All" className="bg-[#101a30] text-white">All Categories</option>
+              <option value="Attractions" className="bg-[#101a30] text-white">Attractions</option>
+              <option value="Historical Places" className="bg-[#101a30] text-white">Historical Places</option>
+              <option value="Garden" className="bg-[#101a30] text-white">Gardens</option>
+              <option value="Museums" className="bg-[#101a30] text-white">Museums</option>
+              <option value="Accommodation" className="bg-[#101a30] text-white">Accommodation</option>
+              <option value="Hotels" className="bg-[#101a30] text-white">Hotels</option>
+              <option value="Eating Out" className="bg-[#101a30] text-white">Eating Out</option>
+              <option value="Iconic" className="bg-[#101a30] text-white">Iconic</option>
+              <option value="Pet Friendly" className="bg-[#101a30] text-white">Pet Friendly</option>
+            </select>
+            <i className="chev pointer-events-none">&#9662;</i>
           </div>
           <div className="search-seg">
             <button

@@ -2,25 +2,51 @@
 
 import React from "react";
 
-export function DetailEditorial() {
+interface DetailEditorialProps {
+  title?: string;
+  description?: string;
+  review?: string;
+}
+
+function sanitizeHtml(html: string) {
+  return html
+    .replace(/\\"/g, '"')
+    .replace(/\\'/g, "'")
+    .replace(/\\r/g, "")
+    .replace(/\\n/g, "")
+    .replace(/id=\\?"docs-internal-guid-[^\\">]*\\?"/gi, "");
+}
+
+export function DetailEditorial({
+  title = "Attraction",
+  description,
+  review,
+}: DetailEditorialProps) {
+  const content = description?.trim() || review?.trim() || "";
+  const cleaned = sanitizeHtml(content);
+
   return (
     <section className="section" style={{ paddingBottom: 0 }}>
       <div className="wrap">
         <div className="kicker rv in">
           <span className="line" />
-          <span className="eyebrow">What Josh Says</span>
+          <span className="eyebrow">Editorial Review</span>
         </div>
         <h2 className="h2 rv in" style={{ "--d": ".1s" } as React.CSSProperties}>
-          Eighty acres, <span className="grad">zero filler.</span>
+          Exploring <span className="grad">{title}.</span>
         </h2>
-        <div className="prose">
-          <p className="rv in" style={{ "--d": ".15s" } as React.CSSProperties}>
-            Start at the top and take the Italianate terraces in order. There are five, stepping down the hillside with a confidence that borders on arrogance: roses on one level, a lily pond on the next, and at the bottom the Pin Mill, sitting at the end of its canal as if it had been rehearsing the reflection for years.
-          </p>
-          <p className="rv in" style={{ "--d": ".25s" } as React.CSSProperties}>
-            Then drop into the Dell and the mood changes entirely. This is the wild half, a steep wooded valley along the river, planted with champion trees that have had more than a century to get on with it. Climb back out and the garden plays its final card: the view, wide open across the valley to the mountains beyond.
-          </p>
-        </div>
+        {cleaned ? (
+          <div
+            className="prose text-white/90 leading-relaxed [&>p]:mb-4 [&>p]:text-base [&>h3]:text-xl [&>h3]:font-bold [&>h3]:mt-6 [&>h3]:mb-2 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:mb-4"
+            dangerouslySetInnerHTML={{ __html: cleaned }}
+          />
+        ) : (
+          <div className="prose">
+            <p className="rv in" style={{ "--d": ".15s" } as React.CSSProperties}>
+              Immerse yourself in one of the most exceptional settings in the country, carefully curated and preserved for visitors who appreciate authentic regional heritage.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

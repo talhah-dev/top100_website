@@ -1,0 +1,454 @@
+[
+  {
+    "title": "Snowdonia Mountain & Coast",
+    "count": 1116
+  },
+  {
+    "title": "Conwy Valley & Denbighshire",
+    "count": 864
+  },
+  {
+    "title": "Anglesey",
+    "count": 852
+  },
+  {
+    "title": "North Yorkshire",
+    "count": 766
+  },
+  {
+    "title": "Mid Wales & Brecon",
+    "count": 737
+  },
+  {
+    "title": "Pembrokeshire",
+    "count": 729
+  },
+  {
+    "title": "Cumbria",
+    "count": 702
+  },
+  {
+    "title": "Causeway Coast & Countryside",
+    "count": 655
+  },
+  {
+    "title": "Ceredigion / Cardigan Bay",
+    "count": 631
+  },
+  {
+    "title": "North East Wales",
+    "count": 629
+  },
+  {
+    "title": "Lancashire",
+    "count": 609
+  },
+  {
+    "title": "Co. Galway",
+    "count": 606
+  },
+  {
+    "title": "Co. Kerry",
+    "count": 503
+  },
+  {
+    "title": "Co. Down",
+    "count": 492
+  },
+  {
+    "title": "Dublin City & Region",
+    "count": 484
+  },
+  {
+    "title": "Cheshire",
+    "count": 479
+  },
+  {
+    "title": "Co. Clare",
+    "count": 477
+  },
+  {
+    "title": "Carmarthenshire",
+    "count": 475
+  },
+  {
+    "title": "Co. Wicklow",
+    "count": 463
+  },
+  {
+    "title": "Wye Valley & Vale of Usk",
+    "count": 450
+  },
+  {
+    "title": "Co. Cork",
+    "count": 444
+  },
+  {
+    "title": "Co. Derry/Londonderry/",
+    "count": 435
+  },
+  {
+    "title": "Co. Mayo",
+    "count": 403
+  },
+  {
+    "title": "Glamorgan\\'s Coast & Countryside",
+    "count": 400
+  },
+  {
+    "title": "Cardiff",
+    "count": 394
+  },
+  {
+    "title": "South Wales Valleys",
+    "count": 381
+  },
+  {
+    "title": "Swansea & Gower Coast",
+    "count": 372
+  },
+  {
+    "title": "Scottish Borders",
+    "count": 369
+  },
+  {
+    "title": "Belfast",
+    "count": 359
+  },
+  {
+    "title": "Co. Wexford",
+    "count": 343
+  },
+  {
+    "title": "West Yorkshire",
+    "count": 337
+  },
+  {
+    "title": "Gloucestershire",
+    "count": 333
+  },
+  {
+    "title": "Shropshire",
+    "count": 309
+  },
+  {
+    "title": "Ayrshire & Arran",
+    "count": 307
+  },
+  {
+    "title": "Dumfries & Galloway",
+    "count": 304
+  },
+  {
+    "title": "Co. Waterford",
+    "count": 303
+  },
+  {
+    "title": "Co. Tyrone",
+    "count": 300
+  },
+  {
+    "title": "Co. Meath",
+    "count": 295
+  },
+  {
+    "title": "Derbyshire",
+    "count": 294
+  },
+  {
+    "title": "Co. Limerick",
+    "count": 288
+  },
+  {
+    "title": "Co. Fermanagh",
+    "count": 269
+  },
+  {
+    "title": "Loch Lomond, The Trossachs, Stirling and The Forth Valley",
+    "count": 258
+  },
+  {
+    "title": "Devon",
+    "count": 246
+  },
+  {
+    "title": "Oxfordshire",
+    "count": 239
+  },
+  {
+    "title": "Cornwall",
+    "count": 235
+  },
+  {
+    "title": "Worcestershire",
+    "count": 228
+  },
+  {
+    "title": "Greater Manchester",
+    "count": 226
+  },
+  {
+    "title": "Co. Armagh",
+    "count": 212
+  },
+  {
+    "title": "Herefordshire",
+    "count": 211
+  },
+  {
+    "title": "Yorkshire NW",
+    "count": 208
+  },
+  {
+    "title": "Highlands",
+    "count": 204
+  },
+  {
+    "title": "East Riding, Hull & The Wolds",
+    "count": 199
+  },
+  {
+    "title": "Co. Donegal",
+    "count": 198
+  },
+  {
+    "title": "Wirral Peninsula",
+    "count": 197
+  },
+  {
+    "title": "Dorset",
+    "count": 189
+  },
+  {
+    "title": "Isle of Man",
+    "count": 182
+  },
+  {
+    "title": "Co. Westmeath",
+    "count": 176
+  },
+  {
+    "title": "Wiltshire",
+    "count": 174
+  },
+  {
+    "title": "Staffordshire",
+    "count": 173
+  },
+  {
+    "title": "Edinburgh & The Lothians",
+    "count": 171
+  },
+  {
+    "title": "Liverpool",
+    "count": 162
+  },
+  {
+    "title": "Co. Sligo",
+    "count": 160
+  },
+  {
+    "title": "Warwickshire",
+    "count": 150
+  },
+  {
+    "title": "Argyll & The Islands",
+    "count": 144
+  },
+  {
+    "title": "West Midlands & The Black Country",
+    "count": 139
+  },
+  {
+    "title": "Co. Kilkenny",
+    "count": 129
+  },
+  {
+    "title": "Northumberland",
+    "count": 121
+  },
+  {
+    "title": "South Yorkshire",
+    "count": 118
+  },
+  {
+    "title": "Bath, Bristol City & Region",
+    "count": 117
+  },
+  {
+    "title": "Co. Kildare",
+    "count": 117
+  },
+  {
+    "title": "Greater Glasgow and The  Clyde Valley",
+    "count": 111
+  },
+  {
+    "title": "Somerset",
+    "count": 107
+  },
+  {
+    "title": "Perthshire",
+    "count": 96
+  },
+  {
+    "title": "Dundee & Angus",
+    "count": 95
+  },
+  {
+    "title": "Co. Roscommon",
+    "count": 94
+  },
+  {
+    "title": "Co. Louth",
+    "count": 90
+  },
+  {
+    "title": "Isle of Skye",
+    "count": 82
+  },
+  {
+    "title": "Co. Tipperary",
+    "count": 82
+  },
+  {
+    "title": "East Sussex",
+    "count": 76
+  },
+  {
+    "title": "Co. Leitrim",
+    "count": 71
+  },
+  {
+    "title": "Co. Cavan",
+    "count": 68
+  },
+  {
+    "title": "Lincolnshire",
+    "count": 67
+  },
+  {
+    "title": "Aberdeenshire",
+    "count": 57
+  },
+  {
+    "title": "Co. Offaly",
+    "count": 49
+  },
+  {
+    "title": "Isle of Wight",
+    "count": 49
+  },
+  {
+    "title": "Nottinghamshire",
+    "count": 46
+  },
+  {
+    "title": "Co. Monaghan",
+    "count": 43
+  },
+  {
+    "title": "Suffolk",
+    "count": 43
+  },
+  {
+    "title": "Durham",
+    "count": 36
+  },
+  {
+    "title": "Norfolk",
+    "count": 33
+  },
+  {
+    "title": "Co. Carlow",
+    "count": 33
+  },
+  {
+    "title": "Leicestershire",
+    "count": 32
+  },
+  {
+    "title": "Orkney Islands",
+    "count": 30
+  },
+  {
+    "title": "Co. Laois",
+    "count": 29
+  },
+  {
+    "title": "Hampshire",
+    "count": 24
+  },
+  {
+    "title": "Yorkshire Borderlands",
+    "count": 23
+  },
+  {
+    "title": "Kent",
+    "count": 22
+  },
+  {
+    "title": "British Isles",
+    "count": 13
+  },
+  {
+    "title": "Ireland\\'s Islands",
+    "count": 13
+  },
+  {
+    "title": "Northern Ireland",
+    "count": 12
+  },
+  {
+    "title": "Cambridgeshire",
+    "count": 10
+  },
+  {
+    "title": "USA",
+    "count": 6
+  },
+  {
+    "title": "Co. Longford",
+    "count": 5
+  },
+  {
+    "title": "West Sussex",
+    "count": 4
+  },
+  {
+    "title": "Ireland",
+    "count": 4
+  },
+  {
+    "title": "England",
+    "count": 4
+  },
+  {
+    "title": "Flintshire",
+    "count": 3
+  },
+  {
+    "title": "Berkshire",
+    "count": 3
+  },
+  {
+    "title": "Northamptonshire",
+    "count": 3
+  },
+  {
+    "title": "Co. Dublin",
+    "count": 2
+  },
+  {
+    "title": "County Durham",
+    "count": 2
+  },
+  {
+    "title": "Gower",
+    "count": 1
+  },
+  {
+    "title": "Florida",
+    "count": 1
+  }
+]

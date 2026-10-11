@@ -2,7 +2,32 @@
 
 import React from "react";
 
-export function DetailVerdict() {
+interface DetailVerdictProps {
+  summary?: string;
+  review?: string;
+}
+
+function toPlainText(str?: string) {
+  if (!str) return "";
+  return str
+    .replace(/\\"/g, '"')
+    .replace(/\\'/g, "'")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function DetailVerdict({
+  summary,
+  review,
+}: DetailVerdictProps) {
+  const cleanSummary = toPlainText(summary);
+  const cleanReview = toPlainText(review);
+  const content =
+    cleanSummary ||
+    cleanReview ||
+    "A place of notable heritage and character, well worth taking the time to experience.";
+
   return (
     <section className="verdict" id="about">
       <div className="wrap">
@@ -11,8 +36,7 @@ export function DetailVerdict() {
           <span className="eyebrow">About</span>
         </div>
         <p className="vq rv in" style={{ "--d": ".1s" } as React.CSSProperties}>
-          A National Trust garden on the slopes above the Conwy Valley, running from the house at the top of the ground down to the river at the bottom.{" "}
-          <span className="grad">Steep in places, and a long walk from end to end.</span>
+          {content}
         </p>
       </div>
     </section>
