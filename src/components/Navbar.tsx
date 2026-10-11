@@ -105,7 +105,7 @@ export function Navbar() {
             </svg>
             SEARCH
           </Link>
-          <Link className="cta" href="#app">
+          <Link className="cta" href="/app">
             GET THE APP
           </Link>
         </div>
@@ -138,7 +138,7 @@ export function Navbar() {
         <Link href="#eat" onClick={() => setMenuOpen(false)}>Places to Eat</Link>
         <Link href="/search" onClick={() => setMenuOpen(false)}>Map</Link>
         <Link href="/book" onClick={() => setMenuOpen(false)}>The Book</Link>
-        <Link href="#app" onClick={() => setMenuOpen(false)} style={{ color: "var(--gold)" }}>
+        <Link href="/app" onClick={() => setMenuOpen(false)} style={{ color: "var(--gold)" }}>
           Get the App
         </Link>
         <span className="foot-soc">

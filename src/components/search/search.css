@@ -382,18 +382,22 @@
     .results {
         padding: 48px 20px 70px;
     }
+
     .rgrid {
         grid-template-columns: repeat(2, 1fr);
         gap: 34px 20px;
     }
+
     .toolbar {
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
     }
+
     .ghost100 {
         font-size: 230px;
     }
+
     .shero {
         padding: 160px 20px 60px;
     }
@@ -407,17 +411,21 @@
         padding: 14px;
         align-items: stretch;
     }
+
     .search-input-field {
         border-right: none;
         padding: 4px 8px;
     }
+
     .search-go-btn {
         text-align: center;
     }
+
     .rgrid {
         grid-template-columns: 1fr;
         gap: 36px;
     }
+
     .shero {
         min-height: auto;
     }
