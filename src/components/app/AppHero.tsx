@@ -1,11 +1,12 @@
 "use client";
 
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 import React from "react";
 
 export function AppHero() {
   return (
     <header className="shero">
-      <div className="ghost100">100</div>
+      {/* <div className="ghost100">100</div> */}
       <div className="inner" id="heroInner">
         <div className="eyebrow rv in">Download the Free App</div>
         <h1>
@@ -19,8 +20,10 @@ export function AppHero() {
           Four apps, one for each nation, free on both stores.
         </p>
         <div className="storebtns rv in" style={{ "--d": ".55s" } as React.CSSProperties}>
-          <span>&#63743; App Store</span>
-          <span>&#9654; Google Play</span>
+          <span><FaApple />
+            App Store</span>
+          <span><FaGooglePlay />
+            Google Play</span>
         </div>
       </div>
     </header>

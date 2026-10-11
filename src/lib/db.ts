@@ -6,7 +6,7 @@ let dbInstance: DatabaseSync | null = null
 export function getDb(): DatabaseSync {
   if (!dbInstance) {
     const dbPath = path.join(process.cwd(), "src/data/attractions.db")
-    dbInstance = new DatabaseSync(dbPath, { readOnly: true })
+    dbInstance = new DatabaseSync(dbPath)
   }
   return dbInstance
 }

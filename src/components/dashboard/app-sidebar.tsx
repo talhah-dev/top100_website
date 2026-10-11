@@ -39,7 +39,7 @@ const navItems = [
   },
   {
     title: "Assets",
-    url: "#",
+    url: "/dashboard/assets",
     icon: <ImageIcon className="size-4 shrink-0" />,
   },
   {

@@ -7,7 +7,7 @@ import Link from "next/link";
 const NATIONS = [
   {
     name: "Wales",
-    image: "/thumbs/app-wales.jpg",
+    image: "/images/Wales.jpg",
     alt: "The Wales app home screen",
     href: "/search?area=Wales",
     tintRgb: "255,107,128",
@@ -16,7 +16,7 @@ const NATIONS = [
   },
   {
     name: "England",
-    image: "/thumbs/app-england.jpg",
+    image: "/images/England.jpg",
     alt: "The England app home screen",
     href: "/search?area=London",
     tintRgb: "147,183,212",
@@ -25,7 +25,7 @@ const NATIONS = [
   },
   {
     name: "Ireland",
-    image: "/thumbs/app-ireland.jpg",
+    image: "/images/Ireland.jpg",
     alt: "The Ireland app home screen",
     href: "/search?area=Ireland",
     tintRgb: "47,191,110",
@@ -34,7 +34,7 @@ const NATIONS = [
   },
   {
     name: "Scotland",
-    image: "/thumbs/app-scotland.jpg",
+    image: "/images/Scotland.jpg",
     alt: "The Scotland app home screen",
     href: "/search?area=Scotland",
     tintRgb: "77,178,255",
