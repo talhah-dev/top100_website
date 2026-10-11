@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { NavMain } from "@/components/dashboard/nav-main"
 import {
   Sidebar,
@@ -15,79 +16,47 @@ import {
   CommandIcon,
   LayoutDashboardIcon,
   FileTextIcon,
-  GlobeIcon,
   FolderTreeIcon,
   ImageIcon,
   MailIcon,
-  BotIcon,
-  ArrowLeftRightIcon,
-  SproutIcon,
-  WrenchIcon,
-  ShoppingBagIcon,
 } from "lucide-react"
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: <LayoutDashboardIcon className="size-4 shrink-0" />,
-      isActive: true,
-    },
-    {
-      title: "Entries",
-      url: "#",
-      icon: <FileTextIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Globals",
-      url: "#",
-      icon: <GlobeIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Categories",
-      url: "#",
-      icon: <FolderTreeIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Assets",
-      url: "#",
-      icon: <ImageIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Form Submissions",
-      url: "#",
-      icon: <MailIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Feed Me",
-      url: "#",
-      icon: <BotIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Site redirects",
-      url: "#",
-      icon: <ArrowLeftRightIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Sprig",
-      url: "#",
-      icon: <SproutIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Utilities",
-      url: "#",
-      icon: <WrenchIcon className="size-4 shrink-0" />,
-    },
-    {
-      title: "Plugin Store",
-      url: "#",
-      icon: <ShoppingBagIcon className="size-4 shrink-0" />,
-    },
-  ],
-}
+const navItems = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: <LayoutDashboardIcon className="size-4 shrink-0" />,
+  },
+  {
+    title: "Entries",
+    url: "#",
+    icon: <FileTextIcon className="size-4 shrink-0" />,
+  },
+  {
+    title: "Categories",
+    url: "#",
+    icon: <FolderTreeIcon className="size-4 shrink-0" />,
+  },
+  {
+    title: "Assets",
+    url: "#",
+    icon: <ImageIcon className="size-4 shrink-0" />,
+  },
+  {
+    title: "Form Submissions",
+    url: "/dashboard/form-submissions",
+    icon: <MailIcon className="size-4 shrink-0" />,
+  },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
+
+  const items = navItems.map((item) => ({
+    ...item,
+    isActive: pathname === item.url,
+  }))
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -104,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={items} />
       </SidebarContent>
     </Sidebar>
   )

@@ -39,15 +39,16 @@ export async function GET(request: NextRequest) {
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : ""
 
-    const countQuery = `SELECT COUNT(*) as count FROM attractions ${whereClause}`
+    const countQuery = `SELECT COUNT(DISTINCT slug) as count FROM attractions ${whereClause}`
     const countResult = db.prepare(countQuery).get(...params) as { count: number }
     const total = countResult?.count || 0
 
     const selectQuery = `
       SELECT id, title, slug, uri, summary, town, county, area,
-             image, image_url, categories, lat, lng, featured
+             image, image_url, categories, lat, lng, MAX(featured) as featured
       FROM attractions
       ${whereClause}
+      GROUP BY slug
       ORDER BY featured DESC, order_priority ASC, title ASC
       LIMIT ? OFFSET ?
     `

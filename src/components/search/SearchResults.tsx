@@ -75,7 +75,13 @@ export function SearchResults({
         setTotal(data.total || 0);
 
         if (append) {
-          setAttractions((prev) => [...prev, ...(data.attractions || [])]);
+          setAttractions((prev) => {
+            const seen = new Set(prev.map((a) => a.slug || a.id));
+            const fresh = (data.attractions || []).filter(
+              (a: AttractionItem) => !seen.has(a.slug || a.id)
+            );
+            return [...prev, ...fresh];
+          });
         } else {
           setAttractions(data.attractions || []);
         }
