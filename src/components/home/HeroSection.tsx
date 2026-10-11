@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { HeroSearch } from "./HeroSearch";
 
 const bgPhotos = [
   { url: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?w=2400&q=80", kb: "kb1", mplx: 18 },
@@ -22,7 +23,6 @@ const sparks = [
 
 export function HeroSection() {
   const [activePhoto, setActivePhoto] = useState(0);
-  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
   const heroRef = useRef<HTMLElement>(null);
   const hundredRef = useRef<HTMLDivElement>(null);
   const subLineRef = useRef<HTMLParagraphElement>(null);
@@ -128,33 +128,7 @@ export function HeroSection() {
           </p>
         </div>
 
-        <div className="search rv in" style={{ "--d": "1.15s" } as React.CSSProperties}>
-          <span className="q">Where would you like to go?</span>
-          <span className="q q2">
-            What would you like to do? <i className="chev">&#9662;</i>
-          </span>
-          <span className="seg">
-            <span
-              onClick={() => setViewMode("grid")}
-              className={`segbtn ${viewMode === "grid" ? "on" : ""}`}
-              role="button"
-              tabIndex={0}
-            >
-              &#9638; Grid
-            </span>
-            <span
-              onClick={() => setViewMode("map")}
-              className={`segbtn ${viewMode === "map" ? "on" : ""}`}
-              role="button"
-              tabIndex={0}
-            >
-              &#8982; Map
-            </span>
-          </span>
-          <span className="go" role="button" tabIndex={0}>
-            SEARCH
-          </span>
-        </div>
+        <HeroSearch />
       </div>
 
       <div className="scrollcue">Scroll</div>
