@@ -1,13 +1,31 @@
-import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/home/HeroSection";
+import React from "react";
+import "@/components/home/home.css";
+import { LoadingIntro } from "@/components/LoadingIntro";
+import { Navbar } from "@/components/Navbar";
+import {
+  HeroSection,
+  MarqueeSection,
+  FeaturedSection,
+  RegionsSection,
+  FiguresSection,
+  FromTheBooksSection,
+} from "@/components/home";
+import { Footer } from "@/components/Footer";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
-      <Header />
-      <main className="flex-1">
+    <>
+      <LoadingIntro />
+      <Navbar />
+      <main>
         <HeroSection />
+        <MarqueeSection />
+        <FeaturedSection />
+        <RegionsSection />
+        <FiguresSection />
+        <FromTheBooksSection />
       </main>
-    </div>
+      <Footer />
+    </>
   );
 }
