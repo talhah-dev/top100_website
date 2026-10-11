@@ -2,9 +2,9 @@ import React from "react";
 import type { Metadata } from "next";
 import "@/components/home/home.css";
 import "@/components/book/book.css";
-import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
+  BookNavbar,
   BookHero,
   BookInside,
   BookReaderQuotes,
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function BookPage() {
   return (
     <>
-      <Navbar />
+      <BookNavbar />
       <main>
         <BookHero />
         <BookInside />

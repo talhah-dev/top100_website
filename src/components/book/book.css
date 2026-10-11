@@ -1,88 +1,74 @@
-.nav:not(.scrolled) .links {
+.book-nav:not(.scrolled) .links {
     color: rgba(20, 27, 46, .78);
 }
 
-.nav:not(.scrolled) .links a:hover {
+.book-nav:not(.scrolled) .links a:hover {
     color: #141B2E;
 }
 
-.nav:not(.scrolled) .brand .name {
+.book-nav:not(.scrolled) .brand .name {
     color: #141B2E;
 }
 
-.nav:not(.scrolled) .lang-pill {
-    border-color: rgba(20, 27, 46, .5);
-    color: #141B2E;
-}
-
-.nav:not(.scrolled) .lang-pill:hover {
-    border-color: #141B2E;
-    color: #141B2E;
-}
-
-.nav:not(.scrolled) .cta {
+.book-nav:not(.scrolled) .cta {
     background: #141B2E;
     color: var(--gold);
 }
 
-.nav:not(.scrolled) .cta:hover {
+.book-nav:not(.scrolled) .cta:hover {
     box-shadow: 0 8px 24px rgba(20, 27, 46, .35);
 }
 
-.nav:not(.scrolled) .nav-soc a {
+.book-nav:not(.scrolled) .nav-soc a {
     border-color: rgba(20, 27, 46, .45);
     color: #141B2E;
 }
 
-.nav:not(.scrolled) .nav-soc a:hover {
+.book-nav:not(.scrolled) .nav-soc a:hover {
     border-color: #141B2E;
     background: rgba(20, 27, 46, .08);
 }
 
-.nav:not(.scrolled) .nav-soc::after {
+.book-nav:not(.scrolled) .nav-soc::after {
     background: linear-gradient(90deg, rgba(20, 27, 46, .5), transparent);
 }
 
-.nav:not(.scrolled) .burger span {
+.book-nav:not(.scrolled) .burger span {
     background: #141B2E;
 }
 
-.nav.scrolled .links,
-.nav.scrolled .links a {
+.book-nav.scrolled .links,
+.book-nav.scrolled .links a {
     color: var(--mist);
     transition: none;
 }
 
-.nav.scrolled .links a:hover {
+.book-nav.scrolled .links a:hover {
     color: var(--gold);
 }
 
-.nav.scrolled .brand .name {
+.book-nav.scrolled .brand .name {
     color: #fff;
 }
 
-.nav.scrolled .lang-pill {
-    border-color: rgba(185, 193, 212, .45);
-    color: var(--mist);
-}
-
-.nav.scrolled .cta {
+.book-nav.scrolled .cta {
     background: linear-gradient(110deg, var(--gold), var(--gold-deep));
     color: #141B2E;
 }
 
-.nav.scrolled .nav-soc a {
+.book-nav.scrolled .nav-soc a {
     border-color: rgba(250, 191, 51, .45);
     color: var(--gold);
 }
 
-.nav.scrolled .nav-soc::after {
+.book-nav.scrolled .nav-soc::after {
     background: linear-gradient(90deg, rgba(250, 191, 51, .5), transparent);
 }
 
-.nav.scrolled .burger span {
+.book-nav.scrolled .burger span {
     background: var(--gold);
 }
+
 
 .bhero {
     position: relative;

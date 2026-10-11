@@ -1,3 +1,4 @@
+export * from "./BookNavbar";
 export * from "./BookHero";
 export * from "./BookInside";
 export * from "./BookReaderQuotes";
