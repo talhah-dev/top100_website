@@ -22,7 +22,7 @@ export function DetailHero({
   return (
     <header className="hero dhero" id="hero">
       <div
-        className="photo kb1 active"
+        className="photo active"
         style={{
           backgroundImage: `url('${bg}')`,
         }}

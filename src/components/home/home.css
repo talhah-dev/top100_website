@@ -1085,7 +1085,8 @@ body::after {
 
 .nation .label {
     position: absolute;
-    left: 26px;
+    left: 20px;
+    right: 20px;
     bottom: 24px;
     z-index: 2
 }
@@ -1096,13 +1097,14 @@ body::after {
     font-weight: 900;
     font-size: 30px;
     color: #fff;
-    text-shadow: 0 3px 14px rgba(0, 0, 0, .4)
+    text-shadow: 0 3px 14px rgba(0, 0, 0, .4);
+    line-height: 1.1
 }
 
 .nation .label i {
     display: block;
     font-style: normal;
-    font-size: 12.5px;
+    font-size: 11.5px;
     font-weight: 700;
     letter-spacing: .16em;
     color: rgba(255, 255, 255, .92);
@@ -1110,6 +1112,13 @@ body::after {
     overflow: hidden;
     opacity: 0;
     transition: max-height .5s var(--ease), opacity .5s var(--ease), margin .5s var(--ease)
+}
+
+.nation.open .label i {
+    max-height: 24px;
+    opacity: .85;
+    margin-top: 4px;
+    color: var(--gold-soft)
 }
 
 .nation:hover {
@@ -1661,15 +1670,16 @@ body::after {
 }
 
 .nation.open {
-    height: 660px;
-    transform: none
+    height: 590px;
+    transform: none;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .55)
 }
 
 .nation .teaser {
     position: absolute;
-    left: 22px;
-    right: 22px;
-    bottom: 86px;
+    left: 20px;
+    right: 20px;
+    bottom: 96px;
     z-index: 2;
     opacity: 0;
     transform: translateY(16px);
@@ -1681,7 +1691,7 @@ body::after {
     opacity: 1;
     transform: none;
     pointer-events: auto;
-    transition-delay: .22s
+    transition-delay: .18s
 }
 
 .teaser .t-item {
@@ -1689,33 +1699,92 @@ body::after {
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    background: rgba(6, 11, 22, .58);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, .24);
-    border-radius: 12px;
-    padding: 10px 14px;
+    background: rgba(6, 11, 22, .68);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: 14px;
+    padding: 9px 13px;
     margin-bottom: 8px;
     color: #fff;
-    font-weight: 700;
-    font-size: 13.5px
+    text-decoration: none;
+    transition: all .25s var(--ease)
 }
 
-.teaser .t-item i {
-    font-style: normal;
-    color: var(--gold);
-    font-family: var(--display);
-    font-weight: 900;
+.teaser .t-item:hover {
+    background: rgba(6, 11, 22, .9);
+    border-color: rgba(var(--gold-rgb), .6);
+    transform: translateX(3px)
+}
+
+.teaser .t-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    text-align: left;
+    overflow: hidden
+}
+
+.teaser .t-item .t-name {
     font-size: 13px;
-    white-space: nowrap
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.teaser .t-item .t-loc {
+    font-style: normal;
+    color: var(--gold-soft);
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .03em;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.teaser .t-item .t-arrow {
+    color: rgba(255, 255, 255, .4);
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: transform .2s ease, color .2s ease
+}
+
+.teaser .t-item:hover .t-arrow {
+    color: var(--gold);
+    transform: translateX(3px)
 }
 
 .teaser .t-all {
-    display: inline-block;
-    margin-top: 8px;
-    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: rgba(var(--gold-rgb), .14);
+    border: 1px solid rgba(var(--gold-rgb), .45);
+    border-radius: 12px;
+    color: var(--gold);
     font-weight: 800;
-    font-size: 12px;
-    letter-spacing: .16em
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all .25s var(--ease)
+}
+
+.teaser .t-all:hover {
+    background: var(--gold);
+    color: #060b16;
+    border-color: var(--gold);
+    box-shadow: 0 4px 16px rgba(var(--gold-rgb), .35)
 }
 
 

@@ -3,13 +3,35 @@
 }
 
 .dhero {
+    position: relative;
     min-height: 86vh;
     align-items: flex-end;
     justify-content: flex-start;
     padding: 118px 0 0;
+    overflow: hidden;
+}
+
+.dhero .photo {
+    position: absolute;
+    inset: 0 !important;
+    animation: none !important;
+    transform: none !important;
+    background-size: cover;
+    background-position: center;
+    will-change: auto;
+}
+
+.dhero .scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(6, 11, 22, .75) 0%, rgba(6, 11, 22, .45) 35%, rgba(6, 11, 22, .88) 80%, var(--bg-deep) 100%);
+    z-index: 1;
+    pointer-events: none;
 }
 
 .dhero .inner {
+    position: relative;
+    z-index: 2;
     text-align: left;
     margin: 0;
     max-width: 960px;

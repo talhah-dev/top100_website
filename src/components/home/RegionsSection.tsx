@@ -97,12 +97,24 @@ export function RegionsSection() {
                 <div className="wash" />
                 <div className="teaser">
                   {reg.teasers.map((t, idx) => (
-                    <div key={idx} className="t-item">
-                      <span dangerouslySetInnerHTML={{ __html: t.name }} />
-                      <i>{t.loc}</i>
-                    </div>
+                    <Link
+                      key={idx}
+                      href={`/search?q=${encodeURIComponent(t.name.replace(/&rsquo;/g, "'"))}`}
+                      className="t-item"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="t-item-content">
+                        <span className="t-name" dangerouslySetInnerHTML={{ __html: t.name }} />
+                        <span className="t-loc">{t.loc}</span>
+                      </div>
+                      <span className="t-arrow">&rarr;</span>
+                    </Link>
                   ))}
-                  <Link href={`#${reg.key}`} className="t-all">
+                  <Link
+                    href={`/search?q=${encodeURIComponent(reg.name)}`}
+                    className="t-all"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     EXPLORE {reg.name.toUpperCase()} &rarr;
                   </Link>
                 </div>
