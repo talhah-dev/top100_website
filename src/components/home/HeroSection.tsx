@@ -5,9 +5,9 @@ import Image from "next/image";
 import { HeroSearch } from "./HeroSearch";
 
 const bgPhotos = [
-  { url: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?w=2400&q=80", kb: "kb1", mplx: 18 },
-  { url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=2400&q=75", kb: "kb2", mplx: 18 },
-  { url: "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?w=2400&q=75", kb: "kb3", mplx: 18 },
+  { url: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?w=2400&q=80", mplx: 18 },
+  { url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=2400&q=75", mplx: 18 },
+  { url: "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?w=2400&q=75", mplx: 18 },
 ];
 
 const sparks = [
@@ -81,7 +81,7 @@ export function HeroSection() {
       {bgPhotos.map((photo, idx) => (
         <div
           key={photo.url}
-          className={`photo ${photo.kb} ${idx === activePhoto ? "active" : ""}`}
+          className={`photo ${idx === activePhoto ? "active" : ""}`}
           data-mplx={photo.mplx}
           style={{ backgroundImage: `url('${photo.url}')` }}
         />

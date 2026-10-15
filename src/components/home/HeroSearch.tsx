@@ -218,7 +218,7 @@ export function HeroSearch() {
         )}
       </div>
 
-      <div className="search-seg">
+      <div className="search-seg seg">
         <button
           type="button"
           className={`segbtn ${viewMode === "grid" ? "on" : ""}`}
@@ -235,7 +235,7 @@ export function HeroSearch() {
         </button>
       </div>
 
-      <button type="submit" className="search-go-btn">
+      <button type="submit" className="search-go-btn go">
         SEARCH
       </button>
     </form>

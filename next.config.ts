@@ -30,6 +30,15 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async rewrites() {
+    return [
+      { source: "/wales", destination: "/country/wales" },
+      { source: "/england", destination: "/country/england" },
+      { source: "/scotland", destination: "/country/scotland" },
+      { source: "/ireland", destination: "/country/ireland" },
+      { source: "/northern-ireland", destination: "/country/northern-ireland" },
+    ];
+  },
 };
 
 export default nextConfig;

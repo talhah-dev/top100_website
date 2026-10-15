@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 
 const wall1Quotes = [
   { text: "The only guide we trust when planning our summer. It has never once let us down.", who: "The Harpers · Kent" },
@@ -64,7 +65,7 @@ export function FromTheBooksSection() {
           <div className="panelcard bookp rv in">
             <h3>The books that<br />started it all.</h3>
             <p>The best-selling Top 100 guides, available from all main book stores, online and direct.</p>
-            <Link className="btn" href="#book">BUY THE BOOK ONLINE</Link>
+            <Link className="btn" href="/book">BUY THE BOOK ONLINE</Link>
             <div className="book">
               <b>TOP <i>100</i><br />ATTRACTIONS</b>
               <span>STEVENSON&rsquo;S GUIDES</span>
@@ -76,8 +77,14 @@ export function FromTheBooksSection() {
             <h3>Four free apps.<br />One trusted standard.</h3>
             <p>England, Scotland, Wales and Ireland, always in your pocket.</p>
             <div className="storebtns">
-              <span>&#63743; App Store</span>
-              <span>&#9654; Google Play</span>
+              <Link href="/app">
+                <FaApple style={{ fontSize: "16px", marginBottom: "2px" }} />
+                <span>App Store</span>
+              </Link>
+              <Link href="/app">
+                <FaGooglePlay style={{ fontSize: "13px" }} />
+                <span>Google Play</span>
+              </Link>
             </div>
           </div>
 

@@ -428,6 +428,9 @@
 }
 
 .storebtns span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     border: 1.5px solid rgba(250, 191, 51, .5);
     color: var(--gold);
     font-weight: 800;
@@ -437,6 +440,7 @@
     border-radius: 12px;
     transition: background .3s var(--ease), transform .3s var(--ease);
     cursor: pointer;
+    line-height: 1;
 }
 
 .storebtns span:hover {

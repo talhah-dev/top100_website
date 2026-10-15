@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 
 export function BookAppCloser() {
   return (
@@ -12,9 +13,15 @@ export function BookAppCloser() {
           <h3>Rather carry it in your pocket?</h3>
           <p>The same hundred, free on the app, one nation at a time.</p>
           <div className="storebtns">
-            <span>&#63743; App Store</span>
-            <span>&#9654; Google Play</span>
-            <Link href="#app">SEE THE APPS</Link>
+            <span>
+              <FaApple style={{ fontSize: "16px", marginBottom: "2px" }} />
+              App Store
+            </span>
+            <span>
+              <FaGooglePlay style={{ fontSize: "13px" }} />
+              Google Play
+            </span>
+            <Link href="/app">SEE THE APPS</Link>
           </div>
         </div>
       </div>

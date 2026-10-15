@@ -69,8 +69,8 @@ export function AboutReaderWall() {
             <h3>Read the guide, then carry it.</h3>
             <p>The books and the four free apps carry the same hundred, kept current from one desk.</p>
             <div className="storebtns">
-              <Link href="#book">BUY THE BOOK</Link>
-              <Link href="#app">GET THE FREE APP</Link>
+              <Link href="/book">BUY THE BOOK</Link>
+              <Link href="/app">GET THE FREE APP</Link>
             </div>
           </div>
         </div>
