@@ -1,6 +1,6 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 import {
   Card,
   CardAction,
@@ -9,103 +9,147 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { TrendingUpIcon, TrendingDownIcon } from "lucide-react"
+import {
+  CompassIcon,
+  FolderTreeIcon,
+  ImageIcon,
+  MailIcon,
+  ArrowRightIcon,
+  Sparkles,
+} from "lucide-react"
 
 export function SectionCards() {
   return (
-    <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon
-              />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month{" "}
-            <TrendingUpIcon className="size-4" />
+    <div className="space-y-6 px-4 lg:px-6">
+      <div className="grid grid-cols-1 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+        <Card className="relative overflow-hidden bg-[#101A30] border-[rgba(185,193,212,0.14)] shadow-md hover:border-[rgba(250,191,51,0.4)] transition">
+          <div className="rainbow-bar" />
+          <CardHeader className="pt-5">
+            <CardDescription className="text-[#B9C1D4] font-medium">Total Attractions</CardDescription>
+            <CardTitle className="font-['Overlock'] text-3xl font-black tabular-nums text-white mt-1">
+              26,919
+            </CardTitle>
+            <CardAction>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[rgba(250,191,51,0.15)] text-[#FABF33] border border-[rgba(250,191,51,0.3)]">
+                4 Nations
+              </span>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex items-center gap-2 text-xs text-[#B9C1D4] border-t border-[rgba(185,193,212,0.08)] pt-3 pb-3">
+            <CompassIcon className="size-4 text-[#FABF33]" />
+            <span>Wales, Scotland, England & Ireland</span>
+          </CardFooter>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-[#101A30] border-[rgba(185,193,212,0.14)] shadow-md hover:border-[rgba(250,191,51,0.4)] transition">
+          <div className="rainbow-bar" />
+          <CardHeader className="pt-5">
+            <CardDescription className="text-[#B9C1D4] font-medium">Curated Areas</CardDescription>
+            <CardTitle className="font-['Overlock'] text-3xl font-black tabular-nums text-white mt-1">
+              113
+            </CardTitle>
+            <CardAction>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                Counties & Coasts
+              </span>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex items-center gap-2 text-xs text-[#B9C1D4] border-t border-[rgba(185,193,212,0.08)] pt-3 pb-3">
+            <FolderTreeIcon className="size-4 text-emerald-400" />
+            <span>Active regional directories</span>
+          </CardFooter>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-[#101A30] border-[rgba(185,193,212,0.14)] shadow-md hover:border-[rgba(250,191,51,0.4)] transition">
+          <div className="rainbow-bar" />
+          <CardHeader className="pt-5">
+            <CardDescription className="text-[#B9C1D4] font-medium">Form Submissions</CardDescription>
+            <CardTitle className="font-['Overlock'] text-3xl font-black tabular-nums text-white mt-1">
+              13
+            </CardTitle>
+            <CardAction>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/30">
+                Inquiries
+              </span>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex items-center gap-2 text-xs text-[#B9C1D4] border-t border-[rgba(185,193,212,0.08)] pt-3 pb-3">
+            <MailIcon className="size-4 text-blue-400" />
+            <span>Reader contact & recommendation forms</span>
+          </CardFooter>
+        </Card>
+
+        <Card className="relative overflow-hidden bg-[#101A30] border-[rgba(185,193,212,0.14)] shadow-md hover:border-[rgba(250,191,51,0.4)] transition">
+          <div className="rainbow-bar" />
+          <CardHeader className="pt-5">
+            <CardDescription className="text-[#B9C1D4] font-medium">Media Assets</CardDescription>
+            <CardTitle className="font-['Overlock'] text-3xl font-black tabular-nums text-white mt-1">
+              5,830
+            </CardTitle>
+            <CardAction>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                Library
+              </span>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex items-center gap-2 text-xs text-[#B9C1D4] border-t border-[rgba(185,193,212,0.08)] pt-3 pb-3">
+            <ImageIcon className="size-4 text-rose-400" />
+            <span>Photographs & uploaded media</span>
+          </CardFooter>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Link
+          href="/dashboard/assets"
+          className="group relative rounded-2xl p-6 bg-[#101A30] border border-[rgba(185,193,212,0.14)] hover:border-[rgba(250,191,51,0.5)] transition overflow-hidden shadow-lg"
+        >
+          <div className="absolute top-0 left-0 right-0 h-1 rainbow-bar opacity-80" />
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="p-2 rounded-xl bg-[#0D1528] border border-[rgba(185,193,212,0.12)] text-[#FABF33]">
+                  <ImageIcon className="size-5" />
+                </span>
+                <span className="font-['Overlock'] text-xl font-black text-white">
+                  Media & Assets Library
+                </span>
+              </div>
+              <p className="text-sm text-[#B9C1D4] pt-2 max-w-md">
+                Search, inspect and filter 5,830 high-resolution attraction photos, file dimensions and upload dates.
+              </p>
+            </div>
+            <span className="p-2.5 rounded-full bg-[#0D1528] text-[#FABF33] group-hover:translate-x-1 transition shrink-0 border border-[rgba(250,191,51,0.2)]">
+              <ArrowRightIcon className="size-4" />
+            </span>
           </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
+        </Link>
+
+        <Link
+          href="/dashboard/form-submissions"
+          className="group relative rounded-2xl p-6 bg-[#101A30] border border-[rgba(185,193,212,0.14)] hover:border-[rgba(250,191,51,0.5)] transition overflow-hidden shadow-lg"
+        >
+          <div className="absolute top-0 left-0 right-0 h-1 rainbow-bar opacity-80" />
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="p-2 rounded-xl bg-[#0D1528] border border-[rgba(185,193,212,0.12)] text-[#FABF33]">
+                  <MailIcon className="size-5" />
+                </span>
+                <span className="font-['Overlock'] text-xl font-black text-white">
+                  Reader Form Submissions
+                </span>
+              </div>
+              <p className="text-sm text-[#B9C1D4] pt-2 max-w-md">
+                Review visitor messages, place submissions, telephone inquiries and correspondence details.
+              </p>
+            </div>
+            <span className="p-2.5 rounded-full bg-[#0D1528] text-[#FABF33] group-hover:translate-x-1 transition shrink-0 border border-[rgba(250,191,51,0.2)]">
+              <ArrowRightIcon className="size-4" />
+            </span>
           </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingDownIcon
-              />
-              -20%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period{" "}
-            <TrendingDownIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon
-              />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention{" "}
-            <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <TrendingUpIcon
-              />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase{" "}
-            <TrendingUpIcon className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
-        </CardFooter>
-      </Card>
+        </Link>
+      </div>
     </div>
   )
 }

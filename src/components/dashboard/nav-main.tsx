@@ -31,10 +31,10 @@ export function NavMain({
                 tooltip={item.title}
                 isActive={item.isActive}
                 className={cn(
-                  "transition-colors",
+                  "transition-all duration-200 rounded-xl px-3 py-2 text-sm font-medium",
                   item.isActive
-                    ? "bg-[#1e293b]! text-white! font-medium hover:bg-[#1e293b]! hover:text-white! data-[active=true]:bg-[#1e293b]! data-[active=true]:text-white!"
-                    : "hover:bg-accent! hover:text-accent-foreground!"
+                    ? "bg-[#101A30]! text-[#FABF33]! font-bold border border-[rgba(250,191,51,0.35)] shadow-[0_4px_16px_rgba(0,0,0,0.35)] data-[active=true]:bg-[#101A30]! data-[active=true]:text-[#FABF33]!"
+                    : "text-[#B9C1D4] hover:bg-[#101A30]/70 hover:text-white hover:border-[rgba(185,193,212,0.1)] border border-transparent"
                 )}
                 render={<Link href={item.url} />}
               >

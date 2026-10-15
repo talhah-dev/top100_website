@@ -1,0 +1,82 @@
+.dashboard-root {
+  --background: #0A1122;
+  --foreground: #F6EFDF;
+  --card: #101A30;
+  --card-foreground: #F6EFDF;
+  --popover: #101A30;
+  --popover-foreground: #F6EFDF;
+  --primary: #FABF33;
+  --primary-foreground: #0A1122;
+  --secondary: #16223B;
+  --secondary-foreground: #F6EFDF;
+  --muted: #0D1528;
+  --muted-foreground: #B9C1D4;
+  --accent: #16223B;
+  --accent-foreground: #FABF33;
+  --destructive: #F0607A;
+  --border: rgba(185, 193, 212, 0.12);
+  --input: rgba(185, 193, 212, 0.16);
+  --ring: #FABF33;
+  --sidebar: #060B16;
+  --sidebar-foreground: #F6EFDF;
+  --sidebar-primary: #FABF33;
+  --sidebar-primary-foreground: #0A1122;
+  --sidebar-accent: #101A30;
+  --sidebar-accent-foreground: #FABF33;
+  --sidebar-border: rgba(185, 193, 212, 0.1);
+  --sidebar-ring: #FABF33;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Raleway', sans-serif;
+  min-height: 100vh;
+}
+
+.rainbow-bar {
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+}
+
+.rainbow-pill {
+  background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+  color: #0A1122;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.rainbow-text {
+  background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.rainbow-card {
+  position: relative;
+  border-radius: 18px;
+  background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(100deg, rgba(53, 179, 107, .45), rgba(110, 139, 255, .45) 35%, rgba(240, 96, 122, .45) 65%, rgba(250, 191, 51, .5)) border-box;
+  border: 1px solid transparent;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rainbow-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-root table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.dashboard-root table tbody tr:hover {
+  background-color: rgba(250, 191, 51, 0.05) !important;
+}
+
+.dashboard-root [data-slot="sidebar-inset"] {
+  background-color: var(--background);
+}
+
+[data-slot="dialog-overlay"] {
+  background-color: rgba(6, 11, 22, 0.8) !important;
+  backdrop-filter: blur(6px) !important;
+}
