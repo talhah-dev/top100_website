@@ -810,7 +810,7 @@ body::after {
     display: flex;
     gap: 0;
     width: max-content;
-    animation: marq 95s linear infinite
+    animation: marq 180s linear infinite
 }
 
 .marquee:hover .track {
