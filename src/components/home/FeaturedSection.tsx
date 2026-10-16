@@ -1,5 +1,17 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Counter from "yet-another-react-lightbox/plugins/counter";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import { ZoomIn } from "lucide-react";
+
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import "yet-another-react-lightbox/plugins/counter.css";
 
 const featuredItems = [
   {
@@ -9,7 +21,7 @@ const featuredItems = [
     quote: "As a seasoned travel journalist with nearly two decades of experience visiting attractions across the British Isles and Ireland, I embarked on a journey to sunny Florida to see how some of the world's biggest theme parks compare. My first stop was Universal Studios and the Islands of Adventure in Orlando.",
     who: "JOSH STEVENSON",
     linkText: "READ THE FULL REVIEW",
-    href: "/search?q=Universal+Orlando",
+    href: "/detail/universal-orlando-resort",
     img: "/images/standouts/universal-orlando.jpg",
     flip: false,
   },
@@ -20,7 +32,7 @@ const featuredItems = [
     quote: "Fresh from appearing in my Top 100 Romantic Destinations book, The Salthouse Hotel & Spa has taken luxury to the next level. Since my last visit, this incredible retreat has evolved dramatically, cementing its place among Northern Ireland’s finest hotels. With opulent bedrooms and eco-lodges, luxury is simply standard here.",
     who: "JOSH STEVENSON",
     linkText: "VIEW THE FULL LISTING",
-    href: "/search?q=The+Salthouse+Hotel",
+    href: "/detail/the-salthouse-hotel",
     img: "/images/standouts/salthouse-hotel.jpg",
     flip: true,
   },
@@ -31,13 +43,20 @@ const featuredItems = [
     quote: "An ideal base when visiting Belfast, this outstanding hotel blends luxury and originality in the most fascinating of ways. The rooms are incredibly designed with rainfall showers and cosy armchairs, and the rooftop hot tub overlooks the city.",
     who: "JOSH STEVENSON",
     linkText: "VIEW THE FULL LISTING",
-    href: "/search?q=The+Merchant+Hotel",
+    href: "/detail/the-merchant",
     img: "/images/standouts/merchant-hotel.jpg",
     flip: false,
   },
 ];
 
 export function FeaturedSection() {
+  const [index, setIndex] = useState(-1);
+
+  const slides = featuredItems.map((item) => ({
+    src: item.img,
+    alt: item.title,
+  }));
+
   return (
     <section className="section" id="featured">
       <div className="wrap">
@@ -52,9 +71,26 @@ export function FeaturedSection() {
         {featuredItems.map((item, idx) => (
           <div key={idx} className={`entry ${item.flip ? "flip" : ""}`}>
             <div className="media rv in">
-              <div className="frame">
+              <div
+                className="frame"
+                role="button"
+                tabIndex={0}
+                onClick={() => setIndex(idx)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setIndex(idx);
+                  }
+                }}
+                aria-label={`View ${item.title} photo in lightbox`}
+              >
                 <div className="ph">
                   <img src={item.img} alt={item.title} data-pimg />
+                </div>
+                <div className="frame-overlay">
+                  <span className="frame-zoom-icon">
+                    <ZoomIn className="w-5 h-5" />
+                  </span>
                 </div>
               </div>
             </div>
@@ -63,7 +99,9 @@ export function FeaturedSection() {
                 <b>{item.chip}</b>
               </span>
               <h3 className="rv in" style={{ "--d": ".08s" } as React.CSSProperties}>
-                {item.title}
+                <Link href={item.href}>
+                  {item.title}
+                </Link>
               </h3>
               <div className="where rv in" style={{ "--d": ".14s" } as React.CSSProperties}>
                 {item.where}
@@ -101,6 +139,29 @@ export function FeaturedSection() {
           </div>
         </div>
       </div>
+
+      <Lightbox
+        open={index >= 0}
+        index={index}
+        close={() => setIndex(-1)}
+        slides={slides}
+        plugins={[Zoom, Thumbnails, Counter, Fullscreen]}
+        zoom={{
+          maxZoomPixelRatio: 4,
+          zoomInMultiplier: 2,
+          doubleTapDelay: 300,
+        }}
+        thumbnails={{
+          position: "bottom",
+          width: 90,
+          height: 60,
+          border: 1,
+          borderRadius: 6,
+          padding: 4,
+          gap: 10,
+        }}
+        animation={{ fade: 250, swipe: 250 }}
+      />
     </section>
   );
 }

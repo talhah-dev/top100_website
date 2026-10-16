@@ -124,13 +124,20 @@ body::after {
     align-items: center;
     justify-content: space-between;
     padding: 18px 44px;
+    padding-top: max(18px, env(safe-area-inset-top, 0px));
+    padding-left: max(44px, env(safe-area-inset-left, 0px));
+    padding-right: max(44px, env(safe-area-inset-right, 0px));
     transition: background .5s var(--ease), padding .5s var(--ease), box-shadow .5s var(--ease)
 }
 
 .nav.scrolled {
     background: linear-gradient(180deg, rgba(88, 22, 32, .90), rgba(52, 14, 20, .88));
     backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
     padding: 10px 44px;
+    padding-top: max(10px, env(safe-area-inset-top, 0px));
+    padding-left: max(44px, env(safe-area-inset-left, 0px));
+    padding-right: max(44px, env(safe-area-inset-right, 0px));
     box-shadow: 0 1px 0 rgba(var(--gold-rgb), .25)
 }
 
@@ -803,7 +810,7 @@ body::after {
     display: flex;
     gap: 0;
     width: max-content;
-    animation: marq 46s linear infinite
+    animation: marq 95s linear infinite
 }
 
 .marquee:hover .track {
@@ -911,7 +918,57 @@ body::after {
     border-radius: 26px;
     overflow: hidden;
     box-shadow: 0 30px 80px rgba(0, 0, 0, .55);
-    border: 1px solid rgba(var(--gold-rgb), .2)
+    border: 1px solid rgba(var(--gold-rgb), .2);
+    cursor: pointer;
+    outline: none;
+    transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.entry .frame:hover {
+    border-color: rgba(var(--gold-rgb), .55);
+    box-shadow: 0 35px 90px rgba(0, 0, 0, .7), 0 0 30px rgba(var(--gold-rgb), .15);
+}
+
+.entry .frame:focus-visible {
+    box-shadow: 0 0 0 2px #FABF33;
+}
+
+.entry .frame-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 11, 22, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.entry .frame-zoom-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(20, 27, 46, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transform: scale(0.85);
+    transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.entry .frame:hover .frame-overlay {
+    opacity: 1;
+}
+
+.entry .frame:hover .frame-zoom-icon {
+    transform: scale(1);
+    background: rgba(20, 27, 46, 0.95);
+    border-color: #FABF33;
+    color: #FABF33;
 }
 
 .entry .frame .ph {
@@ -951,6 +1008,16 @@ body::after {
     font-size: clamp(30px, 3vw, 46px);
     color: #fff;
     margin-bottom: 6px
+}
+
+.entry h3 a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .2s var(--ease);
+}
+
+.entry h3 a:hover {
+    color: var(--gold);
 }
 
 .entry .where {
@@ -1892,7 +1959,8 @@ body::after {
     z-index: 82;
     background: rgba(7, 12, 24, .97);
     backdrop-filter: blur(16px);
-    padding: 92px 34px;
+    -webkit-backdrop-filter: blur(16px);
+    padding: calc(70px + env(safe-area-inset-top, 0px)) 34px calc(34px + env(safe-area-inset-bottom, 0px));
     display: flex;
     flex-direction: column;
     gap: 22px;
@@ -1914,8 +1982,8 @@ body::after {
 
 #mnav .close {
     position: absolute;
-    top: 22px;
-    right: 22px;
+    top: max(22px, calc(10px + env(safe-area-inset-top, 0px)));
+    right: max(22px, env(safe-area-inset-right, 0px));
     font-size: 30px;
     color: var(--gold);
     background: none;
@@ -1926,7 +1994,17 @@ body::after {
 
 @media (max-width: 980px) {
     .nav {
-        padding: 14px 20px
+        padding: 14px 20px;
+        padding-top: max(14px, env(safe-area-inset-top, 0px));
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+    }
+
+    .nav.scrolled {
+        padding: 10px 20px;
+        padding-top: max(10px, env(safe-area-inset-top, 0px));
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
     }
 
     .nav .links,

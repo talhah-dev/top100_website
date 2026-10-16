@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import "@/components/home/home.css";
 import "@/components/detail/detail.css";
 import { Navbar } from "@/components/Navbar";
@@ -20,8 +20,8 @@ export const instant = false;
 
 export async function generateStaticParams() {
   const db = getDb();
-  const rows = db.prepare("SELECT id FROM attractions LIMIT 10").all() as { id: number }[];
-  return rows.map((r) => ({ id: r.id.toString() }));
+  const rows = db.prepare("SELECT slug FROM attractions WHERE slug IS NOT NULL AND slug != '' GROUP BY slug LIMIT 20").all() as { slug: string }[];
+  return rows.map((r) => ({ id: r.slug }));
 }
 
 interface DetailPageProps {
@@ -66,7 +66,7 @@ function getAttraction(idOrSlug: string): AttractionDetail | null {
   const isNumeric = /^\d+$/.test(idOrSlug);
   const query = isNumeric
     ? "SELECT * FROM attractions WHERE id = ? LIMIT 1"
-    : "SELECT * FROM attractions WHERE slug = ? LIMIT 1";
+    : "SELECT * FROM attractions WHERE slug = ? ORDER BY (CASE WHEN review != '' AND review IS NOT NULL AND review != '<p></p>' THEN 0 ELSE 1 END), (CASE WHEN image_url != '' AND image_url IS NOT NULL THEN 0 ELSE 1 END), id DESC LIMIT 1";
   const param = isNumeric ? parseInt(idOrSlug, 10) : idOrSlug;
   const row = db.prepare(query).get(param) as Record<string, unknown> | undefined;
 
@@ -126,6 +126,11 @@ export default async function DetailDynamicPage({ params }: DetailPageProps) {
 
   if (!attraction) {
     notFound();
+  }
+
+  const isNumeric = /^\d+$/.test(id);
+  if (isNumeric && attraction.slug) {
+    redirect(`/detail/${attraction.slug}`);
   }
 
   const categoryLabel = attraction.categories?.[0] || "Attraction";

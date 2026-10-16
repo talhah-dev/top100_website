@@ -10,13 +10,15 @@
     color: #141B2E;
 }
 
+.book-nav .cta,
 .book-nav:not(.scrolled) .cta {
-    background: #141B2E;
-    color: var(--gold);
+    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    color: #141B2E;
 }
 
+.book-nav .cta:hover,
 .book-nav:not(.scrolled) .cta:hover {
-    box-shadow: 0 8px 24px rgba(20, 27, 46, .35);
+    box-shadow: 0 8px 26px rgba(250, 191, 51, .35);
 }
 
 .book-nav:not(.scrolled) .nav-soc a {
@@ -52,7 +54,7 @@
 }
 
 .book-nav.scrolled .cta {
-    background: linear-gradient(110deg, var(--gold), var(--gold-deep));
+    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
     color: #141B2E;
 }
 

@@ -5,9 +5,12 @@ import Image from "next/image";
 import { HeroSearch } from "./HeroSearch";
 
 const bgPhotos = [
-  { url: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?w=2400&q=80", mplx: 18 },
-  { url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=2400&q=75", mplx: 18 },
-  { url: "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?w=2400&q=75", mplx: 18 },
+  { url: "/images/slider/london-eye.jpeg", mplx: 18 },
+  { url: "/images/slider/AdobeStock_276849097.jpg", mplx: 18 },
+  { url: "/images/slider/Home-header-1.jpg", mplx: 18 },
+  { url: "/images/slider/Home-header-2.jpeg", mplx: 18 },
+  { url: "/images/slider/london-bus.jpeg", mplx: 18 },
+  { url: "/images/slider/mildome.jpeg", mplx: 18 },
 ];
 
 const sparks = [

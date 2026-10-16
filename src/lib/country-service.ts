@@ -117,7 +117,7 @@ export function getDynamicCountryData(slug: string): CountryData | undefined {
     });
 
     const attractionRows = db.prepare(`
-      SELECT id, title, area, town, summary, review, image_url, categories, featured
+      SELECT id, title, slug, area, town, summary, review, image_url, categories, featured
       FROM attractions
       WHERE area IN (${placeholders})
       GROUP BY title
@@ -129,6 +129,7 @@ export function getDynamicCountryData(slug: string): CountryData | undefined {
     `).all(...targetAreas) as Array<{
       id: number;
       title: string;
+      slug: string;
       area: string;
       town: string;
       summary: string | null;
@@ -166,7 +167,7 @@ export function getDynamicCountryData(slug: string): CountryData | undefined {
         img: row.image_url || existingPick?.img || "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&q=70",
         alt: row.title,
         featured: idx === 1 || row.featured === 1,
-        link: `/detail?id=${row.id}`
+        link: `/detail/${row.slug || row.id}`
       };
     });
 

@@ -21,7 +21,6 @@ export function BookHero() {
             The best-selling Top 100 guides, available from all main book stores, online and direct.
           </p>
           <div className="bcta rv in" style={{ "--d": ".55s" } as React.CSSProperties}>
-            <span className="btn-ink">BUY THE BOOK ONLINE</span>
             <Link className="btn-inkline" href="/about">
               HOW THE GUIDE WORKS
             </Link>

@@ -175,7 +175,7 @@ export function SearchResults({
                 <Link
                   key={`${place.id}-${idx}`}
                   className="rcard rv in"
-                  href={`/detail/${place.id}`}
+                  href={`/detail/${place.slug || place.id}`}
                 >
                   <div className="rph">
                     <div className="rimg">
