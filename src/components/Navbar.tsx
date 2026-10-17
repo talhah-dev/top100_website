@@ -85,10 +85,10 @@ export function Navbar() {
         </div>
 
         <div className="links">
-          <Link href="/search">ATTRACTIONS</Link>
-          <Link href="/search">PLACES TO STAY</Link>
-          <Link href="/search">PLACES TO EAT</Link>
-          <Link href="/search">MAP</Link>
+          <Link href="/search?category=Attractions">ATTRACTIONS</Link>
+          <Link href="/search?category=Accommodation">PLACES TO STAY</Link>
+          <Link href="/search?category=Eating+Out">PLACES TO EAT</Link>
+          <Link href="/search?view=map">MAP</Link>
           <Link href="/book">THE BOOK</Link>
         </div>
 
@@ -133,10 +133,10 @@ export function Navbar() {
         >
           &times;
         </button>
-        <Link href="/search" onClick={() => setMenuOpen(false)}>Attractions</Link>
-        <Link href="/search" onClick={() => setMenuOpen(false)}>Places to Stay</Link>
-        <Link href="/search" onClick={() => setMenuOpen(false)}>Places to Eat</Link>
-        <Link href="/search" onClick={() => setMenuOpen(false)}>Map</Link>
+        <Link href="/search?category=Attractions" onClick={() => setMenuOpen(false)}>Attractions</Link>
+        <Link href="/search?category=Accommodation" onClick={() => setMenuOpen(false)}>Places to Stay</Link>
+        <Link href="/search?category=Eating+Out" onClick={() => setMenuOpen(false)}>Places to Eat</Link>
+        <Link href="/search?view=map" onClick={() => setMenuOpen(false)}>Map</Link>
         <Link href="/book" onClick={() => setMenuOpen(false)}>The Book</Link>
         <Link href="/app" onClick={() => setMenuOpen(false)} style={{ color: "var(--gold)" }}>
           Get the App

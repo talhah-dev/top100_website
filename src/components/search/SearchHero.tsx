@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, Check } from "lucide-react";
+import { CategoryTreeDropdown } from "./CategoryTreeDropdown";
+import { getCategoryLabel } from "./category-data";
 
 export interface DestinationItem {
   id: string;
@@ -194,7 +196,7 @@ export function SearchHero({
               }}
               className="w-full flex items-center justify-between bg-transparent border-none text-[var(--cream,#F6EFDF)] text-sm cursor-pointer outline-none font-sans"
             >
-              <span className="truncate">{currentCategory.label}</span>
+              <span className="truncate">{getCategoryLabel(category)}</span>
               <ChevronDown
                 className={`size-4 text-[#FABF33] transition-transform duration-200 shrink-0 ml-2 ${
                   isCatOpen ? "rotate-180" : ""
@@ -203,33 +205,15 @@ export function SearchHero({
             </button>
 
             {isCatOpen && (
-              <div className="search-dropdown-menu left-0 sm:right-0 sm:left-auto min-w-[240px] sm:min-w-[270px]">
-                <div className="px-3 py-2 text-[11px] font-bold text-[#FABF33] uppercase tracking-wider border-b border-white/5">
+              <div className="search-dropdown-menu left-0 sm:right-0 sm:left-auto min-w-[320px] sm:min-w-[360px] !text-left">
+                <div className="px-3.5 py-2 text-[11px] font-bold text-[#FABF33] uppercase tracking-wider border-b border-white/5 !text-left">
                   Categories
                 </div>
-                <div className="search-dropdown-list mt-1">
-                  {CATEGORIES.map((item) => {
-                    const isSelected = category === item.value;
-                    return (
-                      <button
-                        key={item.value}
-                        type="button"
-                        onClick={() => {
-                          onCategoryChange?.(item.value);
-                          setIsCatOpen(false);
-                        }}
-                        className={`search-dropdown-item justify-between ${
-                          isSelected ? "active" : ""
-                        }`}
-                      >
-                        <span>{item.label}</span>
-                        {isSelected && (
-                          <Check className="size-4 text-[#FABF33] shrink-0" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                <CategoryTreeDropdown
+                  selectedCategory={category}
+                  onSelect={(cat) => onCategoryChange?.(cat)}
+                  onClose={() => setIsCatOpen(false)}
+                />
               </div>
             )}
           </div>

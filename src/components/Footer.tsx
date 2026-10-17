@@ -65,10 +65,10 @@ export function Footer() {
         <div>
           <h4>Explore</h4>
           <ul>
-            <li><Link href="/search">Attractions</Link></li>
-            <li><Link href="#stay">Places to Stay</Link></li>
-            <li><Link href="#eat">Places to Eat</Link></li>
-            <li><Link href="/search">Map view</Link></li>
+            <li><Link href="/search?category=Attractions">Attractions</Link></li>
+            <li><Link href="/search?category=Accommodation">Places to Stay</Link></li>
+            <li><Link href="/search?category=Eating+Out">Places to Eat</Link></li>
+            <li><Link href="/search?view=map">Map view</Link></li>
           </ul>
         </div>
         <div>

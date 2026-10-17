@@ -54,6 +54,25 @@ export function SearchResults({
   const [loadingMore, setLoadingMore] = useState(false);
   const [navigatingSlug, setNavigatingSlug] = useState<string | number | null>(null);
 
+  useEffect(() => {
+    const handleReset = () => setNavigatingSlug(null);
+    window.addEventListener("pageshow", handleReset);
+    window.addEventListener("popstate", handleReset);
+    window.addEventListener("focus", handleReset);
+    return () => {
+      window.removeEventListener("pageshow", handleReset);
+      window.removeEventListener("popstate", handleReset);
+      window.removeEventListener("focus", handleReset);
+    };
+  }, []);
+
+  const handleCardClick = (slug: string | number) => {
+    setNavigatingSlug(slug);
+    setTimeout(() => {
+      setNavigatingSlug(null);
+    }, 1200);
+  };
+
   const fetchResults = useCallback(
     async (pageToFetch: number, append: boolean = false) => {
       if (append) {
@@ -99,6 +118,7 @@ export function SearchResults({
 
   useEffect(() => {
     setPage(1);
+    setNavigatingSlug(null);
     fetchResults(1, false);
   }, [fetchResults]);
 
@@ -108,16 +128,18 @@ export function SearchResults({
     fetchResults(nextPage, true);
   };
 
-  const CATEGORY_TABS = [
-    "All",
-    "Attractions",
-    "Historical Places",
-    "Garden",
-    "Museums",
-    "Accommodation",
-    "Hotels",
-    "Eating Out",
+  const CORE_CATEGORIES = [
+    { label: "Attractions", value: "Attractions" },
+    { label: "Places to Stay", value: "Accommodation" },
+    { label: "Places to Eat", value: "Eating Out" },
   ];
+
+  const activeSubcategory =
+    selectedCategory &&
+    selectedCategory !== "All" &&
+    !CORE_CATEGORIES.some((c) => c.value === selectedCategory)
+      ? selectedCategory
+      : null;
 
   return (
     <section className="results" id="results">
@@ -140,16 +162,27 @@ export function SearchResults({
               </button>
             ))}
             <div className="flex items-center gap-1">
-              {CATEGORY_TABS.slice(1, 4).map((cat) => (
+              {CORE_CATEGORIES.map((cat) => (
                 <button
                   type="button"
-                  key={cat}
-                  className={`fchip ${selectedCategory === cat ? "on" : ""}`}
-                  onClick={() => onCategoryChange?.(selectedCategory === cat ? "All" : cat)}
+                  key={cat.value}
+                  className={`fchip ${selectedCategory === cat.value ? "on" : ""}`}
+                  onClick={() =>
+                    onCategoryChange?.(selectedCategory === cat.value ? "All" : cat.value)
+                  }
                 >
-                  {cat}
+                  {cat.label}
                 </button>
               ))}
+              {activeSubcategory && (
+                <button
+                  type="button"
+                  className="fchip on"
+                  onClick={() => onCategoryChange?.("All")}
+                >
+                  {activeSubcategory} &times;
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -181,7 +214,7 @@ export function SearchResults({
                   key={`${place.id}-${idx}`}
                   className={`rcard rv in ${isNavigating ? "pointer-events-none" : ""}`}
                   href={`/detail/${itemSlug}`}
-                  onClick={() => setNavigatingSlug(itemSlug)}
+                  onClick={() => handleCardClick(itemSlug)}
                 >
                   {isNavigating && (
                     <div className="absolute inset-0 bg-[#060B16]/85 backdrop-blur-[3px] z-20 flex flex-col items-center justify-center gap-3">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import "@/components/home/home.css";
 import "@/components/search/search.css";
@@ -15,7 +15,9 @@ export default function SearchPage() {
   return (
     <>
       <Navbar />
-      <SearchContent />
+      <Suspense fallback={null}>
+        <SearchContent />
+      </Suspense>
       <Footer />
     </>
   );
