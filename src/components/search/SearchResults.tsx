@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Spinner } from "@/components/ui/spinner";
 
 export interface AttractionItem {
   id: number;
@@ -51,6 +52,7 @@ export function SearchResults({
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [navigatingSlug, setNavigatingSlug] = useState<string | number | null>(null);
 
   const fetchResults = useCallback(
     async (pageToFetch: number, append: boolean = false) => {
@@ -171,12 +173,27 @@ export function SearchResults({
               const categoryLabel = place.categories?.[0] || "Attraction";
               const locationLabel = place.town || place.area || place.county || "UK";
 
+              const itemSlug = place.slug || place.id;
+              const isNavigating = navigatingSlug === itemSlug;
+
               return (
                 <Link
                   key={`${place.id}-${idx}`}
-                  className="rcard rv in"
-                  href={`/detail/${place.slug || place.id}`}
+                  className={`rcard rv in ${isNavigating ? "pointer-events-none" : ""}`}
+                  href={`/detail/${itemSlug}`}
+                  onClick={() => setNavigatingSlug(itemSlug)}
                 >
+                  {isNavigating && (
+                    <div className="absolute inset-0 bg-[#060B16]/85 backdrop-blur-[3px] z-20 flex flex-col items-center justify-center gap-3">
+                      <div className="relative">
+                        <div className="absolute -inset-1.5 rounded-full blur-md bg-[var(--gold,#FABF33)]/30 animate-pulse" />
+                        <Spinner className="relative size-8 text-[var(--gold,#FABF33)]" />
+                      </div>
+                      <span className="text-xs font-bold tracking-widest uppercase text-[var(--gold,#FABF33)]">
+                        Loading...
+                      </span>
+                    </div>
+                  )}
                   <div className="rph">
                     <div className="rimg">
                       <Image
