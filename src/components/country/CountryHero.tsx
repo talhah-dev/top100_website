@@ -40,12 +40,6 @@ export function CountryHero({ country }: CountryHeroProps) {
           {country.subheadline}
         </p>
         <div className="hbtns rv in" style={{ "--d": ".55s" } as React.CSSProperties}>
-          <Link
-            className="hbtn fill"
-            href={`/search?q=${encodeURIComponent(country.name)}`}
-          >
-            SEE EVERY PLACE IN {country.name.toUpperCase()}
-          </Link>
           <Link className="hbtn line" href="/map">
             OPEN THE MAP
           </Link>
