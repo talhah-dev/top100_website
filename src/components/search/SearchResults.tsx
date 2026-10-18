@@ -209,11 +209,16 @@ export function SearchResults({
               const itemSlug = place.slug || place.id;
               const isNavigating = navigatingSlug === itemSlug;
 
+              const categoryQuery =
+                selectedCategory && selectedCategory !== "All"
+                  ? `?from=${encodeURIComponent(selectedCategory)}`
+                  : "";
+
               return (
                 <Link
                   key={`${place.id}-${idx}`}
                   className={`rcard rv in ${isNavigating ? "pointer-events-none" : ""}`}
-                  href={`/detail/${itemSlug}`}
+                  href={`/detail/${itemSlug}${categoryQuery}`}
                   onClick={() => handleCardClick(itemSlug)}
                 >
                   {isNavigating && (

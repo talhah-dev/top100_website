@@ -26,6 +26,7 @@ export async function generateStaticParams() {
 
 interface DetailPageProps {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export interface AttractionDetail {
@@ -72,6 +73,25 @@ function getAttraction(idOrSlug: string): AttractionDetail | null {
 
   if (!row) return null;
 
+  let categories: string[] = [];
+  if (row.slug) {
+    const allCatRows = db.prepare("SELECT categories FROM attractions WHERE slug = ?").all(String(row.slug)) as { categories: string }[];
+    const catSet = new Set<string>();
+    allCatRows.forEach((r) => {
+      try {
+        const parsed = JSON.parse(r.categories);
+        if (Array.isArray(parsed)) parsed.forEach((c) => catSet.add(c));
+      } catch {}
+    });
+    categories = Array.from(catSet);
+  } else if (typeof row.categories === "string") {
+    try {
+      categories = JSON.parse(row.categories);
+    } catch {
+      categories = [];
+    }
+  }
+
   return {
     id: Number(row.id),
     title: String(row.title || ""),
@@ -97,7 +117,7 @@ function getAttraction(idOrSlug: string): AttractionDetail | null {
     national_trust: Boolean(row.national_trust),
     order_priority: Number(row.order_priority || 0),
     area: row.area ? String(row.area) : undefined,
-    categories: typeof row.categories === "string" ? JSON.parse(row.categories) : (row.categories as string[] || []),
+    categories,
     image: row.image ? String(row.image) : undefined,
     image_url: row.image_url ? String(row.image_url) : undefined,
     photos: typeof row.photos === "string" ? JSON.parse(row.photos) : (row.photos as string[] || []),
@@ -120,8 +140,10 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
   };
 }
 
-export default async function DetailDynamicPage({ params }: DetailPageProps) {
+export default async function DetailDynamicPage({ params, searchParams }: DetailPageProps) {
   const { id } = await params;
+  const sp = searchParams ? await searchParams : {};
+  const fromCategory = String(sp.from || sp.category || "");
   const attraction = getAttraction(id);
 
   if (!attraction) {
@@ -130,28 +152,69 @@ export default async function DetailDynamicPage({ params }: DetailPageProps) {
 
   const isNumeric = /^\d+$/.test(id);
   if (isNumeric && attraction.slug) {
-    redirect(`/detail/${attraction.slug}`);
+    const qs = fromCategory ? `?from=${encodeURIComponent(fromCategory)}` : "";
+    redirect(`/detail/${attraction.slug}${qs}`);
   }
 
   const categoryLabel = attraction.categories?.[0] || "Attraction";
 
-  const isAccommodation = attraction.categories?.some((cat) =>
-    cat === "Accommodation" ||
-    [
-      "Hotels",
-      "Guest House / B&Bs",
-      "Self Catering",
-      "Caravans / Campsites / Glamping",
-      "Hostels",
-      "Country House",
-      "Romance",
-      "Pet Friendly",
-    ].includes(cat)
-  );
+  const ACCOMMODATION_CATEGORIES = new Set([
+    "accommodation",
+    "hotels",
+    "guest house / b&bs",
+    "self catering",
+    "caravans / campsites / glamping",
+    "hostels",
+    "country house",
+    "romance",
+    "pet friendly",
+  ]);
 
-  const isEatingOut = attraction.categories?.some((cat) =>
-    cat === "Eating Out" || cat === "Restaurant with Rooms"
-  );
+  const EATING_OUT_CATEGORIES = new Set([
+    "eating out",
+    "restaurant with rooms",
+  ]);
+
+  let isPlacesToStay = false;
+  let isPlacesToEat = false;
+
+  const fromLower = fromCategory.trim().toLowerCase();
+
+  if (fromLower) {
+    if (
+      ACCOMMODATION_CATEGORIES.has(fromLower) ||
+      fromLower.includes("accommodation") ||
+      fromLower.includes("stay")
+    ) {
+      isPlacesToStay = true;
+    } else if (
+      EATING_OUT_CATEGORIES.has(fromLower) ||
+      fromLower.includes("eat")
+    ) {
+      isPlacesToEat = true;
+    }
+  } else {
+    const placeCats = (attraction.categories || []).map((c) => c.toLowerCase());
+    const hasAcc = placeCats.some((c) => ACCOMMODATION_CATEGORIES.has(c));
+    const hasEat = placeCats.some((c) => EATING_OUT_CATEGORIES.has(c));
+    const hasAttr = placeCats.some(
+      (c) =>
+        c === "attractions" ||
+        c === "historical places" ||
+        c === "garden" ||
+        c === "museums" ||
+        c === "iconic"
+    );
+
+    if (hasAcc && !hasAttr) {
+      isPlacesToStay = true;
+    } else if (hasEat && !hasAttr) {
+      isPlacesToEat = true;
+    }
+  }
+
+  const hideAttractionsNearby = isPlacesToStay;
+  const hideEatNearby = !isPlacesToStay && isPlacesToEat;
 
   return (
     <>
@@ -200,8 +263,8 @@ export default async function DetailDynamicPage({ params }: DetailPageProps) {
           mainImage={attraction.image_url}
         />
         <DetailNearby
-          hideAttractionsNearby={isAccommodation}
-          hideEatNearby={isEatingOut}
+          hideAttractionsNearby={hideAttractionsNearby}
+          hideEatNearby={hideEatNearby}
         />
       </main>
       <Footer />
