@@ -135,6 +135,24 @@ export default async function DetailDynamicPage({ params }: DetailPageProps) {
 
   const categoryLabel = attraction.categories?.[0] || "Attraction";
 
+  const isAccommodation = attraction.categories?.some((cat) =>
+    cat === "Accommodation" ||
+    [
+      "Hotels",
+      "Guest House / B&Bs",
+      "Self Catering",
+      "Caravans / Campsites / Glamping",
+      "Hostels",
+      "Country House",
+      "Romance",
+      "Pet Friendly",
+    ].includes(cat)
+  );
+
+  const isEatingOut = attraction.categories?.some((cat) =>
+    cat === "Eating Out" || cat === "Restaurant with Rooms"
+  );
+
   return (
     <>
       <Navbar />
@@ -181,7 +199,10 @@ export default async function DetailDynamicPage({ params }: DetailPageProps) {
           photos={attraction.photos}
           mainImage={attraction.image_url}
         />
-        <DetailNearby />
+        <DetailNearby
+          hideAttractionsNearby={isAccommodation}
+          hideEatNearby={isEatingOut}
+        />
       </main>
       <Footer />
     </>

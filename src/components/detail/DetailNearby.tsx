@@ -4,7 +4,15 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export function DetailNearby() {
+interface DetailNearbyProps {
+  hideAttractionsNearby?: boolean;
+  hideEatNearby?: boolean;
+}
+
+export function DetailNearby({
+  hideAttractionsNearby = false,
+  hideEatNearby = false,
+}: DetailNearbyProps = {}) {
   return (
     <>
       <section className="section" id="stay" style={{ paddingBottom: 0 }}>
@@ -69,7 +77,8 @@ export function DetailNearby() {
         </div>
       </section>
 
-      <section className="section" id="eat" style={{ paddingBottom: 0 }}>
+      {!hideEatNearby && (
+        <section className="section" id="eat" style={{ paddingBottom: 0 }}>
         <div className="wrap">
           <div className="kicker rv in">
             <span className="line" />
@@ -130,8 +139,10 @@ export function DetailNearby() {
           </div>
         </div>
       </section>
+      )}
 
-      <section className="section" id="more" style={{ paddingBottom: 0 }}>
+      {!hideAttractionsNearby && (
+        <section className="section" id="more" style={{ paddingBottom: 0 }}>
         <div className="wrap">
           <div className="kicker rv in">
             <span className="line" />
@@ -186,6 +197,7 @@ export function DetailNearby() {
           </div>
         </div>
       </section>
+      )}
     </>
   );
 }
