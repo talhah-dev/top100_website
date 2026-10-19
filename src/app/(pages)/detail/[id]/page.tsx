@@ -158,6 +158,17 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
 
   const categoryLabel = attraction.categories?.[0] || "Attraction";
 
+  const ATTRACTION_CATEGORIES = new Set([
+    "attractions",
+    "attraction",
+    "historical places",
+    "garden",
+    "gardens",
+    "museums",
+    "museum",
+    "iconic",
+  ]);
+
   const ACCOMMODATION_CATEGORIES = new Set([
     "accommodation",
     "hotels",
@@ -177,6 +188,7 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
 
   let isPlacesToStay = false;
   let isPlacesToEat = false;
+  let isAttraction = false;
 
   const fromLower = fromCategory.trim().toLowerCase();
 
@@ -192,29 +204,30 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
       fromLower.includes("eat")
     ) {
       isPlacesToEat = true;
+    } else if (
+      ATTRACTION_CATEGORIES.has(fromLower) ||
+      fromLower.includes("attraction")
+    ) {
+      isAttraction = true;
     }
   } else {
     const placeCats = (attraction.categories || []).map((c) => c.toLowerCase());
     const hasAcc = placeCats.some((c) => ACCOMMODATION_CATEGORIES.has(c));
     const hasEat = placeCats.some((c) => EATING_OUT_CATEGORIES.has(c));
-    const hasAttr = placeCats.some(
-      (c) =>
-        c === "attractions" ||
-        c === "historical places" ||
-        c === "garden" ||
-        c === "museums" ||
-        c === "iconic"
-    );
+    const hasAttr = placeCats.some((c) => ATTRACTION_CATEGORIES.has(c));
 
     if (hasAcc && !hasAttr) {
       isPlacesToStay = true;
     } else if (hasEat && !hasAttr) {
       isPlacesToEat = true;
+    } else if (hasAttr) {
+      isAttraction = true;
     }
   }
 
-  const hideAttractionsNearby = isPlacesToStay;
+  const hideStayNearby = isPlacesToStay;
   const hideEatNearby = !isPlacesToStay && isPlacesToEat;
+  const hideAttractionsNearby = !isPlacesToStay && !isPlacesToEat && isAttraction;
 
   return (
     <>
@@ -263,8 +276,9 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
           mainImage={attraction.image_url}
         />
         <DetailNearby
-          hideAttractionsNearby={hideAttractionsNearby}
+          hideStayNearby={hideStayNearby}
           hideEatNearby={hideEatNearby}
+          hideAttractionsNearby={hideAttractionsNearby}
         />
       </main>
       <Footer />
