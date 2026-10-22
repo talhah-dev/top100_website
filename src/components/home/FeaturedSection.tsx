@@ -4,14 +4,10 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
-import Counter from "yet-another-react-lightbox/plugins/counter";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import { ZoomIn } from "lucide-react";
 
 import "yet-another-react-lightbox/styles.css";
-import "yet-another-react-lightbox/plugins/thumbnails.css";
-import "yet-another-react-lightbox/plugins/counter.css";
 
 const featuredItems = [
   {
@@ -50,12 +46,7 @@ const featuredItems = [
 ];
 
 export function FeaturedSection() {
-  const [index, setIndex] = useState(-1);
-
-  const slides = featuredItems.map((item) => ({
-    src: item.img,
-    alt: item.title,
-  }));
+  const [activeSlide, setActiveSlide] = useState<{ src: string; alt: string } | null>(null);
 
   return (
     <section className="section" id="featured">
@@ -75,11 +66,11 @@ export function FeaturedSection() {
                 className="frame"
                 role="button"
                 tabIndex={0}
-                onClick={() => setIndex(idx)}
+                onClick={() => setActiveSlide({ src: item.img, alt: item.title })}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setIndex(idx);
+                    setActiveSlide({ src: item.img, alt: item.title });
                   }
                 }}
                 aria-label={`View ${item.title} photo in lightbox`}
@@ -141,26 +132,16 @@ export function FeaturedSection() {
       </div>
 
       <Lightbox
-        open={index >= 0}
-        index={index}
-        close={() => setIndex(-1)}
-        slides={slides}
-        plugins={[Zoom, Thumbnails, Counter, Fullscreen]}
+        open={Boolean(activeSlide)}
+        close={() => setActiveSlide(null)}
+        slides={activeSlide ? [activeSlide] : []}
+        plugins={[Zoom, Fullscreen]}
         zoom={{
           maxZoomPixelRatio: 4,
           zoomInMultiplier: 2,
           doubleTapDelay: 300,
         }}
-        thumbnails={{
-          position: "bottom",
-          width: 90,
-          height: 60,
-          border: 1,
-          borderRadius: 6,
-          padding: 4,
-          gap: 10,
-        }}
-        animation={{ fade: 250, swipe: 250 }}
+        animation={{ fade: 250 }}
       />
     </section>
   );

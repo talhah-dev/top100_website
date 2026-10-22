@@ -1,0 +1,2059 @@
+@import "leaflet/dist/leaflet.css";
+
+/* =====================================================================
+   THE ALTITUDE LADDER — map page
+   Generated page; edit this file and re-run build/build-atlas.py.
+   Colour direction is carried by body[data-dir="gold"|"logo"].
+   ===================================================================== */
+
+:root {
+    --canvas: #0A1122;
+    --stage: #060B16;
+    --panel: #141B2E;
+    --panel2: #0D1528;
+    --cream: #F6EFDF;
+    --mist: #B9C1D4;
+    --dim: #8D96AB;
+    --gold: #FABF33;
+    --gold-soft: #FFD97A;
+    --gold-deep: #D99A00;
+    --gold-rgb: 250, 191, 51;
+    --eat: #F0607A;
+    --stay: #6E8BFF;
+    --wales: #C31A35;
+    --england: #00356B;
+    --ireland: #00843D;
+    --nireland: #6C2BD9;
+    --scotland: #007FFF;
+    --display: 'Overlock', Georgia, serif;
+    --body: 'Raleway', system-ui, sans-serif;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --panel-w: 420px;
+    /* CONSTANT. Never animated: resizing the map
+                               container mid-flight was the defect all three
+                               reviewers flagged in the original concept. */
+    --nav-h: 56px;
+    --mix: linear-gradient(90deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    /* basemap-dependent pin tokens: the plate decides which way the
+     neutral pin and its keyline have to read */
+    --keyline-col: #F6EFDF;
+    --neutral-body: #F6EFDF;
+    --neutral-ink: #0A1122;
+}
+
+body[data-base="daylight"],
+body[data-base="parchment"] {
+    --keyline-col: #0A1122;
+    --neutral-body: #0A1122;
+    --neutral-ink: #F6EFDF;
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%
+}
+
+body {
+    background: var(--canvas);
+    color: #fff;
+    font-family: var(--body);
+    overflow: hidden;
+    /* this route does not scroll */
+    -webkit-font-smoothing: antialiased
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer
+}
+
+:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 6px
+}
+
+.sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0
+}
+
+.skip {
+    position: absolute;
+    left: 12px;
+    top: -60px;
+    z-index: 999;
+    background: var(--gold);
+    color: #141B2E;
+    padding: 10px 16px;
+    border-radius: 0 0 10px 10px;
+    font-weight: 800;
+    font-size: 13px;
+    transition: top .2s
+}
+
+.skip:focus {
+    top: 0
+}
+
+/* ---------------------------------------------------------------- nav */
+
+.nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: var(--nav-h);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 0 20px;
+    background: rgba(6, 11, 22, .80);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid rgba(246, 239, 223, .10)
+}
+
+.nav::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--mix);
+    opacity: .9
+}
+
+.nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    flex: 0 0 auto
+}
+
+.nav .brand img {
+    height: 34px;
+    width: auto;
+    display: block
+}
+
+.nav .brand b {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: .01em
+}
+
+.nav nav {
+    display: flex;
+    gap: 18px;
+    margin-left: 8px;
+    flex: 1;
+    min-width: 0
+}
+
+.nav nav a {
+    color: var(--mist);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 6px 2px;
+    border-bottom: 2px solid transparent
+}
+
+.nav nav a:hover {
+    color: #fff
+}
+
+.nav nav a[aria-current] {
+    color: var(--gold);
+    border-bottom-color: var(--gold)
+}
+
+.nav .cta {
+    flex: 0 0 auto;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold-deep));
+    color: #141B2E;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-decoration: none;
+    border: 0
+}
+
+body[data-dir="logo"] .nav .cta {
+    background: var(--mix);
+    color: #0A1122
+}
+
+/* ---------------------------------------------------------------- stage */
+
+.stage {
+    position: fixed;
+    inset: var(--nav-h) 0 0 0;
+    display: grid;
+    grid-template-columns: var(--panel-w) 1fr;
+    background: var(--stage)
+}
+
+/* ---------------------------------------------------------------- panel */
+
+.panel {
+    position: relative;
+    background: var(--panel);
+    border-right: 1px solid rgba(185, 193, 212, .14);
+    display: flex;
+    flex-direction: column;
+    min-height: 0
+}
+
+.panel>* {
+    flex: 0 0 auto
+}
+
+.psearch {
+    margin: 14px 14px 0;
+    position: relative
+}
+
+.psearch input {
+    width: 100%;
+    height: 44px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(185, 193, 212, .3);
+    color: #fff;
+    padding: 0 44px 0 16px;
+    font-size: 14px;
+    font-family: var(--body)
+}
+
+.psearch input::placeholder {
+    color: var(--dim)
+}
+
+.psearch .mag {
+    position: absolute;
+    right: 14px;
+    top: 12px;
+    width: 20px;
+    height: 20px;
+    color: var(--gold);
+    pointer-events: none
+}
+
+/* the verdict — the one editorial moment, and the only text that rewrites */
+
+.verdict {
+    margin: 16px 14px 0;
+    min-height: 58px
+}
+
+.verdict .vl {
+    display: block;
+    overflow: hidden
+}
+
+.verdict .vl span {
+    display: block;
+    transform: translateY(0)
+}
+
+.verdict .v1 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 26px;
+    line-height: 1.1;
+    color: #fff
+}
+
+.verdict .v2 {
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: .1em;
+    color: var(--gold);
+    margin-top: 4px;
+    text-transform: uppercase
+}
+
+body[data-dir="logo"] .verdict .v2 {
+    background: var(--mix);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent
+}
+
+.ptools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 14px 0;
+    height: 40px
+}
+
+.ptools .count {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--mist);
+    flex: 1;
+    font-variant-numeric: tabular-nums
+}
+
+.ptools .count b {
+    color: #fff
+}
+
+.follow {
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: none;
+    border: 1px solid rgba(185, 193, 212, .3);
+    color: var(--mist);
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    white-space: nowrap
+}
+
+.follow .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--dim)
+}
+
+.follow[aria-pressed="true"] {
+    border-color: var(--gold);
+    color: var(--gold)
+}
+
+.follow[aria-pressed="true"] .dot {
+    background: var(--gold)
+}
+
+.tabs {
+    display: flex;
+    gap: 6px;
+    margin: 12px 14px 0;
+    height: 44px
+}
+
+.tabs button {
+    flex: 1;
+    border-radius: 10px;
+    background: none;
+    border: 1px solid rgba(185, 193, 212, .26);
+    color: var(--mist);
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 6px
+}
+
+.tabs button .n {
+    font-variant-numeric: tabular-nums;
+    opacity: .75;
+    font-size: 10.5px
+}
+
+.tabs button[aria-pressed="true"] {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(var(--gold-rgb), .14)
+}
+
+.frow {
+    display: flex;
+    gap: 8px;
+    margin: 10px 14px 0;
+    height: 44px
+}
+
+.frow button {
+    border-radius: 10px;
+    background: none;
+    border: 1px solid rgba(185, 193, 212, .26);
+    color: var(--mist);
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px
+}
+
+.frow .ftypes {
+    flex: 1
+}
+
+.frow .fsort {
+    width: 120px
+}
+
+.frow .badge {
+    min-width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--gold);
+    color: #141B2E;
+    font-size: 11px;
+    font-weight: 900;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px
+}
+
+.frow .badge.on {
+    display: inline-flex
+}
+
+.prule {
+    height: 1px;
+    background: rgba(185, 193, 212, .14);
+    margin: 12px 14px 0
+}
+
+/* list ------------------------------------------------------------- */
+
+.plist {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 10px 14px 16px;
+    position: relative;
+    scrollbar-width: thin
+}
+
+.plist::-webkit-scrollbar {
+    width: 8px
+}
+
+.plist::-webkit-scrollbar-thumb {
+    background: rgba(185, 193, 212, .22);
+    border-radius: 4px
+}
+
+.gutter {
+    position: absolute;
+    right: 3px;
+    top: 0;
+    width: 3px;
+    pointer-events: none;
+    z-index: 2
+}
+
+.gutter i {
+    position: absolute;
+    right: 0;
+    width: 3px;
+    height: 24px;
+    border-radius: 2px;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity .16s
+}
+
+.gutter i.on {
+    opacity: 1
+}
+
+.card {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(185, 193, 212, .14);
+    border-radius: 14px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: border-color .2s, background .2s
+}
+
+.card:hover,
+.card.hl {
+    border-color: rgba(var(--gold-rgb), .55);
+    background: rgba(255, 255, 255, .055)
+}
+
+.card.sel {
+    border-color: var(--gold);
+    box-shadow: inset 2px 0 0 var(--gold)
+}
+
+.card .tile {
+    flex: 0 0 74px;
+    height: 74px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--panel2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(185, 193, 212, .12)
+}
+
+.card .tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover
+}
+
+/* glyph tile: honest stand-in where no verified photograph exists */
+
+.card .tile .gl {
+    width: 34px;
+    height: 34px;
+    background: var(--gold);
+    opacity: .85;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain
+}
+
+.card .tx {
+    flex: 1;
+    min-width: 0
+}
+
+.card .kick {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    color: var(--gold);
+    text-transform: uppercase
+}
+
+.card h3 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 15.5px;
+    line-height: 1.2;
+    margin: 3px 0 2px;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.card .vq {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--mist);
+    font-style: italic;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden
+}
+
+.card .meta {
+    margin-top: 4px;
+    font-size: 10.5px;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .04em
+}
+
+.pfoot {
+    border-top: 1px solid rgba(185, 193, 212, .14);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px
+}
+
+.pfoot a {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-decoration: none
+}
+
+.pfoot em {
+    font-size: 11px;
+    color: var(--dim);
+    font-style: italic
+}
+
+/* empty / error ------------------------------------------------------ */
+
+.pstate {
+    padding: 26px 14px;
+    display: none
+}
+
+.pstate.on {
+    display: block
+}
+
+.pstate h3 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 22px;
+    margin: 0 0 8px;
+    color: #fff
+}
+
+.pstate p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--mist);
+    margin: 0 0 16px
+}
+
+.pstate .acts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
+
+.pstate .acts button {
+    height: 44px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em
+}
+
+.pstate .acts .p {
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold-deep));
+    color: #141B2E;
+    border: 0
+}
+
+body[data-dir="logo"] .pstate .acts .p {
+    background: var(--mix);
+    color: #0A1122
+}
+
+.pstate .acts .s {
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold)
+}
+
+/* skeleton ----------------------------------------------------------- */
+
+.skel {
+    padding: 10px 14px
+}
+
+.skel .row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px
+}
+
+.skel .sq {
+    width: 74px;
+    height: 74px;
+    border-radius: 10px;
+    background: rgba(185, 193, 212, .07)
+}
+
+.skel .bars {
+    flex: 1;
+    padding-top: 6px
+}
+
+.skel .bars i {
+    display: block;
+    height: 10px;
+    border-radius: 5px;
+    background: rgba(185, 193, 212, .07);
+    margin-bottom: 8px
+}
+
+@media(prefers-reduced-motion:no-preference) {
+    .skel .sq,
+    .skel .bars i {
+        background: linear-gradient(90deg, rgba(185, 193, 212, .06), rgba(185, 193, 212, .14), rgba(185, 193, 212, .06));
+        background-size: 200% 100%;
+        animation: sh 1.4s linear infinite
+    }
+    @keyframes sh {
+        to {
+            background-position: -200% 0
+        }
+    }
+}
+
+/* ---------------------------------------------------------------- map */
+
+.mapwrap {
+    position: relative;
+    min-width: 0
+}
+
+#map {
+    position: absolute;
+    inset: 0;
+    background: var(--stage)
+}
+
+.leaflet-container {
+    background: #060B16;
+    font-family: var(--body)
+}
+
+/* OSM raster tiles pulled into the brand family. No API key, no account. */
+
+/* the navy wash and tint belong to the midnight plate only */
+
+body:not([data-base="midnight"]) .mapwrap::after,
+body:not([data-base="midnight"]) .mapwrap .tint {
+    display: none
+}
+
+body[data-base="daylight"] .leaflet-container {
+    background: #AAD3DF
+}
+
+/* OSM water */
+
+body[data-base="parchment"] .leaflet-container {
+    background: #E8E2D4
+}
+
+/* on a light plate the chrome needs its own ground to stay legible */
+
+body:not([data-base="midnight"]) .rail,
+body:not([data-base="midnight"]) .mctl button,
+body:not([data-base="midnight"]) .legend,
+body:not([data-base="midnight"]) .pinsw,
+body:not([data-base="midnight"]) .basesw {
+    background: rgba(6, 11, 22, .92);
+    border-color: rgba(246, 239, 223, .22)
+}
+
+body[data-base="midnight"] .leaflet-tile-pane {
+    filter: invert(1) hue-rotate(196deg) brightness(.86) contrast(1.08) saturate(.20)
+}
+
+body[data-base="daylight"] .leaflet-tile-pane {
+    filter: none
+}
+
+/* the normal map, untouched */
+
+body[data-base="parchment"] .leaflet-tile-pane {
+    filter: sepia(.42) saturate(.70) brightness(1.03) contrast(.96) hue-rotate(-8deg)
+}
+
+.mapwrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 420;
+    background: radial-gradient(120% 90% at 50% 42%, rgba(10, 17, 34, .14), rgba(10, 17, 34, .44));
+    mix-blend-mode: multiply
+}
+
+.mapwrap .tint {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 415;
+    background: #0A1122;
+    opacity: .30;
+    mix-blend-mode: color
+}
+
+.mapwrap::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    z-index: 460;
+    background: rgba(var(--gold-rgb), .30)
+}
+
+body[data-dir="logo"] .mapwrap::before {
+    background: var(--mix)
+}
+
+.leaflet-control-attribution {
+    background: rgba(6, 11, 22, .78) !important;
+    color: var(--dim) !important;
+    font-size: 10.5px !important;
+    border-radius: 8px 0 0 0
+}
+
+.leaflet-control-attribution a {
+    color: var(--mist) !important
+}
+
+/* altitude rail ------------------------------------------------------ */
+
+.rail {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(8, 13, 28, .84);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(246, 239, 223, .16);
+    border-radius: 14px;
+    padding: 5px;
+    min-width: 112px
+}
+
+.rail button {
+    height: 36px;
+    border: 0;
+    background: none;
+    color: var(--mist);
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    position: relative;
+    text-align: left
+}
+
+.rail button .tick {
+    width: 14px;
+    height: 2px;
+    background: rgba(185, 193, 212, .45);
+    flex: 0 0 14px;
+    border-radius: 2px
+}
+
+.rail button[aria-current="true"] {
+    background: var(--gold);
+    color: #141B2E
+}
+
+body[data-dir="logo"] .rail button[aria-current="true"] {
+    background: var(--mix);
+    color: #0A1122
+}
+
+.rail button[aria-current="true"] .tick {
+    background: #141B2E
+}
+
+.rail button .has {
+    position: absolute;
+    right: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: none
+}
+
+.rail button.hasres .has {
+    display: block
+}
+
+.rail button[aria-current="true"].hasres .has {
+    background: #141B2E
+}
+
+/* map controls ------------------------------------------------------- */
+
+.mctl {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
+
+.mctl button {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(8, 13, 28, .84);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(246, 239, 223, .16);
+    color: var(--mist);
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.mctl button:hover {
+    color: #fff;
+    border-color: rgba(var(--gold-rgb), .5)
+}
+
+.mctl svg {
+    width: 18px;
+    height: 18px
+}
+
+.legend {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    z-index: 500;
+    border-radius: 14px;
+    padding: 11px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    background: rgba(8, 13, 28, .84);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(246, 239, 223, .16)
+}
+
+.legend span {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--mist)
+}
+
+.legend b {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex: 0 0 12px
+}
+
+.legend .wide {
+    width: 21px;
+    border-radius: 999px
+}
+
+.legend .swatch {
+    background: conic-gradient(#5E22BA, #0066E5, #00908A, #3FAB13, #F2A801, #FD5303, #FB236C, #5E22BA)
+}
+
+.basesw {
+    position: absolute;
+    right: 16px;
+    bottom: 62px;
+    z-index: 500;
+    display: flex;
+    padding: 4px;
+    background: rgba(8, 13, 28, .86);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(246, 239, 223, .18);
+    border-radius: 999px
+}
+
+.basesw button {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 0;
+    background: none;
+    color: var(--mist)
+}
+
+.basesw button.on {
+    background: var(--gold);
+    color: #141B2E
+}
+
+body[data-dir="logo"] .basesw button.on {
+    background: var(--mix);
+    color: #0A1122
+}
+
+.pinsw {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 500;
+    display: flex;
+    padding: 4px;
+    background: rgba(8, 13, 28, .86);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(246, 239, 223, .18);
+    border-radius: 999px
+}
+
+.pinsw button {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 0;
+    background: none;
+    color: var(--mist)
+}
+
+.pinsw button.on {
+    background: var(--gold);
+    color: #141B2E
+}
+
+body[data-dir="logo"] .pinsw button.on {
+    background: var(--mix);
+    color: #0A1122
+}
+
+/* the moved-map banner: the honest replacement for a floating
+   "search this area" that stated no relationship to anything */
+
+.moved {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 16px;
+    z-index: 520;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+    padding: 0 8px 0 16px;
+    border-radius: 999px;
+    background: rgba(8, 13, 28, .92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(var(--gold-rgb), .5)
+}
+
+.moved.on {
+    display: flex
+}
+
+.moved span {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--mist);
+    white-space: nowrap
+}
+
+.moved button {
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 0;
+    background: var(--gold);
+    color: #141B2E;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em
+}
+
+/* pin-mode frame */
+
+.pinmode {
+    position: absolute;
+    inset: 8px;
+    z-index: 505;
+    pointer-events: none;
+    display: none;
+    border: 1px dashed rgba(var(--gold-rgb), .75);
+    border-radius: 10px
+}
+
+.pinmode.on {
+    display: block
+}
+
+/* region medallions and area pucks ----------------------------------- */
+
+.medal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: var(--mcol);
+    border: 3px solid var(--mring);
+    box-shadow: 0 0 0 1.5px var(--cream), 0 10px 26px rgba(0, 0, 0, .55);
+    color: var(--cream);
+    transition: transform .26s var(--ease)
+}
+
+.medal:hover {
+    transform: scale(1.06)
+}
+
+.medal b {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 19px;
+    line-height: 1;
+    color: var(--cream)
+}
+
+.medal i {
+    font-style: normal;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 14px;
+    color: var(--gold);
+    margin-top: 3px;
+    font-variant-numeric: tabular-nums
+}
+
+.puck {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: var(--panel2);
+    border: 1.5px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 15px;
+    color: var(--gold);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .5);
+    font-variant-numeric: tabular-nums;
+    transition: transform .26s var(--ease)
+}
+
+.puck:hover {
+    transform: scale(1.08)
+}
+
+.pucklab {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    top: -6px;
+    white-space: nowrap;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--cream);
+    background: rgba(6, 11, 22, .85);
+    padding: 3px 7px;
+    border-radius: 6px;
+    letter-spacing: .04em
+}
+
+/* popcard ------------------------------------------------------------ */
+
+.popcard {
+    position: absolute;
+    z-index: 530;
+    width: 272px;
+    background: var(--panel);
+    border: 1px solid rgba(var(--gold-rgb), .42);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 26px 60px rgba(0, 0, 0, .65);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity .3s var(--ease), transform .3s var(--ease)
+}
+
+.popcard.on {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto
+}
+
+.popcard .pb {
+    padding: 13px 14px 14px
+}
+
+.popcard .kick {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    color: var(--gold);
+    text-transform: uppercase
+}
+
+.popcard h3 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 18px;
+    margin: 5px 0 4px;
+    color: #fff
+}
+
+.popcard p {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--mist);
+    font-style: italic;
+    margin: 0 0 11px
+}
+
+.popcard .btns {
+    display: flex;
+    gap: 8px
+}
+
+.popcard .btns a,
+.popcard .btns button {
+    flex: 1;
+    height: 38px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-decoration: none
+}
+
+.popcard .go {
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold-deep));
+    color: #141B2E;
+    border: 0
+}
+
+body[data-dir="logo"] .popcard .go {
+    background: var(--mix);
+    color: #0A1122
+}
+
+.popcard .dir {
+    background: none;
+    border: 1px solid rgba(185, 193, 212, .32);
+    color: var(--mist)
+}
+
+/* types drawer ------------------------------------------------------- */
+
+.drawer {
+    position: absolute;
+    inset: 0;
+    z-index: 70;
+    display: none
+}
+
+.drawer.on {
+    display: block
+}
+
+.drawer .scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 8, 18, .55);
+    backdrop-filter: blur(2px)
+}
+
+.drawer .sheet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--panel-w);
+    background: var(--panel);
+    border-right: 1px solid rgba(185, 193, 212, .18);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 28px 0 60px rgba(0, 0, 0, .5)
+}
+
+.drawer .dh {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    border-bottom: 1px solid rgba(185, 193, 212, .14)
+}
+
+.drawer .dh h2 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 19px;
+    margin: 0;
+    flex: 1
+}
+
+.drawer .dh button {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: none;
+    border: 1px solid rgba(185, 193, 212, .26);
+    color: var(--mist);
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.drawer .db {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 14px 14px
+}
+
+.coll {
+    margin-bottom: 10px
+}
+
+.coll .ct {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    color: var(--gold);
+    margin: 12px 0 6px;
+    text-transform: uppercase
+}
+
+.fam {
+    border: 1px solid rgba(185, 193, 212, .14);
+    border-radius: 12px;
+    margin-bottom: 6px;
+    overflow: hidden
+}
+
+.fam>button {
+    width: 100%;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    background: none;
+    border: 0;
+    text-align: left
+}
+
+.fam>button .fg {
+    display: flex;
+    gap: 2px;
+    flex: 0 0 auto
+}
+
+.fam>button .fg i {
+    width: 17px;
+    height: 17px;
+    background: var(--mist);
+    display: block;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain
+}
+
+.fam>button .fn {
+    flex: 1;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 14.5px;
+    color: #fff
+}
+
+.fam>button .fc {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums
+}
+
+.fam>button .chev {
+    width: 14px;
+    height: 14px;
+    color: var(--dim);
+    transition: transform .22s
+}
+
+.fam[aria-expanded="true"]>button .chev {
+    transform: rotate(90deg)
+}
+
+.fam .sub {
+    display: none;
+    padding: 2px 12px 10px 38px
+}
+
+.fam[aria-expanded="true"] .sub {
+    display: block
+}
+
+.fam .sub label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    height: 36px;
+    font-size: 12.5px;
+    color: var(--mist);
+    cursor: pointer
+}
+
+.fam .sub input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--gold)
+}
+
+.fam .sub label i {
+    width: 16px;
+    height: 16px;
+    background: var(--mist);
+    flex: 0 0 16px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain
+}
+
+.drawer .df {
+    padding: 12px 14px;
+    border-top: 1px solid rgba(185, 193, 212, .14);
+    display: flex;
+    gap: 8px
+}
+
+.drawer .df button {
+    flex: 1;
+    height: 44px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: .08em
+}
+
+.drawer .df .p {
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold-deep));
+    color: #141B2E;
+    border: 0
+}
+
+body[data-dir="logo"] .drawer .df .p {
+    background: var(--mix);
+    color: #0A1122
+}
+
+.drawer .df .s {
+    background: none;
+    border: 1px solid rgba(185, 193, 212, .3);
+    color: var(--mist)
+}
+
+/* ---------------------------------------------------------------- mobile */
+
+.sheetgrab,
+.mobonly {
+    display: none
+}
+
+@media(max-width:900px) {
+    .nav nav {
+        display: none
+    }
+    /* links collided with the CTA at 375 */
+    .nav {
+        gap: 12px;
+        padding: 0 12px
+    }
+    .nav .brand b {
+        font-size: 13.5px
+    }
+    .nav .cta {
+        font-size: 10.5px;
+        padding: 0 12px;
+        height: 32px
+    }
+    .stage {
+        grid-template-columns: 1fr;
+        position: fixed;
+        inset: var(--nav-h) 0 0 0
+    }
+    .mapwrap {
+        position: absolute;
+        inset: 0
+    }
+    .panel {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        height: var(--sheet-h, 55%);
+        border-right: 0;
+        border-radius: 20px 20px 0 0;
+        border-top: 1px solid rgba(246, 239, 223, .16);
+        box-shadow: 0 -18px 50px rgba(0, 0, 0, .6);
+        z-index: 540;
+        transition: height .32s var(--ease)
+    }
+    .panel.dragging {
+        transition: none
+    }
+    .sheetgrab {
+        display: block;
+        width: 100%;
+        height: 30px;
+        background: none;
+        border: 0;
+        position: relative;
+        touch-action: none
+    }
+    .sheetgrab::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 13px;
+        transform: translateX(-50%);
+        width: 38px;
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(185, 193, 212, .45)
+    }
+    .drawer .sheet {
+        width: 100%
+    }
+    .rail {
+        flex-direction: row;
+        min-width: 0;
+        left: 12px;
+        right: 12px;
+        top: 12px;
+        overflow-x: auto
+    }
+    .rail button {
+        height: 40px;
+        flex: 1;
+        justify-content: center;
+        letter-spacing: .08em;
+        font-size: 10px
+    }
+    .rail button .tick {
+        display: none
+    }
+    .mctl {
+        top: 66px;
+        right: 12px
+    }
+    .legend,
+    .pinsw,
+    .basesw {
+        display: none
+    }
+    .mobonly {
+        display: flex
+    }
+    .popcard {
+        display: none
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    * {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important
+    }
+}
+
+
+        :root {
+            --m-eat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M6 2h1.6v6h1.2V2h1.6v6h1.2V2H13v6.6c0 1.6-.9 2.8-2.3 3.3V22H8.3V11.9C6.9 11.4 6 10.2 6 8.6ZM18.4 2c1.6 1.9 2.4 4.3 2.4 6.8 0 2.2-.9 3.9-2.3 4.6V22h-2.3V2Z'/%3E%3C/svg%3E");
+            --m-stay: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M2 5h2.5v8.2h8.1V9.6c0-1.3 1-2.3 2.3-2.3h4.2c1.6 0 2.9 1.3 2.9 2.9V19h-2.4v-2.6H4.5V19H2Z'/%3E%3Ccircle fill='%23000' cx='7.6' cy='9.9' r='2.3'/%3E%3C/svg%3E")
+        }
+
+        /* ===================== MAP PIN SYSTEM =====================
+   Two treatments behind one switch on .mapc[data-pins]:
+     data-pins="client"   Joshua's 60 pack colours, bound by a cream keyline
+     data-pins="category" cream body, navy glyph, ring carries see/eat/stay
+   Geometry is shared, so switching never moves a pin.
+   TIP ANCHORING: the art box is 44x54 and the nib tip sits at (22,54), so
+   margin:-54px 0 0 -22px puts the tip exactly on the anchor point. The old
+   rule used -46px against a tip at y=42 and pointed 4px high. Fixed.
+   ========================================================== */
+
+        :root {
+            --keyline: 2.5px;
+            --pin-head: 36px;
+            --pin-glyph: 18px
+        }
+
+        .pin {
+            position: absolute;
+            width: 44px;
+            height: 54px;
+            transform: translate(-50%, -100%);
+            background: none;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            z-index: 3;
+            transform-origin: 22px 54px;
+            transition: transform .26s var(--ease), opacity .4s var(--ease)
+        }
+
+        .pin .body {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            height: var(--pin-head);
+            width: var(--pin-head);
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .55);
+            box-sizing: border-box;
+            border: var(--keyline) solid var(--pin-line)
+        }
+
+        /* glyph is a recolourable mask, never a baked-in colour */
+
+        .pin .g {
+            width: var(--pin-glyph);
+            height: var(--pin-glyph);
+            flex: 0 0 auto;
+            background: var(--pin-ink);
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            mask-size: contain
+        }
+
+        /* nib: a cream keyline triangle with the body-coloured triangle sitting on it */
+
+        .pin::before,
+        .pin::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-style: solid;
+            border-color: transparent;
+            width: 0;
+            height: 0
+        }
+
+        .pin::before {
+            top: calc(var(--pin-head) - 3px);
+            border-width: 21px 11px 0 11px;
+            border-top-color: var(--pin-line);
+            filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .45))
+        }
+
+        .pin::after {
+            top: calc(var(--pin-head) - 5px);
+            border-width: 19px 8px 0 8px;
+            border-top-color: var(--pin-body)
+        }
+
+        /* ---- treatment A: Joshua's pack colours, cream keyline ---- */
+
+        #map[data-pins="client"] .pin {
+            --pin-body: var(--pin-body-own, #F6EFDF);
+            --pin-ink: var(--pin-ink-own, #0A1122);
+            --pin-line: var(--pin-line-own, #F6EFDF)
+        }
+
+        #map[data-pins="client"] .pin .body {
+            background: var(--pin-body)
+        }
+
+        /* ---- treatment B: cream body, ring carries the top-level category ---- */
+
+        #map[data-pins="category"] .pin {
+            --pin-body: #F6EFDF;
+            --pin-ink: #0A1122
+        }
+
+        #map[data-pins="category"] .pin .body {
+            background: #F6EFDF
+        }
+
+        #map[data-pins="category"] .pin.t-a {
+            --pin-line: #0A1122
+        }
+
+        #map[data-pins="category"] .pin.t-e {
+            --pin-line: #F0607A
+        }
+
+        #map[data-pins="category"] .pin.t-s {
+            --pin-line: #6E8BFF
+        }
+
+        #map[data-pins="category"] .pin.multi {
+            --pin-line: #0A1122
+        }
+
+        /* ---- combination pins: a stadium, never a new symbol, never a shield ----
+   width = head + 18(n-1): 36 / 54 / 72. Order is ALWAYS attraction, eat, stay,
+   so position is learnable without reading either glyph. */
+
+        .pin.n2 .body {
+            width: calc(var(--pin-head) + 18px)
+        }
+
+        .pin.n3 .body {
+            width: calc(var(--pin-head) + 36px)
+        }
+
+        .pin.n2,
+        .pin.n3 {
+            width: 80px;
+            transform-origin: 40px 54px
+        }
+
+        .pin.n2 .g,
+        .pin.n3 .g {
+            width: 16px;
+            height: 16px
+        }
+
+        .pin .divider {
+            width: 1px;
+            align-self: stretch;
+            margin: 5px 0;
+            background: rgba(10, 17, 34, .30);
+            flex: 0 0 1px
+        }
+
+        #map[data-pins="client"] .pin.multi .divider {
+            background: rgba(246, 239, 223, .42)
+        }
+
+        /* ---- iconic: a second ring inside the first. Never a colour, never a star ---- */
+
+        .pin.iconic .body {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .55), inset 0 0 0 1.25px var(--pin-ink2, rgba(10, 17, 34, .55))
+        }
+
+        .pin.iconic .g {
+            width: calc(var(--pin-glyph) - 3px);
+            height: calc(var(--pin-glyph) - 3px)
+        }
+
+        /* ---- states ---- */
+
+        .pin:hover,
+        .pin.hl {
+            transform: scale(1.1)
+        }
+
+        .pin.sel {
+            z-index: 6;
+            transform: scale(1.18)
+        }
+
+        /* dark separator between the body and the gold ring: gold on the pack's amber
+   family measures about 1.1:1, so without this the ring vanishes on a beach pin */
+
+        .pin.sel .body {
+            box-shadow: 0 0 0 3px #060B16, 0 0 0 5px var(--gold), 0 12px 30px rgba(0, 0, 0, .7)
+        }
+
+        .pin.dim {
+            opacity: .16;
+            pointer-events: none
+        }
+
+        .pin:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 3px;
+            border-radius: 12px
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+
+            .pin,
+            .pin:hover,
+            .pin.hl,
+            .pin.sel {
+                transition: none;
+                transform: none
+            }
+
+            .pin.sel .body {
+                box-shadow: 0 0 0 3px #060B16, 0 0 0 6px var(--gold), 0 12px 30px rgba(0, 0, 0, .7)
+            }
+        }
+
+        /* ---- clusters: a circle with NO nib, anchored by its centre ----
+   A nib points at one place. A cluster is not one place, so it has none. */
+
+        .cluster {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0D1528;
+            border: 2px solid var(--gold);
+            border-radius: 999px;
+            font-family: var(--display);
+            font-weight: 900;
+            color: var(--gold);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .5);
+            cursor: pointer;
+            transition: transform .26s var(--ease)
+        }
+
+        .cluster::after {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: 999px;
+            border: 1px solid rgba(246, 239, 223, .12);
+            pointer-events: none
+        }
+
+        .cluster.s1 {
+            width: 36px;
+            height: 36px;
+            font-size: 15px
+        }
+
+        .cluster.s2 {
+            width: 44px;
+            height: 44px;
+            font-size: 17px
+        }
+
+        .cluster.s3 {
+            width: 52px;
+            height: 52px;
+            font-size: 19px
+        }
+
+        .cluster.s4 {
+            width: 60px;
+            height: 60px;
+            font-size: 21px
+        }
+
+        .cluster:hover {
+            transform: translate(-50%, -50%) scale(1.08)
+        }
+
+        .cluster.dim {
+            opacity: .45
+        }
+
+        /* floor, not .16: gold numerals below this fail AA */
+
+        .legend .lgswatch {
+            background: conic-gradient(#5E22BA, #0066E5, #00908A, #3FAB13, #F2A801, #FD5303, #FB236C, #5E22BA)
+        }
+
+        .legend .lgwide {
+            width: 19px;
+            border-radius: 999px;
+            background: #F6EFDF;
+            box-shadow: inset 0 0 0 2px #0A1122
+        }
+
+        .legend[data-pins="client"] .lg-cat {
+            display: none
+        }
+
+        .legend[data-pins="category"] .lg-client {
+            display: none
+        }
+
+        /* ---- pin treatment switch ---- */
+
+        .pinsw {
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+            z-index: 8;
+            display: flex;
+            gap: 0;
+            background: rgba(8, 13, 28, .86);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(246, 239, 223, .18);
+            border-radius: 999px;
+            padding: 4px
+        }
+
+        .pinsw button {
+            font-family: var(--body);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .14em;
+            padding: 7px 13px;
+            border-radius: 999px;
+            border: 0;
+            background: none;
+            color: var(--mist);
+            cursor: pointer
+        }
+
+        .pinsw button.on {
+            background: var(--gold);
+            color: #141B2E
+        }
+
+        .pinsw button:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px
+        }
+
+        /* ---- specimen block ---- */
+
+        .marks {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 60px 28px 10px
+        }
+
+        .marks h2 {
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: clamp(26px, 3.4vw, 40px);
+            color: #fff;
+            margin: 0 0 6px
+        }
+
+        .marks .lead {
+            color: var(--mist);
+            font-size: 14px;
+            max-width: 62ch;
+            margin: 0 0 26px;
+            line-height: 1.6
+        }
+
+        .specgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+            gap: 10px 8px;
+            margin-bottom: 30px
+        }
+
+        .spec {
+            background: rgba(255, 255, 255, .028);
+            border: 1px solid rgba(185, 193, 212, .12);
+            border-radius: 14px;
+            padding: 16px 8px 11px;
+            text-align: center;
+            position: relative;
+            min-height: 116px
+        }
+
+        .spec .holder {
+            position: relative;
+            height: 54px;
+            margin-bottom: 9px
+        }
+
+        .spec .holder .pin,
+        .spec .holder .cluster {
+            position: absolute;
+            left: 50%;
+            top: 54px
+        }
+
+        .spec b {
+            display: block;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: .1em;
+            color: var(--mist);
+            text-transform: uppercase;
+            line-height: 1.35
+        }
+
+        .spec .sublabel {
+            display: block;
+            font-size: 9px;
+            color: rgba(185, 193, 212, .6);
+            margin-top: 3px;
+            letter-spacing: .04em
+        }
+
+        .marks h3 {
+            font-family: var(--body);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .2em;
+            color: var(--gold);
+            margin: 26px 0 12px;
+            text-transform: uppercase
+        }
+
+        @media(max-width:720px) {
+            .marks {
+                padding: 44px 16px 6px
+            }
+
+            .specgrid {
+                grid-template-columns: repeat(auto-fill, minmax(92px, 1fr))
+            }
+        }
+
+        /* =================== END MAP PIN SYSTEM =================== */
+
+        .pin .g-eat {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M6 2h1.6v6h1.2V2h1.6v6h1.2V2H13v6.6c0 1.6-.9 2.8-2.3 3.3V22H8.3V11.9C6.9 11.4 6 10.2 6 8.6ZM18.4 2c1.6 1.9 2.4 4.3 2.4 6.8 0 2.2-.9 3.9-2.3 4.6V22h-2.3V2Z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M6 2h1.6v6h1.2V2h1.6v6h1.2V2H13v6.6c0 1.6-.9 2.8-2.3 3.3V22H8.3V11.9C6.9 11.4 6 10.2 6 8.6ZM18.4 2c1.6 1.9 2.4 4.3 2.4 6.8 0 2.2-.9 3.9-2.3 4.6V22h-2.3V2Z'/%3E%3C/svg%3E")
+        }
+
+        .pin .g-stay {
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M2 5h2.5v8.2h8.1V9.6c0-1.3 1-2.3 2.3-2.3h4.2c1.6 0 2.9 1.3 2.9 2.9V19h-2.4v-2.6H4.5V19H2Z'/%3E%3Ccircle fill='%23000' cx='7.6' cy='9.9' r='2.3'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M2 5h2.5v8.2h8.1V9.6c0-1.3 1-2.3 2.3-2.3h4.2c1.6 0 2.9 1.3 2.9 2.9V19h-2.4v-2.6H4.5V19H2Z'/%3E%3Ccircle fill='%23000' cx='7.6' cy='9.9' r='2.3'/%3E%3C/svg%3E")
+        }
+
+        .pin.off {
+            opacity: .42
+        }
+
+        .cluster.dim {
+            opacity: .45
+        }
+    

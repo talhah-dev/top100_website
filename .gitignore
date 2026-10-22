@@ -43,3 +43,6 @@ next-env.d.ts
 # backups
 Top100-server-backup
 Top100-server-backup/
+
+# map
+/map/

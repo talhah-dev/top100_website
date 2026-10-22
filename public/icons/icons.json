@@ -1,0 +1,482 @@
+[
+ {
+  "id": 1,
+  "label": "Historic House",
+  "slug": "historic-house",
+  "file": "01-historic-house.png",
+  "colour": "#F71622",
+  "aspect": 1.04
+ },
+ {
+  "id": 2,
+  "label": "Castle",
+  "slug": "castle",
+  "file": "02-castle.png",
+  "colour": "#5E22BA",
+  "aspect": 0.96
+ },
+ {
+  "id": 3,
+  "label": "Museum",
+  "slug": "museum",
+  "file": "03-museum.png",
+  "colour": "#0066E5",
+  "aspect": 0.98
+ },
+ {
+  "id": 4,
+  "label": "Art Gallery",
+  "slug": "art-gallery",
+  "file": "04-art-gallery.png",
+  "colour": "#FB226D",
+  "aspect": 0.945
+ },
+ {
+  "id": 5,
+  "label": "Heritage Centre",
+  "slug": "heritage-centre",
+  "file": "05-heritage-centre.png",
+  "colour": "#01948D",
+  "aspect": 0.942
+ },
+ {
+  "id": 6,
+  "label": "Stately Home",
+  "slug": "stately-home",
+  "file": "06-stately-home.png",
+  "colour": "#854720",
+  "aspect": 1.143
+ },
+ {
+  "id": 7,
+  "label": "Palace",
+  "slug": "palace",
+  "file": "07-palace.png",
+  "colour": "#E29E00",
+  "aspect": 1.059
+ },
+ {
+  "id": 8,
+  "label": "Ruins",
+  "slug": "ruins",
+  "file": "08-ruins.png",
+  "colour": "#61676F",
+  "aspect": 1.156
+ },
+ {
+  "id": 9,
+  "label": "Archaeology",
+  "slug": "archaeology",
+  "file": "09-archaeology.png",
+  "colour": "#FD5302",
+  "aspect": 0.944
+ },
+ {
+  "id": 10,
+  "label": "Cathedral",
+  "slug": "cathedral",
+  "file": "10-cathedral.png",
+  "colour": "#014195",
+  "aspect": 0.797
+ },
+ {
+  "id": 11,
+  "label": "Church",
+  "slug": "church",
+  "file": "11-church.png",
+  "colour": "#5D22B9",
+  "aspect": 0.881
+ },
+ {
+  "id": 12,
+  "label": "Abbey",
+  "slug": "abbey",
+  "file": "12-abbey.png",
+  "colour": "#1A7E2A",
+  "aspect": 0.885
+ },
+ {
+  "id": 13,
+  "label": "Monastery",
+  "slug": "monastery",
+  "file": "13-monastery.png",
+  "colour": "#834520",
+  "aspect": 1.078
+ },
+ {
+  "id": 14,
+  "label": "Temple",
+  "slug": "temple",
+  "file": "14-temple.png",
+  "colour": "#F8111B",
+  "aspect": 0.942
+ },
+ {
+  "id": 15,
+  "label": "Mosque",
+  "slug": "mosque",
+  "file": "15-mosque.png",
+  "colour": "#01958D",
+  "aspect": 1.16
+ },
+ {
+  "id": 16,
+  "label": "Synagogue",
+  "slug": "synagogue",
+  "file": "16-synagogue.png",
+  "colour": "#0069E9",
+  "aspect": 0.86
+ },
+ {
+  "id": 17,
+  "label": "Garden",
+  "slug": "garden",
+  "file": "17-garden.png",
+  "colour": "#FB236C",
+  "aspect": 0.893
+ },
+ {
+  "id": 18,
+  "label": "Arboretum",
+  "slug": "arboretum",
+  "file": "18-arboretum.png",
+  "colour": "#1C7A25",
+  "aspect": 1.118
+ },
+ {
+  "id": 19,
+  "label": "Park",
+  "slug": "park",
+  "file": "19-park.png",
+  "colour": "#3FAB13",
+  "aspect": 0.869
+ },
+ {
+  "id": 20,
+  "label": "Nature Reserve",
+  "slug": "nature-reserve",
+  "file": "20-nature-reserve.png",
+  "colour": "#026822",
+  "aspect": 1.018
+ },
+ {
+  "id": 21,
+  "label": "Beach",
+  "slug": "beach",
+  "file": "21-beach.png",
+  "colour": "#F2A801",
+  "aspect": 0.848
+ },
+ {
+  "id": 22,
+  "label": "Lake",
+  "slug": "lake",
+  "file": "22-lake.png",
+  "colour": "#018CEC",
+  "aspect": 1.967
+ },
+ {
+  "id": 23,
+  "label": "River Walk",
+  "slug": "river-walk",
+  "file": "23-river-walk.png",
+  "colour": "#006BE8",
+  "aspect": 0.981
+ },
+ {
+  "id": 24,
+  "label": "Waterfall",
+  "slug": "waterfall",
+  "file": "24-waterfall.png",
+  "colour": "#0068E5",
+  "aspect": 0.944
+ },
+ {
+  "id": 25,
+  "label": "Cave",
+  "slug": "cave",
+  "file": "25-cave.png",
+  "colour": "#636970",
+  "aspect": 1.224
+ },
+ {
+  "id": 26,
+  "label": "Mountain",
+  "slug": "mountain",
+  "file": "26-mountain.png",
+  "colour": "#5D22BA",
+  "aspect": 1.489
+ },
+ {
+  "id": 27,
+  "label": "Forest",
+  "slug": "forest",
+  "file": "27-forest.png",
+  "colour": "#026224",
+  "aspect": 1.167
+ },
+ {
+  "id": 28,
+  "label": "Scenic Viewpoint",
+  "slug": "scenic-viewpoint",
+  "file": "28-scenic-viewpoint.png",
+  "colour": "#01968C",
+  "aspect": 1.184
+ },
+ {
+  "id": 29,
+  "label": "Zoo",
+  "slug": "zoo",
+  "file": "29-zoo.png",
+  "colour": "#FD5303",
+  "aspect": 1.28
+ },
+ {
+  "id": 30,
+  "label": "Aquarium",
+  "slug": "aquarium",
+  "file": "30-aquarium.png",
+  "colour": "#0068E7",
+  "aspect": 1.405
+ },
+ {
+  "id": 31,
+  "label": "Safari Park",
+  "slug": "safari-park",
+  "file": "31-safari-park.png",
+  "colour": "#468904",
+  "aspect": 0.735
+ },
+ {
+  "id": 32,
+  "label": "Farm Park",
+  "slug": "farm-park",
+  "file": "32-farm-park.png",
+  "colour": "#834720",
+  "aspect": 1.019
+ },
+ {
+  "id": 33,
+  "label": "Theme Park",
+  "slug": "theme-park",
+  "file": "33-theme-park.png",
+  "colour": "#FA256F",
+  "aspect": 0.897
+ },
+ {
+  "id": 34,
+  "label": "Adventure Park",
+  "slug": "adventure-park",
+  "file": "34-adventure-park.png",
+  "colour": "#FC141C",
+  "aspect": 0.967
+ },
+ {
+  "id": 35,
+  "label": "Water Park",
+  "slug": "water-park",
+  "file": "35-water-park.png",
+  "colour": "#019995",
+  "aspect": 0.845
+ },
+ {
+  "id": 36,
+  "label": "Activity Centre",
+  "slug": "activity-centre",
+  "file": "36-activity-centre.png",
+  "colour": "#5F22BA",
+  "aspect": 0.787
+ },
+ {
+  "id": 37,
+  "label": "Wildlife Centre",
+  "slug": "wildlife-centre",
+  "file": "37-wildlife-centre.png",
+  "colour": "#22761D",
+  "aspect": 1.019
+ },
+ {
+  "id": 38,
+  "label": "Steam Railway",
+  "slug": "steam-railway",
+  "file": "38-steam-railway.png",
+  "colour": "#F2111D",
+  "aspect": 0.869
+ },
+ {
+  "id": 39,
+  "label": "Harbour / Marina",
+  "slug": "harbour-marina",
+  "file": "39-harbour-marina.png",
+  "colour": "#0068E7",
+  "aspect": 0.862
+ },
+ {
+  "id": 40,
+  "label": "Lighthouse",
+  "slug": "lighthouse",
+  "file": "40-lighthouse.png",
+  "colour": "#EEA600",
+  "aspect": 0.597
+ },
+ {
+  "id": 41,
+  "label": "Visitor Centre",
+  "slug": "visitor-centre",
+  "file": "41-visitor-centre.png",
+  "colour": "#006AE9",
+  "aspect": 0.982
+ },
+ {
+  "id": 42,
+  "label": "Science Centre",
+  "slug": "science-centre",
+  "file": "42-science-centre.png",
+  "colour": "#5A1FB6",
+  "aspect": 0.862
+ },
+ {
+  "id": 43,
+  "label": "Planetarium",
+  "slug": "planetarium",
+  "file": "43-planetarium.png",
+  "colour": "#002E72",
+  "aspect": 1.619
+ },
+ {
+  "id": 44,
+  "label": "Observatory",
+  "slug": "observatory",
+  "file": "44-observatory.png",
+  "colour": "#002F75",
+  "aspect": 1.0
+ },
+ {
+  "id": 45,
+  "label": "Distillery / Brewery",
+  "slug": "distillery-brewery",
+  "file": "45-distillery-brewery.png",
+  "colour": "#834520",
+  "aspect": 0.754
+ },
+ {
+  "id": 46,
+  "label": "Vineyard",
+  "slug": "vineyard",
+  "file": "46-vineyard.png",
+  "colour": "#268D1C",
+  "aspect": 0.717
+ },
+ {
+  "id": 47,
+  "label": "Shopping Village",
+  "slug": "shopping-village",
+  "file": "47-shopping-village.png",
+  "colour": "#F01F72",
+  "aspect": 0.672
+ },
+ {
+  "id": 48,
+  "label": "Market",
+  "slug": "market",
+  "file": "48-market.png",
+  "colour": "#FD6202",
+  "aspect": 1.019
+ },
+ {
+  "id": 49,
+  "label": "Cultural Centre",
+  "slug": "cultural-centre",
+  "file": "49-cultural-centre.png",
+  "colour": "#019A92",
+  "aspect": 1.184
+ },
+ {
+  "id": 50,
+  "label": "Theatre / Performance",
+  "slug": "theatre-performance",
+  "file": "50-theatre-performance.png",
+  "colour": "#F4101C",
+  "aspect": 1.069
+ },
+ {
+  "id": 51,
+  "label": "Live Music Venue",
+  "slug": "live-music-venue",
+  "file": "51-live-music-venue.png",
+  "colour": "#5E22BA",
+  "aspect": 0.857
+ },
+ {
+  "id": 52,
+  "label": "Sports Venue",
+  "slug": "sports-venue",
+  "file": "52-sports-venue.png",
+  "colour": "#02902D",
+  "aspect": 0.803
+ },
+ {
+  "id": 53,
+  "label": "Golf Attraction",
+  "slug": "golf-attraction",
+  "file": "53-golf-attraction.png",
+  "colour": "#0067E6",
+  "aspect": 0.81
+ },
+ {
+  "id": 54,
+  "label": "Family Entertainment",
+  "slug": "family-entertainment",
+  "file": "54-family-entertainment.png",
+  "colour": "#EFA700",
+  "aspect": 0.934
+ },
+ {
+  "id": 55,
+  "label": "Film / TV Location",
+  "slug": "film-tv-location",
+  "file": "55-film-tv-location.png",
+  "colour": "#626971",
+  "aspect": 0.907
+ },
+ {
+  "id": 56,
+  "label": "Military Site",
+  "slug": "military-site",
+  "file": "56-military-site.png",
+  "colour": "#458407",
+  "aspect": 1.512
+ },
+ {
+  "id": 57,
+  "label": "Industrial Heritage",
+  "slug": "industrial-heritage",
+  "file": "57-industrial-heritage.png",
+  "colour": "#824620",
+  "aspect": 1.0
+ },
+ {
+  "id": 58,
+  "label": "UNESCO Site",
+  "slug": "unesco-site",
+  "file": "58-unesco-site.png",
+  "colour": "#0069E7",
+  "aspect": 0.981
+ },
+ {
+  "id": 59,
+  "label": "Festival / Event Site",
+  "slug": "festival-event-site",
+  "file": "59-festival-event-site.png",
+  "colour": "#FC246B",
+  "aspect": 2.188
+ },
+ {
+  "id": 60,
+  "label": "Local Landmark",
+  "slug": "local-landmark",
+  "file": "60-local-landmark.png",
+  "colour": "#0B3D80",
+  "aspect": 0.683
+ }
+]

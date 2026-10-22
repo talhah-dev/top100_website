@@ -1,6 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import { FaApple, FaGooglePlay } from "react-icons/fa";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const wall1Quotes = [
   { text: "The only guide we trust when planning our summer. It has never once let us down.", who: "The Harpers · Kent" },
@@ -21,6 +24,8 @@ const wall2Quotes = [
 ];
 
 export function FromTheBooksSection() {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+
   return (
     <section className="section" style={{ paddingTop: "40px", paddingBottom: 0 }}>
       <div className="wrap">
@@ -88,7 +93,7 @@ export function FromTheBooksSection() {
             </div>
           </div>
 
-          <Link className="imgcard rv in" href="#search">
+          <Link className="imgcard rv in" href="/detail/the-national-trust">
             <img
               loading="lazy"
               src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=70"
@@ -101,7 +106,20 @@ export function FromTheBooksSection() {
             </div>
           </Link>
 
-          <Link className="imgcard video rv in" style={{ "--d": ".15s" } as React.CSSProperties} href="#video" aria-label="Play the featured video">
+          <div
+            className="imgcard video rv in"
+            style={{ "--d": ".15s" } as React.CSSProperties}
+            role="button"
+            tabIndex={0}
+            onClick={() => setIsVideoOpen(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsVideoOpen(true);
+              }
+            }}
+            aria-label="Play the featured video"
+          >
             <img
               loading="lazy"
               src="https://images.unsplash.com/photo-1445964047600-cdbdb873673d?w=1200&q=70"
@@ -113,9 +131,29 @@ export function FromTheBooksSection() {
               <span className="vchip">Featured Video</span>
               <h3>Powerscourt Estate &amp; Gardens</h3>
             </div>
-          </Link>
+          </div>
         </div>
       </div>
+
+      <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
+        <DialogContent className="sm:max-w-4xl w-[95vw] p-0 overflow-hidden bg-black/95 border border-[rgba(var(--gold-rgb),0.3)] shadow-2xl rounded-2xl [&>button]:z-50 [&>button]:bg-black/70 [&>button]:text-white [&>button]:hover:bg-black [&>button]:rounded-full [&>button]:top-3 [&>button]:right-3">
+          <DialogTitle className="sr-only">
+            Powerscourt Estate &amp; Gardens Featured Video
+          </DialogTitle>
+          <div className="relative w-full aspect-video">
+            {isVideoOpen && (
+              <iframe
+                className="w-full h-full border-0"
+                src="https://www.youtube.com/embed/g6w1gRdn67w?autoplay=1&si=EZBnJbxCeeyEms_r"
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

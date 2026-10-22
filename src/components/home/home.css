@@ -415,13 +415,13 @@ body::after {
 .hundred {
     position: absolute;
     left: 50%;
-    top: 46%;
-    transform: translate(-50%, -50%);
+    bottom: 0;
+    transform: translateX(-50%);
     z-index: 1;
     font-family: var(--display);
     font-weight: 900;
-    font-size: clamp(280px, 44vw, 620px);
-    line-height: 1;
+    font-size: clamp(340px, 48vw, 680px);
+    line-height: 0.85;
     color: transparent;
     -webkit-text-stroke: 2.5px rgba(var(--gold-rgb), .45);
     pointer-events: none;
@@ -1403,6 +1403,7 @@ body::after {
     align-items: center;
     gap: 8px;
     border: 1.5px solid rgba(var(--gold-rgb), .5);
+    background: transparent;
     color: var(--gold);
     font-weight: 800;
     font-size: 12.5px;
@@ -2095,7 +2096,7 @@ body::after {
     }
 
     .hundred {
-        font-size: 250px
+        font-size: clamp(180px, 42vw, 260px)
     }
 
     .interlude {

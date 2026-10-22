@@ -21,7 +21,7 @@ export function BookAppCloser() {
               <FaGooglePlay style={{ fontSize: "13px" }} />
               Google Play
             </span>
-            <Link href="/app">SEE THE APPS</Link>
+            <Link href="/app" className="btn-cta">SEE THE APPS</Link>
           </div>
         </div>
       </div>

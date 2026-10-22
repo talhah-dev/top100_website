@@ -56,6 +56,7 @@
 
 .storebtns span {
   border: 1.5px solid rgba(250, 191, 51, 0.5);
+  background: transparent;
   color: var(--gold);
   font-weight: 800;
   font-size: 12.5px;
@@ -72,6 +73,7 @@
 .storebtns span:hover {
   background: rgba(250, 191, 51, 0.12);
   transform: translateY(-2px);
+  color: var(--gold);
 }
 
 .storebtns a {
@@ -79,18 +81,21 @@
   align-items: center;
   min-height: 44px;
   border: 1.5px solid rgba(250, 191, 51, 0.5);
+  background: transparent;
   color: var(--gold);
   font-weight: 800;
   font-size: 12.5px;
   letter-spacing: 0.06em;
   padding: 11px 18px;
   border-radius: 12px;
+  text-decoration: none;
   transition: background 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
 .storebtns a:hover {
   background: rgba(250, 191, 51, 0.12);
   transform: translateY(-2px);
+  color: var(--gold);
 }
 
 .phones {

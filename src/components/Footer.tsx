@@ -68,17 +68,17 @@ export function Footer() {
             <li><Link href="/search?category=Attractions">Attractions</Link></li>
             <li><Link href="/search?category=Accommodation">Places to Stay</Link></li>
             <li><Link href="/search?category=Eating+Out">Places to Eat</Link></li>
-            <li><Link href="/search?view=map">Map view</Link></li>
+            <li><Link href="/map">Map view</Link></li>
           </ul>
         </div>
         <div>
           <h4>Regions</h4>
           <ul>
-            <li><Link href="#regions">Wales</Link></li>
-            <li><Link href="#regions">England</Link></li>
-            <li><Link href="#regions">Ireland</Link></li>
-            <li><Link href="#regions">Northern Ireland</Link></li>
-            <li><Link href="#regions">Scotland</Link></li>
+            <li><Link href="/country/wales">Wales</Link></li>
+            <li><Link href="/country/england">England</Link></li>
+            <li><Link href="/country/ireland">Ireland</Link></li>
+            <li><Link href="/country/northern-ireland">Northern Ireland</Link></li>
+            <li><Link href="/country/scotland">Scotland</Link></li>
           </ul>
         </div>
         <div>
@@ -86,7 +86,7 @@ export function Footer() {
           <ul>
             <li><Link href="/about">About Us</Link></li>
             <li><Link href="/book">Buy the Book</Link></li>
-            <li><Link href="#app">Get the Free App</Link></li>
+            <li><Link href="/app">Get the Free App</Link></li>
             <li><Link href="/contact">Contact Us</Link></li>
           </ul>
         </div>
