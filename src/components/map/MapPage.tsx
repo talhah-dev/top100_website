@@ -28,7 +28,7 @@ interface IconDef {
 
 const BANDS = [
   { k: "country", label: "COUNTRY", min: 0, max: 6.99, zoom: 6, v1: "Not a list.", v2: "A verdict." },
-  { k: "region", label: "REGION", min: 7, max: 9.99, zoom: 8.2, v1: "Wales.", v2: "{n} worth the journey." },
+  { k: "region", label: "REGION", min: 7, max: 9.99, zoom: 8.2, v1: "{region}.", v2: "{n} worth the journey." },
   { k: "town", label: "TOWN", min: 10, max: 13.49, zoom: 11.6, v1: "{place}.", v2: "{n} reasons to stop." },
   { k: "street", label: "STREET", min: 13.5, max: 22, zoom: 15, v1: "You're here.", v2: "Now choose." },
 ];
@@ -42,10 +42,10 @@ const WORDS = [
 
 const REGIONS = [
   { k: "wales", name: "Wales", col: "#C31A35", lat: 52.65, lng: -3.75, loaded: true },
-  { k: "england", name: "England", col: "#00356B", lat: 52.60, lng: -1.30, loaded: false },
-  { k: "ireland", name: "Ireland", col: "#00843D", lat: 53.20, lng: -8.10, loaded: false },
-  { k: "nireland", name: "N. Ireland", col: "#6C2BD9", lat: 54.70, lng: -6.60, loaded: false },
-  { k: "scotland", name: "Scotland", col: "#007FFF", lat: 56.70, lng: -4.40, loaded: false },
+  { k: "england", name: "England", col: "#00356B", lat: 52.60, lng: -1.30, loaded: true },
+  { k: "ireland", name: "Ireland", col: "#00843D", lat: 53.20, lng: -8.10, loaded: true },
+  { k: "nireland", name: "N. Ireland", col: "#6C2BD9", lat: 54.70, lng: -6.60, loaded: true },
+  { k: "scotland", name: "Scotland", col: "#007FFF", lat: 56.70, lng: -4.40, loaded: true },
 ];
 
 const FAMILIES: [string, string[]][] = [
@@ -81,6 +81,60 @@ const TOWNS: [string, number, number][] = [
   ["Llangollen", 52.971, -3.168],
   ["Dolgellau", 52.743, -3.883],
   ["Barmouth", 52.722, -4.056],
+  ["Cardiff", 51.481, -3.179],
+  ["Swansea", 51.621, -3.943],
+  ["Newport", 51.584, -2.997],
+  ["Aberystwyth", 52.415, -4.082],
+  ["Carmarthen", 51.857, -4.312],
+  ["Tenby", 51.672, -4.704],
+  ["Brecon", 51.946, -3.391],
+  ["Belfast", 54.597, -5.930],
+  ["Derry", 54.996, -7.309],
+  ["Coleraine", 55.132, -6.666],
+  ["Bushmills", 55.206, -6.523],
+  ["Portrush", 55.205, -6.655],
+  ["Enniskillen", 54.345, -7.641],
+  ["Newry", 54.175, -6.337],
+  ["Omagh", 54.600, -7.300],
+  ["Armagh", 54.350, -6.654],
+  ["Ballymena", 54.864, -6.276],
+  ["Lisburn", 54.512, -6.044],
+  ["Edinburgh", 55.953, -3.188],
+  ["Glasgow", 55.864, -4.251],
+  ["Inverness", 57.477, -4.224],
+  ["Aberdeen", 57.149, -2.094],
+  ["Dundee", 56.462, -2.970],
+  ["Stirling", 56.116, -3.936],
+  ["Dumfries", 55.070, -3.606],
+  ["Fort William", 56.819, -5.105],
+  ["Perth", 56.395, -3.430],
+  ["St Andrews", 56.339, -2.796],
+  ["Dublin", 53.349, -6.260],
+  ["Cork", 51.898, -8.475],
+  ["Galway", 53.270, -9.056],
+  ["Killarney", 52.059, -9.504],
+  ["Limerick", 52.663, -8.626],
+  ["Kilkenny", 52.654, -7.252],
+  ["Waterford", 52.259, -7.110],
+  ["Sligo", 54.276, -8.476],
+  ["Athlone", 53.423, -7.940],
+  ["Donegal", 54.653, -8.110],
+  ["London", 51.507, -0.127],
+  ["Manchester", 53.480, -2.242],
+  ["Liverpool", 53.408, -2.991],
+  ["Birmingham", 52.486, -1.890],
+  ["Chester", 53.190, -2.893],
+  ["York", 53.960, -1.087],
+  ["Newcastle", 54.978, -1.617],
+  ["Bristol", 51.454, -2.587],
+  ["Bath", 51.375, -2.359],
+  ["Oxford", 51.752, -1.257],
+  ["Cambridge", 52.205, 0.121],
+  ["Leeds", 53.800, -1.549],
+  ["Keswick", 54.601, -3.136],
+  ["Windermere", 54.380, -2.906],
+  ["Exeter", 50.718, -3.533],
+  ["Brighton", 50.822, -0.137],
 ];
 
 function spell(n: number) {
@@ -98,6 +152,19 @@ function nearestTown(la: number, ln: number) {
     }
   }
   return best[0];
+}
+
+function nearestRegion(la: number, ln: number) {
+  let best = REGIONS[0];
+  let bd = 1e9;
+  for (const r of REGIONS) {
+    const d = (r.lat - la) * (r.lat - la) + (r.lng - ln) * (r.lng - ln);
+    if (d < bd) {
+      bd = d;
+      best = r;
+    }
+  }
+  return best;
 }
 
 function esc(s: string) {
@@ -374,9 +441,10 @@ export function MapPage() {
       b.className = "medal";
       b.style.setProperty("--mcol", r.col + "38");
       b.style.setProperty("--mring", r.col);
-      const n = r.loaded ? S.places.length.toLocaleString() : "--";
+      const count = S.places.filter((p) => nearestRegion(p.lat, p.lng).k === r.k).length;
+      const n = count.toLocaleString();
       b.innerHTML = `<b>${r.name}</b><i>${n}</i>`;
-      b.setAttribute("aria-label", `${r.name}, ${r.loaded ? n + " places loaded" : "not loaded in this prototype"}`);
+      b.setAttribute("aria-label", `${r.name}, ${n} places loaded`);
       b.addEventListener("click", () => {
         if (leafletMap) {
           leafletMap.flyTo([r.lat, r.lng], 8.2, {
@@ -397,11 +465,17 @@ export function MapPage() {
       b.addEventListener("click", async () => {
         if (!leafletMap) return;
         const L = await import("leaflet");
-        const g = L.latLngBounds(list.map((p) => [p.lat, p.lng]));
-        leafletMap.flyToBounds(g, {
-          padding: [70, 70],
-          duration: RM.matches ? 0 : 0.62,
-        });
+        if (list.length === 1) {
+          leafletMap.flyTo([list[0].lat, list[0].lng], 12, {
+            duration: RM.matches ? 0 : 0.62,
+          });
+        } else {
+          const g = L.latLngBounds(list.map((p) => [p.lat, p.lng]));
+          leafletMap.flyToBounds(g, {
+            padding: [70, 70],
+            duration: RM.matches ? 0 : 0.62,
+          });
+        }
       });
       const lab = document.createElement("span");
       lab.className = "pucklab";
@@ -414,12 +488,13 @@ export function MapPage() {
     const regionCard = (r: (typeof REGIONS)[0]) => {
       const b = document.createElement("button");
       b.className = "card";
+      const count = S.places.filter((p) => nearestRegion(p.lat, p.lng).k === r.k).length;
       b.innerHTML = `
         <span class="tile" style="background:${r.col}28;border-color:${r.col}"></span>
         <span class="tx">
           <span class="kick">REGION</span>
           <h3>${r.name}</h3>
-          <span class="vq">${r.loaded ? S.places.length.toLocaleString() + " places loaded in this prototype." : "Not loaded in this prototype."}</span>
+          <span class="vq">${count.toLocaleString()} places loaded in this region.</span>
         </span>
       `;
       b.addEventListener("click", () => {
@@ -471,7 +546,10 @@ export function MapPage() {
     const paintPanel = (vis: Place[], bandChanged?: boolean) => {
       if (!leafletMap) return;
       const c = leafletMap.getCenter();
-      const v1 = S.band.v1.replace("{place}", nearestTown(c.lat, c.lng));
+      const curReg = nearestRegion(c.lat, c.lng);
+      const v1 = S.band.v1
+        .replace("{place}", nearestTown(c.lat, c.lng))
+        .replace("{region}", curReg.name);
       const v2 = S.band.v2.replace("{n}", S.band.k === "town" ? spell(vis.length) : vis.length.toLocaleString());
 
       const v1El = document.getElementById("v1");
@@ -494,15 +572,11 @@ export function MapPage() {
       const empty = document.getElementById("empty");
       if (!list) return;
 
-      if (S.band.k === "country" || S.band.k === "region") {
+      if (S.band.k === "country") {
         list.innerHTML = "";
         list.style.display = "";
         if (empty) empty.classList.remove("on");
-        if (S.band.k === "country") {
-          REGIONS.forEach((r) => list.appendChild(regionCard(r)));
-        } else {
-          vis.slice(0, 40).forEach((p) => list.appendChild(card(p)));
-        }
+        REGIONS.forEach((r) => list.appendChild(regionCard(r)));
         return;
       }
 
@@ -524,7 +598,7 @@ export function MapPage() {
           const db = (b.lat - cc.lat) * (b.lat - cc.lat) + (b.lng - cc.lng) * (b.lng - cc.lng);
           return da - db;
         })
-        .slice(0, 120)
+        .slice(0, S.band.k === "region" ? 40 : 120)
         .forEach((p) => list.appendChild(card(p)));
     };
 
@@ -556,7 +630,7 @@ export function MapPage() {
         });
         Object.keys(groups).forEach((k) => {
           const g = groups[k];
-          if (g.length < 2) return;
+          if (g.length < 1) return;
           let la = 0;
           let ln = 0;
           g.forEach((p) => {
