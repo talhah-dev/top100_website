@@ -100,7 +100,11 @@ export function HeroSearch() {
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
     if (category && category !== "All") params.set("category", category);
-    if (viewMode) params.set("view", viewMode);
+
+    if (viewMode === "map") {
+      router.push("/map");
+      return;
+    }
 
     const qs = params.toString();
     router.push(qs ? `/search?${qs}` : "/search");
@@ -213,7 +217,7 @@ export function HeroSearch() {
         <button
           type="button"
           className={`segbtn ${viewMode === "map" ? "on" : ""}`}
-          onClick={() => setViewMode("map")}
+          onClick={() => router.push("/map")}
         >
           &#8982; Map
         </button>

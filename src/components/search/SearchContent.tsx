@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { SearchHero } from "./SearchHero";
 import { SearchResults } from "./SearchResults";
 
 export function SearchContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const urlCategory = searchParams.get("category");
   const urlQuery = searchParams.get("q");
@@ -58,6 +59,10 @@ export function SearchContent() {
   };
 
   const handleViewModeChange = (newView: "grid" | "map") => {
+    if (newView === "map") {
+      router.push("/map");
+      return;
+    }
     setViewMode(newView);
     const params = new URLSearchParams(window.location.search);
     if (newView && newView !== "grid") {

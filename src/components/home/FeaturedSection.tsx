@@ -124,7 +124,7 @@ export function FeaturedSection() {
             <span>
               From landmark days out to memorable meals and stays, there is more to discover in every direction.
             </span>
-            <Link className="cta" href="#search" style={{ display: "inline-block", marginTop: "26px" }}>
+            <Link className="cta" href="/map" style={{ display: "inline-block", marginTop: "26px" }}>
               EXPLORE ALL
             </Link>
           </div>

@@ -919,7 +919,7 @@ export function MapPage() {
 
   return (
     <>
-      <header className="nav">
+      <header className="map-nav">
         <Link className="brand" href="/">
           <Image src="/images/logo.png" alt="Logo" width={120} height={34} style={{ height: "34px", width: "auto" }} />
           <b>Stevenson&apos;s Top 100</b>
@@ -934,7 +934,7 @@ export function MapPage() {
           <Link href="/book">The book</Link>
         </nav>
         <Link className="cta" href="/app">
-          GET THE APP &rarr;
+          GET THE APP
         </Link>
       </header>
 

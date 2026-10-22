@@ -52,25 +52,14 @@ body[data-base="parchment"] {
     box-sizing: border-box
 }
 
-html,
-body {
+body.map-route {
     margin: 0;
-    height: 100%
-}
-
-body {
+    height: 100%;
     background: var(--canvas);
     color: #fff;
     font-family: var(--body);
     overflow: hidden;
-    /* this route does not scroll */
-    -webkit-font-smoothing: antialiased
-}
-
-button {
-    font: inherit;
-    color: inherit;
-    cursor: pointer
+    -webkit-font-smoothing: antialiased;
 }
 
 :focus-visible {
@@ -111,7 +100,7 @@ button {
 
 /* ---------------------------------------------------------------- nav */
 
-.nav {
+.map-nav {
     position: fixed;
     inset: 0 0 auto 0;
     height: var(--nav-h);
@@ -125,7 +114,7 @@ button {
     border-bottom: 1px solid rgba(246, 239, 223, .10)
 }
 
-.nav::after {
+.map-nav::after {
     content: "";
     position: absolute;
     left: 0;
@@ -136,7 +125,7 @@ button {
     opacity: .9
 }
 
-.nav .brand {
+.map-nav .brand {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -145,20 +134,20 @@ button {
     flex: 0 0 auto
 }
 
-.nav .brand img {
+.map-nav .brand img {
     height: 34px;
     width: auto;
     display: block
 }
 
-.nav .brand b {
+.map-nav .brand b {
     font-family: var(--display);
     font-weight: 900;
     font-size: 15px;
     letter-spacing: .01em
 }
 
-.nav nav {
+.map-nav nav {
     display: flex;
     gap: 18px;
     margin-left: 8px;
@@ -166,7 +155,7 @@ button {
     min-width: 0
 }
 
-.nav nav a {
+.map-nav nav a {
     color: var(--mist);
     text-decoration: none;
     font-size: 12.5px;
@@ -178,34 +167,42 @@ button {
     border-bottom: 2px solid transparent
 }
 
-.nav nav a:hover {
+.map-nav nav a:hover {
     color: #fff
 }
 
-.nav nav a[aria-current] {
+.map-nav nav a[aria-current] {
     color: var(--gold);
     border-bottom-color: var(--gold)
 }
 
-.nav .cta {
+.map-nav .cta {
     flex: 0 0 auto;
-    height: 36px;
+    height: 38px;
     display: inline-flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 20px;
     border-radius: 999px;
-    background: linear-gradient(135deg, var(--gold-soft), var(--gold-deep));
-    color: #141B2E;
-    font-weight: 800;
-    font-size: 12px;
-    letter-spacing: .08em;
+    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A) !important;
+    color: #141B2E !important;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: .05em;
     text-decoration: none;
-    border: 0
+    border: 0;
+    transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+    white-space: nowrap;
 }
 
-body[data-dir="logo"] .nav .cta {
-    background: var(--mix);
-    color: #0A1122
+.map-nav .cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(110, 139, 255, .35);
+}
+
+body[data-dir="logo"] .map-nav .cta {
+    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A) !important;
+    color: #141B2E !important;
 }
 
 /* ---------------------------------------------------------------- stage */
@@ -1489,18 +1486,17 @@ body[data-dir="logo"] .drawer .df .p {
 }
 
 @media(max-width:900px) {
-    .nav nav {
+    .map-nav nav {
         display: none
     }
-    /* links collided with the CTA at 375 */
-    .nav {
+    .map-nav {
         gap: 12px;
         padding: 0 12px
     }
-    .nav .brand b {
+    .map-nav .brand b {
         font-size: 13.5px
     }
-    .nav .cta {
+    .map-nav .cta {
         font-size: 10.5px;
         padding: 0 12px;
         height: 32px
