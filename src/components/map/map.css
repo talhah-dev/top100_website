@@ -1625,7 +1625,7 @@ body[data-dir="logo"] .drawer .df .p {
             padding: 0;
             cursor: pointer;
             z-index: 3;
-            transform-origin: 22px 54px;
+            transform-origin: 50% 100%;
             transition: transform .26s var(--ease), opacity .4s var(--ease)
         }
 
@@ -1778,30 +1778,28 @@ body[data-dir="logo"] .drawer .df .p {
 
         .pin:hover,
         .pin.hl {
-            transform: scale(1.1)
+            z-index: 5;
+            transform: translate(-50%, -100%) scale(1.15);
         }
 
         .pin.sel {
             z-index: 6;
-            transform: scale(1.18)
+            transform: translate(-50%, -100%) scale(1.2);
         }
 
-        /* dark separator between the body and the gold ring: gold on the pack's amber
-   family measures about 1.1:1, so without this the ring vanishes on a beach pin */
-
         .pin.sel .body {
-            box-shadow: 0 0 0 3px #060B16, 0 0 0 5px var(--gold), 0 12px 30px rgba(0, 0, 0, .7)
+            box-shadow: 0 0 0 3px #060B16, 0 0 0 5px var(--gold), 0 12px 30px rgba(0, 0, 0, .7);
         }
 
         .pin.dim {
             opacity: .16;
-            pointer-events: none
+            pointer-events: none;
         }
 
         .pin:focus-visible {
             outline: 2px solid var(--gold);
             outline-offset: 3px;
-            border-radius: 12px
+            border-radius: 12px;
         }
 
         @media (prefers-reduced-motion:reduce) {
@@ -1811,11 +1809,11 @@ body[data-dir="logo"] .drawer .df .p {
             .pin.hl,
             .pin.sel {
                 transition: none;
-                transform: none
+                transform: translate(-50%, -100%);
             }
 
             .pin.sel .body {
-                box-shadow: 0 0 0 3px #060B16, 0 0 0 6px var(--gold), 0 12px 30px rgba(0, 0, 0, .7)
+                box-shadow: 0 0 0 3px #060B16, 0 0 0 6px var(--gold), 0 12px 30px rgba(0, 0, 0, .7);
             }
         }
 
