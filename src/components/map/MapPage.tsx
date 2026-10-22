@@ -1026,7 +1026,7 @@ export function MapPage() {
             </span>
           </div>
 
-          <div className="verdict">
+          <div className="verdict map-verdict">
             <span className="vl">
               <span className="v1" id="v1">
                 Conwy.

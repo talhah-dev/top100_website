@@ -29,7 +29,7 @@ export function DetailVerdict({
     "A place of notable heritage and character, well worth taking the time to experience.";
 
   return (
-    <section className="verdict" id="about">
+    <section className="dverdict" id="about">
       <div className="wrap">
         <div className="kicker rv in">
           <span className="line" />

@@ -263,43 +263,53 @@ body[data-dir="logo"] .map-nav .cta {
 
 /* the verdict — the one editorial moment, and the only text that rewrites */
 
-.verdict {
-    margin: 16px 14px 0;
-    min-height: 58px
+.panel .verdict,
+.map-verdict {
+    margin: 16px 14px 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    min-height: 58px;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-.verdict .vl {
+.panel .verdict .vl,
+.map-verdict .vl {
     display: block;
-    overflow: hidden
+    overflow: hidden;
 }
 
-.verdict .vl span {
+.panel .verdict .vl span,
+.map-verdict .vl span {
     display: block;
-    transform: translateY(0)
+    transform: translateY(0);
 }
 
-.verdict .v1 {
+.panel .verdict .v1,
+.map-verdict .v1 {
     font-family: var(--display);
     font-weight: 900;
     font-size: 26px;
     line-height: 1.1;
-    color: #fff
+    color: #fff;
 }
 
-.verdict .v2 {
+.panel .verdict .v2,
+.map-verdict .v2 {
     font-weight: 800;
     font-size: 13px;
     letter-spacing: .1em;
     color: var(--gold);
     margin-top: 4px;
-    text-transform: uppercase
+    text-transform: uppercase;
 }
 
-body[data-dir="logo"] .verdict .v2 {
+body[data-dir="logo"] .panel .verdict .v2,
+body[data-dir="logo"] .map-verdict .v2 {
     background: var(--mix);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent
+    color: transparent;
 }
 
 .ptools {

@@ -49,12 +49,12 @@
     letter-spacing: .06em;
 }
 
-.verdict {
+.dverdict {
     background: var(--bg-deep);
     padding: 130px 44px 120px;
 }
 
-.verdict .vq {
+.dverdict .vq {
     font-family: var(--display);
     font-weight: 900;
     font-style: normal;
@@ -65,7 +65,7 @@
     margin-top: 26px;
 }
 
-.verdict .kicker {
+.dverdict .kicker {
     margin-bottom: 8px;
 }
 
@@ -560,7 +560,7 @@
     .dhero .inner {
         padding: 0 20px 76px;
     }
-    .verdict {
+    .dverdict {
         padding: 90px 20px;
     }
     .visitcard {
