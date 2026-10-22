@@ -156,7 +156,7 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     redirect(`/detail/${attraction.slug}${qs}`);
   }
 
-  const categoryLabel = attraction.categories?.[0] || "Attraction";
+  const categoryLabel = fromCategory || attraction.categories?.[0] || "Attraction";
 
   const ATTRACTION_CATEGORIES = new Set([
     "attractions",
@@ -167,15 +167,24 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     "museums",
     "museum",
     "iconic",
+    "features",
   ]);
 
   const ACCOMMODATION_CATEGORIES = new Set([
     "accommodation",
     "hotels",
+    "hotel",
     "guest house / b&bs",
+    "guest house",
+    "b&b",
+    "b&bs",
     "self catering",
     "caravans / campsites / glamping",
+    "caravans",
+    "campsites",
+    "glamping",
     "hostels",
+    "hostel",
     "country house",
     "romance",
     "pet friendly",
@@ -183,51 +192,69 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
 
   const EATING_OUT_CATEGORIES = new Set([
     "eating out",
+    "eating",
+    "eat",
+    "food",
+    "restaurant",
     "restaurant with rooms",
+    "restaurants",
   ]);
 
-  let isPlacesToStay = false;
-  let isPlacesToEat = false;
-  let isAttraction = false;
-
-  const fromLower = fromCategory.trim().toLowerCase();
-
-  if (fromLower) {
-    if (
-      ACCOMMODATION_CATEGORIES.has(fromLower) ||
-      fromLower.includes("accommodation") ||
-      fromLower.includes("stay")
-    ) {
-      isPlacesToStay = true;
-    } else if (
-      EATING_OUT_CATEGORIES.has(fromLower) ||
-      fromLower.includes("eat")
-    ) {
-      isPlacesToEat = true;
-    } else if (
-      ATTRACTION_CATEGORIES.has(fromLower) ||
-      fromLower.includes("attraction")
-    ) {
-      isAttraction = true;
-    }
-  } else {
-    const placeCats = (attraction.categories || []).map((c) => c.toLowerCase());
-    const hasAcc = placeCats.some((c) => ACCOMMODATION_CATEGORIES.has(c));
-    const hasEat = placeCats.some((c) => EATING_OUT_CATEGORIES.has(c));
-    const hasAttr = placeCats.some((c) => ATTRACTION_CATEGORIES.has(c));
-
-    if (hasAcc && !hasAttr) {
-      isPlacesToStay = true;
-    } else if (hasEat && !hasAttr) {
-      isPlacesToEat = true;
-    } else if (hasAttr) {
-      isAttraction = true;
-    }
+  const rawCats: string[] = [];
+  if (Array.isArray(attraction.categories)) {
+    rawCats.push(...attraction.categories);
+  }
+  if (fromCategory && typeof fromCategory === "string") {
+    rawCats.push(fromCategory);
   }
 
-  const hideStayNearby = isPlacesToStay;
-  const hideEatNearby = !isPlacesToStay && isPlacesToEat;
-  const hideAttractionsNearby = !isPlacesToStay && !isPlacesToEat && isAttraction;
+  let hasAttraction = rawCats.some((c) => {
+    const s = c.toLowerCase().trim();
+    return (
+      ATTRACTION_CATEGORIES.has(s) ||
+      s.includes("attraction") ||
+      s.includes("historical") ||
+      s.includes("garden") ||
+      s.includes("museum") ||
+      s.includes("iconic")
+    );
+  });
+
+  let hasEatingOut = rawCats.some((c) => {
+    const s = c.toLowerCase().trim();
+    return (
+      EATING_OUT_CATEGORIES.has(s) ||
+      s.includes("eat") ||
+      s.includes("restaurant") ||
+      s.includes("food") ||
+      s.includes("dining")
+    );
+  });
+
+  let hasAccommodation = rawCats.some((c) => {
+    const s = c.toLowerCase().trim();
+    return (
+      ACCOMMODATION_CATEGORIES.has(s) ||
+      s.includes("accommodation") ||
+      s.includes("stay") ||
+      s.includes("hotel") ||
+      s.includes("guest house") ||
+      s.includes("b&b") ||
+      s.includes("self catering") ||
+      s.includes("campsite") ||
+      s.includes("glamping") ||
+      s.includes("hostel") ||
+      s.includes("country house")
+    );
+  });
+
+  if (!hasAttraction && !hasEatingOut && !hasAccommodation) {
+    hasAttraction = true;
+  }
+
+  const hideStayNearby = hasAccommodation;
+  const hideEatNearby = hasEatingOut;
+  const hideAttractionsNearby = hasAttraction;
 
   return (
     <>
