@@ -883,7 +883,7 @@ export function MapPage() {
         });
 
         const [placesRes, iconsRes] = await Promise.all([
-          fetch("/data/places.json").then((r) => r.json()),
+          fetch("/api/map/places").then((r) => r.json()),
           fetch("/icons/icons.json").then((r) => r.json()),
         ]);
 
