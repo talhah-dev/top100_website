@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Check, Sparkles } from "lucide-react";
 import { CATEGORY_GROUPS } from "./category-data";
 
@@ -16,7 +17,7 @@ export function CategoryTreeDropdown({
   onClose,
 }: CategoryTreeDropdownProps) {
   return (
-    <div className="category-clean-scrollbar w-full p-1.5 text-left select-none" style={{ paddingRight: '14px' }}>
+    <div className="category-clean-scrollbar w-full p-1.5 text-left select-none" style={{ paddingRight: "14px" }}>
       <button
         type="button"
         onClick={() => {
@@ -45,7 +46,6 @@ export function CategoryTreeDropdown({
       <div className="space-y-3">
         {CATEGORY_GROUPS.map((group) => {
           const isGroupSelected = selectedCategory === group.value;
-          const Icon = group.icon;
 
           return (
             <div key={group.id} className="relative">
@@ -62,8 +62,14 @@ export function CategoryTreeDropdown({
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-7 h-7 rounded-full bg-[#141B2E] border border-[#FABF33]/35 flex items-center justify-center text-[#FABF33] shrink-0 shadow-xs">
-                    <Icon className="size-3.5" />
+                  <div className="w-7 h-7 rounded-full bg-[#141B2E] border border-[#FABF33]/35 flex items-center justify-center shrink-0 shadow-xs p-1">
+                    <Image
+                      src={group.iconPath}
+                      alt={group.name}
+                      width={22}
+                      height={22}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <span className="text-[14.5px] font-bold tracking-wide truncate">
                     {group.name}
@@ -90,13 +96,19 @@ export function CategoryTreeDropdown({
                         className={`w-full flex items-center justify-between pl-2.5 pr-3 py-1.5 rounded-lg text-left transition-all ${
                           isSubSelected
                             ? "bg-[#FABF33]/15 text-[#FABF33] font-semibold"
-                            : "text-[#F6EFDF]/75 hover:bg-white/5 hover:text-[#FABF33]"
+                            : "text-[#F6EFDF]/85 hover:bg-white/5 hover:text-[#FABF33]"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="text-[#FABF33]/60 font-medium text-xs select-none shrink-0">
-                            —
-                          </span>
+                          <div className="w-5 h-5 rounded-md bg-[#141B2E]/60 border border-white/10 flex items-center justify-center shrink-0 p-0.5">
+                            <Image
+                              src={sub.iconPath}
+                              alt={sub.label}
+                              width={18}
+                              height={18}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
                           <span className="text-[13px] truncate">{sub.label}</span>
                         </div>
                         {isSubSelected && (

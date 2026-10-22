@@ -1,0 +1,61 @@
+id,label,slug,filename,width,height
+1,Historic House,historic-house,01-historic-house.png,97,115
+2,Castle,castle,02-castle.png,97,114
+3,Museum,museum,03-museum.png,97,116
+4,Art Gallery,art-gallery,04-art-gallery.png,97,117
+5,Heritage Centre,heritage-centre,05-heritage-centre.png,98,117
+6,Stately Home,stately-home,06-stately-home.png,97,115
+7,Palace,palace,07-palace.png,96,113
+8,Ruins,ruins,08-ruins.png,98,116
+9,Archaeology,archaeology,09-archaeology.png,99,117
+10,Cathedral,cathedral,10-cathedral.png,98,117
+11,Church,church,11-church.png,98,116
+12,Abbey,abbey,12-abbey.png,98,116
+13,Monastery,monastery,13-monastery.png,98,117
+14,Temple,temple,14-temple.png,98,116
+15,Mosque,mosque,15-mosque.png,99,117
+16,Synagogue,synagogue,16-synagogue.png,98,117
+17,Garden,garden,17-garden.png,98,118
+18,Arboretum,arboretum,18-arboretum.png,99,118
+19,Park,park,19-park.png,98,118
+20,Nature Reserve,nature-reserve,20-nature-reserve.png,100,117
+21,Beach,beach,21-beach.png,100,120
+22,Lake,lake,22-lake.png,99,120
+23,River Walk,river-walk,23-river-walk.png,99,120
+24,Waterfall,waterfall,24-waterfall.png,100,121
+25,Cave,cave,25-cave.png,98,120
+26,Mountain,mountain,26-mountain.png,99,121
+27,Forest,forest,27-forest.png,99,120
+28,Scenic Viewpoint,scenic-viewpoint,28-scenic-viewpoint.png,101,120
+29,Zoo,zoo,29-zoo.png,99,120
+30,Aquarium,aquarium,30-aquarium.png,100,121
+31,Safari Park,safari-park,31-safari-park.png,99,118
+32,Farm Park,farm-park,32-farm-park.png,100,120
+33,Theme Park,theme-park,33-theme-park.png,101,118
+34,Adventure Park,adventure-park,34-adventure-park.png,99,119
+35,Water Park,water-park,35-water-park.png,100,120
+36,Activity Centre,activity-centre,36-activity-centre.png,100,120
+37,Wildlife Centre,wildlife-centre,37-wildlife-centre.png,101,120
+38,Steam Railway,steam-railway,38-steam-railway.png,101,120
+39,Harbour / Marina,harbour-marina,39-harbour-marina.png,102,120
+40,Lighthouse,lighthouse,40-lighthouse.png,100,119
+41,Visitor Centre,visitor-centre,41-visitor-centre.png,99,117
+42,Science Centre,science-centre,42-science-centre.png,99,119
+43,Planetarium,planetarium,43-planetarium.png,100,119
+44,Observatory,observatory,44-observatory.png,100,119
+45,Distillery / Brewery,distillery-brewery,45-distillery-brewery.png,98,119
+46,Vineyard,vineyard,46-vineyard.png,99,119
+47,Shopping Village,shopping-village,47-shopping-village.png,100,119
+48,Market,market,48-market.png,99,119
+49,Cultural Centre,cultural-centre,49-cultural-centre.png,102,119
+50,Theatre / Performance,theatre-performance,50-theatre-performance.png,99,119
+51,Live Music Venue,live-music-venue,51-live-music-venue.png,99,118
+52,Sports Venue,sports-venue,52-sports-venue.png,99,119
+53,Golf Attraction,golf-attraction,53-golf-attraction.png,100,119
+54,Family Entertainment,family-entertainment,54-family-entertainment.png,100,122
+55,Film / TV Location,film-tv-location,55-film-tv-location.png,99,119
+56,Military Site,military-site,56-military-site.png,100,119
+57,Industrial Heritage,industrial-heritage,57-industrial-heritage.png,100,119
+58,UNESCO Site,unesco-site,58-unesco-site.png,100,119
+59,Festival / Event Site,festival-event-site,59-festival-event-site.png,100,119
+60,Local Landmark,local-landmark,60-local-landmark.png,98,118

@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { ChevronDown, Check } from "lucide-react";
 import { CategoryTreeDropdown } from "./CategoryTreeDropdown";
-import { getCategoryLabel } from "./category-data";
+import { getCategoryLabel, getCategoryIcon } from "./category-data";
 
 export interface DestinationItem {
   id: string;
@@ -196,7 +197,18 @@ export function SearchHero({
               }}
               className="w-full flex items-center justify-between bg-transparent border-none text-[var(--cream,#F6EFDF)] text-sm cursor-pointer outline-none font-sans"
             >
-              <span className="truncate">{getCategoryLabel(category)}</span>
+              <div className="flex items-center gap-2 min-w-0">
+                {getCategoryIcon(category) ? (
+                  <Image
+                    src={getCategoryIcon(category)!}
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="w-4 h-4 object-contain shrink-0"
+                  />
+                ) : null}
+                <span className="truncate">{getCategoryLabel(category)}</span>
+              </div>
               <ChevronDown
                 className={`size-4 text-[#FABF33] transition-transform duration-200 shrink-0 ml-2 ${
                   isCatOpen ? "rotate-180" : ""
