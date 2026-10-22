@@ -28,9 +28,30 @@ export async function GET(request: NextRequest) {
       params.push(`%"${category}"%`)
     }
 
+    const REGION_CLAUSES: Record<string, string> = {
+      Wales:
+        "(area LIKE '%Wales%' OR county IN ('Gwynedd','Conwy','Anglesey','Powys','Pembrokeshire','Ceredigion','Carmarthenshire','Denbighshire','Flintshire','Wrexham','Monmouthshire','Newport','Cardiff','Swansea','Neath Port Talbot','Bridgend','Rhondda Cynon Taf','Merthyr Tydfil','Caerphilly','Blaenau Gwent','Torfaen','Vale of Glamorgan') OR area IN ('Snowdonia Mountain & Coast','Anglesey','Mid Wales & Brecon','North East Wales','Pembrokeshire','Ceredigion / Cardigan Bay','Carmarthenshire','Wye Valley & Vale of Usk','Conwy Valley & Denbighshire'))",
+      "Northern Ireland":
+        "(area LIKE '%Causeway Coast%' OR area LIKE '%Belfast%' OR area LIKE '%Northern Ireland%' OR county IN ('Co. Antrim','Co. Down','Co. Londonderry','Co. Tyrone','Co. Armagh','Co. Fermanagh'))",
+      Ireland:
+        "(area LIKE '%Ireland%' OR area LIKE '%Dublin%' OR county IN ('Co. Galway','Co. Kerry','Co. Cork','Co. Clare','Co. Mayo','Co. Meath','Co. Waterford','Co. Dublin','Co. Wicklow','Co. Donegal','Co. Wexford','Co. Kilkenny','Co. Limerick','Co. Sligo','Co. Tipperary','Co. Kildare','Co. Louth','Co. Westmeath','Co. Cavan','Co. Monaghan','Co. Roscommon','Co. Leitrim','Co. Laois','Co. Offaly','Co. Carlow','Co. Longford'))",
+      Scotland:
+        "(area LIKE '%Scotland%' OR area LIKE '%Highland%' OR area LIKE '%Edinburgh%' OR area LIKE '%Glasgow%' OR county IN ('Dumfries & Galloway','Scottish Borders','Highland','Highlands','Aberdeenshire','Fife','Perth & Kinross','Stirling','Argyll & Bute','City of Edinburgh','Glasgow City','Angus','Moray','South Ayrshire','North Ayrshire','East Lothian','Midlothian','West Lothian'))",
+      London: "(area LIKE '%London%' OR county LIKE '%London%' OR town LIKE '%London%')",
+      Cornwall: "(area LIKE '%Cornwall%' OR county LIKE '%Cornwall%')",
+      Cumbria: "(area LIKE '%Cumbria%' OR county LIKE '%Cumbria%')",
+      Devon: "(area LIKE '%Devon%' OR county LIKE '%Devon%')",
+      Yorkshire: "(area LIKE '%Yorkshire%' OR county LIKE '%Yorkshire%')",
+    }
+
     if (area && area !== "All") {
-      conditions.push("area = ?")
-      params.push(area)
+      if (REGION_CLAUSES[area]) {
+        conditions.push(REGION_CLAUSES[area])
+      } else {
+        conditions.push("(area LIKE ? OR county LIKE ? OR town LIKE ?)")
+        const pattern = `%${area}%`
+        params.push(pattern, pattern, pattern)
+      }
     }
 
     if (featured === "true" || featured === "1") {

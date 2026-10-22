@@ -37,8 +37,11 @@ export function DetailVisitCard({
 }: DetailVisitCardProps) {
   const addressParts = [address, address2, town, county, postcode].filter(Boolean);
   const displayAddress = addressParts.length > 0 ? addressParts.join(", ") : "United Kingdom";
-  const mapQuery = lat && lng ? `${lat},${lng}` : encodeURIComponent(`${title}, ${displayAddress}`);
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+  const embedQuery =
+    lat && lng
+      ? `${lat},${lng}`
+      : encodeURIComponent([title, address, town, county, postcode].filter(Boolean).join(", ") || displayAddress);
+  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${embedQuery}`;
 
   return (
     <section className="section" id="visit" style={{ paddingBottom: 0 }}>
@@ -153,31 +156,22 @@ export function DetailVisitCard({
             </a>
           </div>
 
-          <div className="vmap relative overflow-hidden rounded-lg bg-[#0D1528] flex items-center justify-center min-h-[320px]">
-            {lat && lng ? (
-              <iframe
-                title={`Map of ${title}`}
-                width="100%"
-                height="100%"
-                style={{ border: 0, minHeight: "360px", opacity: 0.85 }}
-                loading="lazy"
-                src={`https://maps.google.com/maps?q=${lat},${lng}&hl=en&z=14&output=embed`}
-              />
-            ) : (
-              <div className="text-center p-8">
-                <div className="text-3xl mb-2">&#128205;</div>
-                <h4 className="text-white font-bold">{title}</h4>
-                <p className="text-xs text-muted-foreground mt-1">{displayAddress}</p>
-                <a
-                  href={directionsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-block text-xs uppercase tracking-wider text-[#FABF33] hover:underline"
-                >
-                  View on Google Maps &rarr;
-                </a>
-              </div>
-            )}
+          <div className="vmap relative overflow-hidden rounded-lg bg-[#0D1528] flex items-center justify-center min-h-[420px] w-full">
+            <iframe
+              title={`Map of ${title}`}
+              width="100%"
+              height="100%"
+              style={{
+                border: 0,
+                width: "100%",
+                height: "100%",
+                minHeight: "420px",
+                position: "absolute",
+                inset: 0,
+              }}
+              loading="lazy"
+              src={`https://maps.google.com/maps?q=${embedQuery}&hl=en&z=15&output=embed`}
+            />
           </div>
         </div>
       </div>

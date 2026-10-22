@@ -359,6 +359,25 @@
     color: var(--gold);
 }
 
+.subfilters-container {
+    animation: fadeInSubfilters 0.25s ease-out;
+}
+
+.subfilters-row {
+    animation: fadeInSubfilters 0.2s ease-out;
+}
+
+@keyframes fadeInSubfilters {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .rgrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
