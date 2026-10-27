@@ -122,8 +122,8 @@ export function FromTheBooksSection() {
           >
             <img
               loading="lazy"
-              src="https://images.unsplash.com/photo-1445964047600-cdbdb873673d?w=1200&q=70"
-              alt="Estate woodland, featured video still"
+              src="/images/powerscourt-video-thumbnail.jpg"
+              alt="Powerscourt Estate &amp; Gardens, featured video thumbnail"
             />
             <div className="veil" />
             <span className="play" />
@@ -144,7 +144,7 @@ export function FromTheBooksSection() {
             {isVideoOpen && (
               <iframe
                 className="w-full h-full border-0"
-                src="https://www.youtube.com/embed/g6w1gRdn67w?autoplay=1&si=EZBnJbxCeeyEms_r"
+                src="https://www.youtube.com/embed/YxrFPrJlTQc?autoplay=1&si=WxnB3wp9dMIkyayY"
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
