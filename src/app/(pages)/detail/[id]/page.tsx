@@ -262,13 +262,13 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
   let hideStayNearby = false;
   let hideEatNearby = false;
   let hideAttractionsNearby = false;
-  let sectionOrder: ("attractions" | "eat" | "stay")[] = ["eat", "stay"];
+  let sectionOrder: ("attractions" | "eat" | "stay")[] = ["attractions", "eat", "stay"];
 
   if (isFromAccommodation || (hasAccommodation && !hasSpecificAttraction && !isFromEatingOut && !isFromAttraction)) {
     hideStayNearby = true;
     hideEatNearby = false;
     hideAttractionsNearby = false;
-    sectionOrder = ["eat", "attractions"];
+    sectionOrder = ["attractions", "eat"];
   } else if (isFromEatingOut || (hasEatingOut && !hasAccommodation && !hasSpecificAttraction && !isFromAttraction)) {
     hideEatNearby = true;
     hideAttractionsNearby = false;
