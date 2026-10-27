@@ -15,6 +15,7 @@ import {
   DetailNearby,
 } from "@/components/detail";
 import { getDb } from "@/lib/db";
+import { resolveCoordinates } from "@/lib/geocode";
 
 export const instant = false;
 
@@ -200,61 +201,85 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     "restaurants",
   ]);
 
-  const rawCats: string[] = [];
-  if (Array.isArray(attraction.categories)) {
-    rawCats.push(...attraction.categories);
+  const fromCatLower = fromCategory.toLowerCase().trim();
+  const isFromAccommodation =
+    fromCatLower.includes("accommodation") ||
+    fromCatLower.includes("stay") ||
+    fromCatLower.includes("hotel") ||
+    fromCatLower.includes("b&b") ||
+    fromCatLower.includes("self catering") ||
+    fromCatLower.includes("campsite") ||
+    fromCatLower.includes("glamping") ||
+    fromCatLower.includes("hostel");
+
+  const isFromEatingOut =
+    fromCatLower.includes("eating out") ||
+    fromCatLower.includes("eat") ||
+    fromCatLower.includes("restaurant") ||
+    fromCatLower.includes("food") ||
+    fromCatLower.includes("dining");
+
+  const isFromAttraction =
+    fromCatLower.includes("attraction") ||
+    fromCatLower.includes("historical") ||
+    fromCatLower.includes("garden") ||
+    fromCatLower.includes("museum") ||
+    fromCatLower.includes("castle");
+
+  const catsLower = (attraction.categories || []).map((c) => c.toLowerCase().trim());
+  const hasAccommodation = catsLower.some((c) =>
+    ACCOMMODATION_CATEGORIES.has(c) ||
+    c.includes("accommodation") ||
+    c.includes("hotel") ||
+    c.includes("guest house") ||
+    c.includes("b&b") ||
+    c.includes("self catering") ||
+    c.includes("campsite") ||
+    c.includes("glamping") ||
+    c.includes("hostel") ||
+    c.includes("country house")
+  );
+
+  const hasEatingOut = catsLower.some((c) =>
+    EATING_OUT_CATEGORIES.has(c) ||
+    c.includes("eating out") ||
+    c.includes("restaurant") ||
+    c.includes("pub") ||
+    c.includes("cafe") ||
+    c.includes("dining")
+  );
+
+  const hasSpecificAttraction = catsLower.some((c) =>
+    c.includes("historical places") ||
+    c.includes("museum") ||
+    c.includes("garden") ||
+    c.includes("castle") ||
+    c.includes("theme park") ||
+    c.includes("zoo") ||
+    c.includes("landmark")
+  );
+
+  let hideStayNearby = false;
+  let hideEatNearby = false;
+  let hideAttractionsNearby = false;
+  let sectionOrder: ("attractions" | "eat" | "stay")[] = ["eat", "stay"];
+
+  if (isFromAccommodation || (hasAccommodation && !hasSpecificAttraction && !isFromEatingOut && !isFromAttraction)) {
+    hideStayNearby = true;
+    hideEatNearby = false;
+    hideAttractionsNearby = false;
+    sectionOrder = ["eat", "attractions"];
+  } else if (isFromEatingOut || (hasEatingOut && !hasAccommodation && !hasSpecificAttraction && !isFromAttraction)) {
+    hideEatNearby = true;
+    hideAttractionsNearby = false;
+    hideStayNearby = false;
+    sectionOrder = ["attractions", "stay"];
+  } else {
+    hideAttractionsNearby = true;
+    hideEatNearby = false;
+    hideStayNearby = false;
+    sectionOrder = ["eat", "stay"];
   }
-  if (fromCategory && typeof fromCategory === "string") {
-    rawCats.push(fromCategory);
-  }
-
-  let hasAttraction = rawCats.some((c) => {
-    const s = c.toLowerCase().trim();
-    return (
-      ATTRACTION_CATEGORIES.has(s) ||
-      s.includes("attraction") ||
-      s.includes("historical") ||
-      s.includes("garden") ||
-      s.includes("museum") ||
-      s.includes("iconic")
-    );
-  });
-
-  let hasEatingOut = rawCats.some((c) => {
-    const s = c.toLowerCase().trim();
-    return (
-      EATING_OUT_CATEGORIES.has(s) ||
-      s.includes("eat") ||
-      s.includes("restaurant") ||
-      s.includes("food") ||
-      s.includes("dining")
-    );
-  });
-
-  let hasAccommodation = rawCats.some((c) => {
-    const s = c.toLowerCase().trim();
-    return (
-      ACCOMMODATION_CATEGORIES.has(s) ||
-      s.includes("accommodation") ||
-      s.includes("stay") ||
-      s.includes("hotel") ||
-      s.includes("guest house") ||
-      s.includes("b&b") ||
-      s.includes("self catering") ||
-      s.includes("campsite") ||
-      s.includes("glamping") ||
-      s.includes("hostel") ||
-      s.includes("country house")
-    );
-  });
-
-  if (!hasAttraction && !hasEatingOut && !hasAccommodation) {
-    hasAttraction = true;
-  }
-
-  const hideStayNearby = hasAccommodation;
-  const hideEatNearby = hasEatingOut;
-  const hideAttractionsNearby = hasAttraction;
 
   const db = getDb();
   let placeType = "a";
@@ -276,9 +301,9 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     placeSubtype = mapPlace.subtype || "historic-house";
     isIconic = Boolean(mapPlace.iconic);
   } else {
-    if (hasAttraction && hasEatingOut && hasAccommodation) placeType = "aes";
-    else if (hasAttraction && hasEatingOut) placeType = "ae";
-    else if (hasAttraction && hasAccommodation) placeType = "as";
+    if (hasSpecificAttraction && hasEatingOut && hasAccommodation) placeType = "aes";
+    else if (hasSpecificAttraction && hasEatingOut) placeType = "ae";
+    else if (hasSpecificAttraction && hasAccommodation) placeType = "as";
     else if (hasEatingOut && hasAccommodation) placeType = "es";
     else if (hasEatingOut) placeType = "e";
     else if (hasAccommodation) placeType = "s";
@@ -295,8 +320,24 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     else placeSubtype = "local-landmark";
   }
 
-  const finalLat = attraction.lat ?? mapPlace?.lat;
-  const finalLng = attraction.lng ?? mapPlace?.lng;
+  let finalLat = attraction.lat ?? mapPlace?.lat;
+  let finalLng = attraction.lng ?? mapPlace?.lng;
+
+  if (typeof finalLat !== "number" || typeof finalLng !== "number") {
+    const resolved = await resolveCoordinates({
+      id: attraction.id,
+      title: attraction.title,
+      address: attraction.address,
+      town: attraction.town,
+      county: attraction.county,
+      postcode: attraction.postcode,
+      area: attraction.area,
+    });
+    if (resolved) {
+      finalLat = resolved.lat;
+      finalLng = resolved.lng;
+    }
+  }
 
   return (
     <>
@@ -351,6 +392,7 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
           hideStayNearby={hideStayNearby}
           hideEatNearby={hideEatNearby}
           hideAttractionsNearby={hideAttractionsNearby}
+          sectionOrder={sectionOrder}
         />
       </main>
       <Footer />

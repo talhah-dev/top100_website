@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
+import { getFallbackCoordinates } from "@/lib/coordinates";
 
 interface DetailMapProps {
   lat?: number;
@@ -11,6 +12,10 @@ interface DetailMapProps {
   placeSubtype?: string;
   iconic?: boolean;
   embedQuery?: string;
+  address?: string;
+  town?: string;
+  county?: string;
+  postcode?: string;
 }
 
 export function DetailMap({
@@ -20,18 +25,28 @@ export function DetailMap({
   placeType = "a",
   placeSubtype = "historic-house",
   iconic = false,
-  embedQuery,
+  address,
+  town,
+  county,
+  postcode,
 }: DetailMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
-    if (typeof lat !== "number" || typeof lng !== "number" || !containerRef.current) return;
-    const latitude = lat;
-    const longitude = lng;
+    if (!containerRef.current) return;
+
+    let latitude = typeof lat === "number" && !isNaN(lat) ? lat : null;
+    let longitude = typeof lng === "number" && !isNaN(lng) ? lng : null;
+
+    if (latitude === null || longitude === null) {
+      const [fLat, fLng] = getFallbackCoordinates(county, town, address);
+      latitude = fLat;
+      longitude = fLng;
+    }
 
     let isMounted = true;
     let leafletMap: import("leaflet").Map | null = null;
+    let customMarker: import("leaflet").Marker | null = null;
 
     async function initMap() {
       try {
@@ -43,7 +58,7 @@ export function DetailMap({
           attributionControl: false,
           scrollWheelZoom: false,
           zoomSnap: 0.25,
-        }).setView([latitude, longitude], 15);
+        }).setView([latitude!, longitude!], 15);
 
         L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}", {
           maxZoom: 20,
@@ -103,7 +118,7 @@ export function DetailMap({
 
         pinBtn.innerHTML = `<span class="body" style="background:${body};border:2.5px solid ${line}">${cells}</span>`;
 
-        const customMarker = L.marker([latitude, longitude], {
+        customMarker = L.marker([latitude!, longitude!], {
           icon: L.divIcon({
             className: "",
             html: "",
@@ -121,7 +136,57 @@ export function DetailMap({
         });
 
         customMarker.addTo(leafletMap);
-        setHasLoaded(true);
+
+        if (typeof lat !== "number" || typeof lng !== "number") {
+          async function tryResolve() {
+            if (postcode) {
+              const cleanPc = postcode.replace(/[^A-Za-z0-9]/g, "");
+              try {
+                const pcRes = await fetch(`https://api.postcodes.io/postcodes/${cleanPc}`);
+                if (pcRes.ok) {
+                  const d = await pcRes.json();
+                  if (d.result?.latitude && d.result?.longitude) {
+                    const newLat = Number(d.result.latitude);
+                    const newLng = Number(d.result.longitude);
+                    if (isMounted && leafletMap && customMarker) {
+                      leafletMap.setView([newLat, newLng], 15);
+                      customMarker.setLatLng([newLat, newLng]);
+                    }
+                    return;
+                  }
+                }
+              } catch {}
+            }
+
+            const queries = [
+              [title, town, county].filter(Boolean).join(", "),
+              [address, town, county].filter(Boolean).join(", "),
+              [address, county].filter(Boolean).join(", "),
+              [town, county].filter(Boolean).join(", "),
+            ].filter((q, idx, arr) => q.length > 0 && arr.indexOf(q) === idx);
+
+            for (const q of queries) {
+              try {
+                const nRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`, {
+                  headers: { "User-Agent": "Top100AttractionsApp/1.0" },
+                });
+                if (nRes.ok) {
+                  const d = await nRes.json();
+                  if (Array.isArray(d) && d.length > 0 && d[0].lat && d[0].lon) {
+                    const newLat = parseFloat(d[0].lat);
+                    const newLng = parseFloat(d[0].lon);
+                    if (isMounted && leafletMap && customMarker) {
+                      leafletMap.setView([newLat, newLng], 15);
+                      customMarker.setLatLng([newLat, newLng]);
+                    }
+                    return;
+                  }
+                }
+              } catch {}
+            }
+          }
+          tryResolve();
+        }
       } catch {}
     }
 
@@ -134,27 +199,7 @@ export function DetailMap({
         leafletMap = null;
       }
     };
-  }, [lat, lng, placeType, placeSubtype, iconic, title]);
-
-  if (!lat || !lng) {
-    return (
-      <iframe
-        title={`Map of ${title}`}
-        width="100%"
-        height="100%"
-        style={{
-          border: 0,
-          width: "100%",
-          height: "100%",
-          minHeight: "420px",
-          position: "absolute",
-          inset: 0,
-        }}
-        loading="lazy"
-        src={`https://maps.google.com/maps?q=${embedQuery || encodeURIComponent(title)}&hl=en&z=15&output=embed`}
-      />
-    );
-  }
+  }, [lat, lng, placeType, placeSubtype, iconic, title, address, town, county, postcode]);
 
   return (
     <div

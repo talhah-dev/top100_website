@@ -77,6 +77,9 @@
     border-radius: 26px;
     overflow: hidden;
     background: linear-gradient(150deg, var(--panel), var(--panel-2)) padding-box, linear-gradient(100deg, rgba(53, 179, 107, .45), rgba(110, 139, 255, .45) 35%, rgba(240, 96, 122, .45) 65%, rgba(var(--gold-rgb), .5)) border-box;
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
 }
 
 .vinfo {
@@ -171,6 +174,8 @@
     background: var(--panel-2);
     border-left: 1px solid rgba(var(--gold-rgb), .16);
     min-height: 560px;
+    z-index: 1;
+    isolation: isolate;
 }
 
 .vmap svg {

@@ -163,7 +163,7 @@ export function DetailVisitCard({
             </a>
           </div>
 
-          <div className="vmap relative overflow-hidden rounded-lg bg-[#0D1528] flex items-center justify-center min-h-[420px] w-full">
+          <div className="vmap relative overflow-hidden rounded-lg bg-[#0D1528] flex items-center justify-center min-h-[420px] w-full isolate z-[1]">
             <DetailMap
               lat={lat}
               lng={lng}
@@ -172,6 +172,10 @@ export function DetailVisitCard({
               placeSubtype={placeSubtype}
               iconic={iconic}
               embedQuery={embedQuery}
+              address={address}
+              town={town}
+              county={county}
+              postcode={postcode}
             />
           </div>
         </div>
