@@ -31,18 +31,25 @@ interface SearchResultsProps {
 
 const REGION_OPTIONS = [
   "All",
+  "England",
   "Wales",
-  "London",
-  "Northern Ireland",
-  "Ireland",
   "Scotland",
-  "Cornwall",
-  "Cumbria",
-  "Devon",
-  "Yorkshire",
+  "Ireland",
+  "Northern Ireland",
 ];
 
 const REGION_SUB_OPTIONS: Record<string, string[]> = {
+  England: [
+    "London",
+    "Cornwall",
+    "Cumbria",
+    "Devon",
+    "Yorkshire",
+    "Lancashire",
+    "Cheshire",
+    "Manchester",
+    "Bath & Bristol",
+  ],
   Wales: [
     "Snowdonia",
     "Anglesey",
@@ -52,13 +59,16 @@ const REGION_SUB_OPTIONS: Record<string, string[]> = {
     "Cardigan Bay",
     "Carmarthenshire",
     "Gwynedd",
+    "Cardiff",
   ],
-  "Northern Ireland": [
-    "Causeway Coast",
-    "Belfast",
-    "Co. Antrim",
-    "Co. Down",
-    "Co. Londonderry",
+  Scotland: [
+    "Edinburgh",
+    "Glasgow",
+    "Highlands",
+    "Dumfries & Galloway",
+    "Scottish Borders",
+    "Ayrshire",
+    "Isle of Skye",
   ],
   Ireland: [
     "Dublin",
@@ -67,37 +77,17 @@ const REGION_SUB_OPTIONS: Record<string, string[]> = {
     "Co. Cork",
     "Co. Clare",
     "Co. Wicklow",
+    "Co. Mayo",
+    "Kilkenny",
   ],
-  Scotland: [
-    "Edinburgh",
-    "Glasgow",
-    "Highlands",
-    "Dumfries & Galloway",
-    "Scottish Borders",
-  ],
-  Yorkshire: [
-    "North Yorkshire",
-    "West Yorkshire",
-    "York",
-  ],
-  Cumbria: [
-    "Lake District",
-    "Keswick",
-    "Windermere",
-  ],
-  Devon: [
-    "North Devon",
-    "South Devon",
-    "Exeter",
-  ],
-  Cornwall: [
-    "St Ives",
-    "Newquay",
-    "Falmouth",
-  ],
-  London: [
-    "Central London",
-    "Westminster",
+  "Northern Ireland": [
+    "Belfast",
+    "Causeway Coast",
+    "Co. Antrim",
+    "Co. Down",
+    "Co. Londonderry",
+    "Co. Fermanagh",
+    "Co. Tyrone",
   ],
 };
 

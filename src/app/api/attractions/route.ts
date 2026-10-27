@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
     }
 
     const REGION_CLAUSES: Record<string, string> = {
+      England:
+        "(area LIKE '%England%' OR county IN ('North Yorkshire','West Yorkshire','South Yorkshire','Yorkshire','Cumbria','Lancashire','Cheshire','Derbyshire','Shropshire','Cornwall','Devon','Dorset','Somerset','Gloucestershire','Hampshire','Kent','East Sussex','West Sussex','Surrey','Berkshire','Oxfordshire','Buckinghamshire','Bedfordshire','Hertfordshire','Essex','Suffolk','Norfolk','Cambridgeshire','Northamptonshire','Warwickshire','Worcestershire','Herefordshire','Staffordshire','Leicestershire','Rutland','Lincolnshire','Nottinghamshire','Northumberland','County Durham','Tyne and Wear','Greater Manchester','Merseyside','London','Greater London','Wiltshire','Bristol') OR area IN ('North Yorkshire','West Yorkshire','South Yorkshire','Yorkshire Borderlands','Yorkshire NW','Cumbria','Lancashire','Cheshire','Derbyshire','Shropshire','Cornwall','Devon','Dorset','Somerset','Gloucestershire','Bath, Bristol City & Region','Hampshire','Kent','East Sussex','West Sussex','Berkshire','Oxfordshire','Essex','Suffolk','Norfolk','Cambridgeshire','Northamptonshire','Warwickshire','Worcestershire','Herefordshire','Staffordshire','Leicestershire','Lincolnshire','Nottinghamshire','Northumberland','County Durham','Durham','East Riding, Hull & The Wolds','Greater Manchester','Liverpool','Wirral Peninsula','Isle of Wight','West Midlands & The Black Country') OR town LIKE '%London%')",
       Wales:
         "(area LIKE '%Wales%' OR county IN ('Gwynedd','Conwy','Anglesey','Powys','Pembrokeshire','Ceredigion','Carmarthenshire','Denbighshire','Flintshire','Wrexham','Monmouthshire','Newport','Cardiff','Swansea','Neath Port Talbot','Bridgend','Rhondda Cynon Taf','Merthyr Tydfil','Caerphilly','Blaenau Gwent','Torfaen','Vale of Glamorgan') OR area IN ('Snowdonia Mountain & Coast','Anglesey','Mid Wales & Brecon','North East Wales','Pembrokeshire','Ceredigion / Cardigan Bay','Carmarthenshire','Wye Valley & Vale of Usk','Conwy Valley & Denbighshire'))",
       "Northern Ireland":
@@ -42,6 +44,7 @@ export async function GET(request: NextRequest) {
       Cumbria: "(area LIKE '%Cumbria%' OR county LIKE '%Cumbria%')",
       Devon: "(area LIKE '%Devon%' OR county LIKE '%Devon%')",
       Yorkshire: "(area LIKE '%Yorkshire%' OR county LIKE '%Yorkshire%')",
+      "Bath & Bristol": "(area LIKE '%Bath%' OR area LIKE '%Bristol%' OR town LIKE '%Bath%' OR town LIKE '%Bristol%')",
     }
 
     if (area && area !== "All") {
