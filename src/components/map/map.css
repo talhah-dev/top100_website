@@ -752,7 +752,7 @@ body:not([data-base="midnight"]) .mapwrap .tint {
 }
 
 body[data-base="daylight"] .leaflet-container {
-    background: #AAD3DF
+    background: #f2efe9
 }
 
 /* OSM water */

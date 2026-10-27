@@ -926,9 +926,10 @@ export function MapPage() {
           fadeAnimation: !RM.matches,
         }).setView([53.21, -3.8], 11.6);
 
-        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 19,
-          attribution: "&copy; OpenStreetMap contributors",
+        L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}", {
+          maxZoom: 20,
+          subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          attribution: "&copy; Google Maps",
         }).addTo(leafletMap);
 
         layerGroup = L.layerGroup().addTo(leafletMap);
