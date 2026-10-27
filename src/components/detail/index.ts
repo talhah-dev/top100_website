@@ -5,3 +5,4 @@ export * from "./DetailBeforeYouGo";
 export * from "./DetailVisitCard";
 export * from "./DetailGallery";
 export * from "./DetailNearby";
+export * from "./DetailMap";

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { DetailMap } from "./DetailMap";
 
 interface DetailVisitCardProps {
   title?: string;
@@ -17,6 +18,9 @@ interface DetailVisitCardProps {
   instagram?: string;
   lat?: number;
   lng?: number;
+  placeType?: string;
+  placeSubtype?: string;
+  iconic?: boolean;
 }
 
 export function DetailVisitCard({
@@ -34,6 +38,9 @@ export function DetailVisitCard({
   instagram,
   lat,
   lng,
+  placeType,
+  placeSubtype,
+  iconic,
 }: DetailVisitCardProps) {
   const addressParts = [address, address2, town, county, postcode].filter(Boolean);
   const displayAddress = addressParts.length > 0 ? addressParts.join(", ") : "United Kingdom";
@@ -157,20 +164,14 @@ export function DetailVisitCard({
           </div>
 
           <div className="vmap relative overflow-hidden rounded-lg bg-[#0D1528] flex items-center justify-center min-h-[420px] w-full">
-            <iframe
-              title={`Map of ${title}`}
-              width="100%"
-              height="100%"
-              style={{
-                border: 0,
-                width: "100%",
-                height: "100%",
-                minHeight: "420px",
-                position: "absolute",
-                inset: 0,
-              }}
-              loading="lazy"
-              src={`https://maps.google.com/maps?q=${embedQuery}&hl=en&z=15&output=embed`}
+            <DetailMap
+              lat={lat}
+              lng={lng}
+              title={title}
+              placeType={placeType}
+              placeSubtype={placeSubtype}
+              iconic={iconic}
+              embedQuery={embedQuery}
             />
           </div>
         </div>

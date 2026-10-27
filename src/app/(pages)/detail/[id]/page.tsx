@@ -256,6 +256,48 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
   const hideEatNearby = hasEatingOut;
   const hideAttractionsNearby = hasAttraction;
 
+  const db = getDb();
+  let placeType = "a";
+  let placeSubtype = "historic-house";
+  let isIconic = false;
+
+  const mapPlace = attraction.slug
+    ? (db.prepare("SELECT lat, lng, type, subtype, iconic FROM map_places WHERE slug = ? LIMIT 1").get(attraction.slug) as {
+        lat: number;
+        lng: number;
+        type: string;
+        subtype: string;
+        iconic: number;
+      } | undefined)
+    : undefined;
+
+  if (mapPlace) {
+    placeType = mapPlace.type || "a";
+    placeSubtype = mapPlace.subtype || "historic-house";
+    isIconic = Boolean(mapPlace.iconic);
+  } else {
+    if (hasAttraction && hasEatingOut && hasAccommodation) placeType = "aes";
+    else if (hasAttraction && hasEatingOut) placeType = "ae";
+    else if (hasAttraction && hasAccommodation) placeType = "as";
+    else if (hasEatingOut && hasAccommodation) placeType = "es";
+    else if (hasEatingOut) placeType = "e";
+    else if (hasAccommodation) placeType = "s";
+    else placeType = "a";
+
+    const catsLower = (attraction.categories || []).map((c) => c.toLowerCase());
+    if (catsLower.some((c) => c.includes("garden"))) placeSubtype = "garden";
+    else if (catsLower.some((c) => c.includes("museum"))) placeSubtype = "museum";
+    else if (catsLower.some((c) => c.includes("castle"))) placeSubtype = "castle";
+    else if (catsLower.some((c) => c.includes("hotel"))) placeSubtype = "hotels";
+    else if (catsLower.some((c) => c.includes("guest house") || c.includes("b&b"))) placeSubtype = "guest-house-bbs";
+    else if (catsLower.some((c) => c.includes("campsite") || c.includes("caravan") || c.includes("glamping"))) placeSubtype = "caravans-campsites-glamping";
+    else if (catsLower.some((c) => c.includes("historical"))) placeSubtype = "historic-house";
+    else placeSubtype = "local-landmark";
+  }
+
+  const finalLat = attraction.lat ?? mapPlace?.lat;
+  const finalLng = attraction.lng ?? mapPlace?.lng;
+
   return (
     <>
       <Navbar />
@@ -294,8 +336,11 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
           facebook={attraction.facebook}
           twitter={attraction.twitter}
           instagram={attraction.instagram}
-          lat={attraction.lat}
-          lng={attraction.lng}
+          lat={finalLat}
+          lng={finalLng}
+          placeType={placeType}
+          placeSubtype={placeSubtype}
+          iconic={isIconic}
         />
         <DetailGallery
           title={attraction.title}
