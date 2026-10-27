@@ -352,6 +352,7 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
         />
         <DetailVerdict
           summary={attraction.summary}
+          description={attraction.description}
           review={attraction.review}
         />
         <DetailEditorial
