@@ -30,7 +30,7 @@ export default function WalesPage() {
         <div className="wrap">
           <CountryAreas country={country} />
           <CountryPicks country={country} />
-          <CountryFilm country={country} />
+          {country.film?.videoUrl && <CountryFilm country={country} />}
           <CountryQuote country={country} />
         </div>
       </main>

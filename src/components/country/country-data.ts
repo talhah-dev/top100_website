@@ -23,6 +23,7 @@ export interface CountryFilm {
   subtitle: string;
   img: string;
   alt: string;
+  videoUrl?: string;
 }
 
 export interface CountryData {
@@ -41,7 +42,7 @@ export interface CountryData {
   areas: CountryArea[];
   picksCap: string;
   picks: CountryPick[];
-  film: CountryFilm;
+  film?: CountryFilm;
   quote: string;
   quoteAuthor: string;
 }
