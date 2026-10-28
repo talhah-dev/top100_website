@@ -33,11 +33,11 @@ interface SearchResultsProps {
 
 const REGION_OPTIONS = [
   "All",
-  "England",
   "Wales",
-  "Scotland",
+  "England",
   "Ireland",
   "Northern Ireland",
+  "Scotland",
 ];
 
 const CORE_CATEGORIES = [

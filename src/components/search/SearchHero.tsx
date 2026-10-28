@@ -19,19 +19,14 @@ export const DESTINATIONS: DestinationItem[] = [
     flagUrl: "/flags/gb.svg",
   },
   {
-    id: "england",
-    name: "England",
-    flagUrl: "/flags/england.svg",
-  },
-  {
-    id: "scotland",
-    name: "Scotland",
-    flagUrl: "/flags/scotland.svg",
-  },
-  {
     id: "wales",
     name: "Wales",
     flagUrl: "/flags/wales.svg",
+  },
+  {
+    id: "england",
+    name: "England",
+    flagUrl: "/flags/england.svg",
   },
   {
     id: "ireland",
@@ -42,6 +37,11 @@ export const DESTINATIONS: DestinationItem[] = [
     id: "northern-ireland",
     name: "Northern Ireland",
     flagUrl: "/flags/northern-ireland.svg",
+  },
+  {
+    id: "scotland",
+    name: "Scotland",
+    flagUrl: "/flags/scotland.svg",
   },
 ];
 
