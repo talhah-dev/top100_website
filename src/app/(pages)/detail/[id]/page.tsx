@@ -128,10 +128,15 @@ function getAttraction(idOrSlug: string): AttractionDetail | null {
   };
 }
 
-function shuffleArray<T>(items: T[]): T[] {
+function seededShuffle<T>(items: T[], seedStr: string): T[] {
+  let seed = 0;
+  for (let i = 0; i < seedStr.length; i++) {
+    seed = (seed * 31 + seedStr.charCodeAt(i)) >>> 0;
+  }
   const arr = [...items];
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    const j = seed % (i + 1);
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
@@ -184,7 +189,7 @@ function getNearbyPlaces(params: {
       FROM attractions
       WHERE (county = ? OR area = ?) AND slug != ? AND slug != '' AND image_url IS NOT NULL AND image_url != ''
       GROUP BY slug
-      ORDER BY RANDOM()
+      ORDER BY id DESC
       LIMIT 80
     `;
     const fallbackRows = db.prepare(fallbackQuery).all(county || "", area || "", slug) as typeof rows;
@@ -226,9 +231,9 @@ function getNearbyPlaces(params: {
   }
 
   return {
-    attractions: shuffleArray(attractionPool).slice(0, 3),
-    eat: shuffleArray(eatPool).slice(0, 3),
-    stay: shuffleArray(stayPool).slice(0, 3),
+    attractions: seededShuffle(attractionPool, slug + "-a").slice(0, 3),
+    eat: seededShuffle(eatPool, slug + "-e").slice(0, 3),
+    stay: seededShuffle(stayPool, slug + "-s").slice(0, 3),
   };
 }
 
@@ -364,28 +369,6 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     c.includes("landmark")
   );
 
-  let hideStayNearby = false;
-  let hideEatNearby = false;
-  let hideAttractionsNearby = false;
-  let sectionOrder: ("attractions" | "eat" | "stay")[] = ["attractions", "eat", "stay"];
-
-  if (isFromAccommodation || (hasAccommodation && !hasSpecificAttraction && !isFromEatingOut && !isFromAttraction)) {
-    hideStayNearby = true;
-    hideEatNearby = false;
-    hideAttractionsNearby = false;
-    sectionOrder = ["attractions", "eat"];
-  } else if (isFromEatingOut || (hasEatingOut && !hasAccommodation && !hasSpecificAttraction && !isFromAttraction)) {
-    hideEatNearby = true;
-    hideAttractionsNearby = false;
-    hideStayNearby = false;
-    sectionOrder = ["attractions", "stay"];
-  } else {
-    hideAttractionsNearby = true;
-    hideEatNearby = false;
-    hideStayNearby = false;
-    sectionOrder = ["eat", "stay"];
-  }
-
   const db = getDb();
   let placeType = "a";
   let placeSubtype = "historic-house";
@@ -424,6 +407,22 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     else if (catsLower.some((c) => c.includes("historical"))) placeSubtype = "historic-house";
     else placeSubtype = "local-landmark";
   }
+
+  const isPlaceAttraction = placeType.includes("a") || hasSpecificAttraction || isFromAttraction || (!placeType.includes("e") && !placeType.includes("s") && !hasEatingOut && !hasAccommodation);
+  const isPlaceEatingOut = placeType.includes("e") || hasEatingOut || isFromEatingOut;
+  const isPlaceAccommodation = placeType.includes("s") || hasAccommodation || isFromAccommodation;
+
+  const hideAttractionsNearby = isPlaceAttraction;
+  const hideEatNearby = isPlaceEatingOut;
+  const hideStayNearby = isPlaceAccommodation;
+
+  const ALL_SECTIONS: ("attractions" | "eat" | "stay")[] = ["attractions", "eat", "stay"];
+  const sectionOrder = ALL_SECTIONS.filter((sec) => {
+    if (sec === "attractions") return !hideAttractionsNearby;
+    if (sec === "eat") return !hideEatNearby;
+    if (sec === "stay") return !hideStayNearby;
+    return false;
+  });
 
   let finalLat = attraction.lat ?? mapPlace?.lat;
   let finalLng = attraction.lng ?? mapPlace?.lng;

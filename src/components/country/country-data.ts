@@ -31,6 +31,7 @@ export interface CountryData {
   name: string;
   heroImage: string;
   heroImageAlt: string;
+  flagUrl?: string;
   flagColors: string[];
   eyebrow: string;
   headline: string;

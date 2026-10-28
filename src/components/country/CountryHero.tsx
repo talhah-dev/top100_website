@@ -8,7 +8,17 @@ interface CountryHeroProps {
   country: CountryData;
 }
 
+const COUNTRY_FLAGS: Record<string, string> = {
+  england: "/flags/england.svg",
+  wales: "/flags/wales.svg",
+  scotland: "/flags/scotland.svg",
+  ireland: "/flags/ireland.svg",
+  "northern-ireland": "/flags/northern-ireland.svg",
+};
+
 export function CountryHero({ country }: CountryHeroProps) {
+  const flagUrl = country.flagUrl || COUNTRY_FLAGS[country.slug] || `/flags/${country.slug}.svg`;
+
   return (
     <header className="whero">
       <img
@@ -18,13 +28,23 @@ export function CountryHero({ country }: CountryHeroProps) {
       />
       <div className="veil" />
       <div className="wrap" id="heroInner">
-        <div className="nband rv in">
-          {country.flagColors.map((color, idx) => (
-            <span key={idx} style={{ background: color }} />
-          ))}
-        </div>
         <div className="eyebrow rv in" style={{ "--d": ".08s" } as React.CSSProperties}>
-          {country.eyebrow}
+          {flagUrl && (
+            <img
+              src={flagUrl}
+              alt={country.name}
+              width={20}
+              height={14}
+              className="badge-flag"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.endsWith(".png")) {
+                  target.src = `/flags/${country.slug}.png`;
+                }
+              }}
+            />
+          )}
+          <span>{country.eyebrow}</span>
         </div>
         <h1>
           <span className="wline">
