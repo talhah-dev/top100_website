@@ -40,59 +40,6 @@ const REGION_OPTIONS = [
   "Northern Ireland",
 ];
 
-const REGION_SUB_OPTIONS: Record<string, string[]> = {
-  England: [
-    "London",
-    "Cornwall",
-    "Cumbria",
-    "Devon",
-    "Yorkshire",
-    "Lancashire",
-    "Cheshire",
-    "Manchester",
-    "Bath & Bristol",
-  ],
-  Wales: [
-    "Snowdonia",
-    "Anglesey",
-    "Conwy",
-    "Pembrokeshire",
-    "Brecon",
-    "Cardigan Bay",
-    "Carmarthenshire",
-    "Gwynedd",
-    "Cardiff",
-  ],
-  Scotland: [
-    "Edinburgh",
-    "Glasgow",
-    "Highlands",
-    "Dumfries & Galloway",
-    "Scottish Borders",
-    "Ayrshire",
-    "Isle of Skye",
-  ],
-  Ireland: [
-    "Dublin",
-    "Co. Galway",
-    "Co. Kerry",
-    "Co. Cork",
-    "Co. Clare",
-    "Co. Wicklow",
-    "Co. Mayo",
-    "Kilkenny",
-  ],
-  "Northern Ireland": [
-    "Belfast",
-    "Causeway Coast",
-    "Co. Antrim",
-    "Co. Down",
-    "Co. Londonderry",
-    "Co. Fermanagh",
-    "Co. Tyrone",
-  ],
-};
-
 const CORE_CATEGORIES = [
   { label: "Attractions", value: "Attractions" },
   { label: "Places to Stay", value: "Accommodation" },
@@ -113,7 +60,6 @@ export function SearchResults({
       setActiveRegion(selectedRegion);
     }
   }, [selectedRegion]);
-  const [activeSubRegion, setActiveSubRegion] = useState("");
   const [attractions, setAttractions] = useState<AttractionItem[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -152,8 +98,7 @@ export function SearchResults({
         const params = new URLSearchParams();
         if (searchQuery.trim()) params.set("q", searchQuery.trim());
         if (selectedCategory && selectedCategory !== "All") params.set("category", selectedCategory);
-        const areaToFilter = activeSubRegion || (activeRegion !== "All" ? activeRegion : "");
-        if (areaToFilter) params.set("area", areaToFilter);
+        if (activeRegion && activeRegion !== "All") params.set("area", activeRegion);
         params.set("page", pageToFetch.toString());
         params.set("limit", "12");
 
@@ -181,7 +126,7 @@ export function SearchResults({
         setLoadingMore(false);
       }
     },
-    [searchQuery, selectedCategory, activeRegion, activeSubRegion]
+    [searchQuery, selectedCategory, activeRegion]
   );
 
   useEffect(() => {
@@ -215,7 +160,6 @@ export function SearchResults({
                   className={`fchip ${activeRegion === region ? "on" : ""}`}
                   onClick={() => {
                     setActiveRegion(region);
-                    setActiveSubRegion("");
                     onRegionChange?.(region);
                   }}
                 >
@@ -259,65 +203,45 @@ export function SearchResults({
             })}
           </div>
 
-          {(activeCategoryGroup || (activeRegion !== "All" && REGION_SUB_OPTIONS[activeRegion])) && (
+          {activeCategoryGroup && (
             <div className="subfilters-container w-full flex flex-col gap-2.5 pt-2 border-t border-[rgba(185,193,212,0.12)]">
-              {activeCategoryGroup && (
-                <div className="subfilters-row flex items-center gap-2 flex-wrap">
-                  <button
-                    type="button"
-                    className={`fchip text-[11px] py-1.5 px-3.5 ${selectedCategory === activeCategoryGroup.value ? "on" : ""}`}
-                    onClick={() => onCategoryChange?.(activeCategoryGroup.value)}
-                  >
-                    All {activeCategoryGroup.name}
-                  </button>
-                  {activeCategoryGroup.subcategories.map((sub) => {
-                    const isSelected = selectedCategory === sub.value;
-                    return (
-                      <button
-                        type="button"
-                        key={sub.value}
-                        className={`fchip text-[11px] py-1.5 px-3.5 flex items-center gap-1.5 ${isSelected ? "on" : ""}`}
-                        onClick={() =>
-                          onCategoryChange?.(isSelected ? activeCategoryGroup.value : sub.value)
-                        }
-                      >
-                        {sub.iconPath && (
-                          <Image
-                            src={sub.iconPath}
-                            alt=""
-                            width={14}
-                            height={14}
-                            className="w-3.5 h-3.5 object-contain inline-block shrink-0"
-                          />
-                        )}
-                        {sub.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {activeRegion !== "All" && REGION_SUB_OPTIONS[activeRegion] && (
-                <div className="subfilters-row flex items-center gap-2 flex-wrap">
-                  <button
-                    type="button"
-                    className={`fchip text-[11px] py-1.5 px-3.5 ${!activeSubRegion ? "on" : ""}`}
-                    onClick={() => setActiveSubRegion("")}
-                  >
-                    All {activeRegion}
-                  </button>
-                  {REGION_SUB_OPTIONS[activeRegion].map((subArea) => (
+              <div className="subfilters-row flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  className={`fchip text-[11px] py-1.5 px-3.5 ${selectedCategory === activeCategoryGroup.value ? "on" : ""}`}
+                  onClick={() => onCategoryChange?.(activeCategoryGroup.value)}
+                >
+                  {activeCategoryGroup.id === "accommodation"
+                    ? "All Places to Stay"
+                    : activeCategoryGroup.id === "eating-out"
+                    ? "All Places to Eat"
+                    : `All ${activeCategoryGroup.name}`}
+                </button>
+                {activeCategoryGroup.subcategories.map((sub) => {
+                  const isSelected = selectedCategory === sub.value;
+                  return (
                     <button
                       type="button"
-                      key={subArea}
-                      className={`fchip text-[11px] py-1.5 px-3.5 ${activeSubRegion === subArea ? "on" : ""}`}
-                      onClick={() => setActiveSubRegion(activeSubRegion === subArea ? "" : subArea)}
+                      key={sub.value}
+                      className={`fchip text-[11px] py-1.5 px-3.5 flex items-center gap-1.5 ${isSelected ? "on" : ""}`}
+                      onClick={() =>
+                        onCategoryChange?.(isSelected ? activeCategoryGroup.value : sub.value)
+                      }
                     >
-                      {subArea}
+                      {sub.iconPath && (
+                        <Image
+                          src={sub.iconPath}
+                          alt=""
+                          width={14}
+                          height={14}
+                          className="w-3.5 h-3.5 object-contain inline-block shrink-0"
+                        />
+                      )}
+                      {sub.label}
                     </button>
-                  ))}
-                </div>
-              )}
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
