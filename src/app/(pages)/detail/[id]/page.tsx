@@ -13,6 +13,7 @@ import {
   DetailVisitCard,
   DetailGallery,
   DetailNearby,
+  NearbyItem,
 } from "@/components/detail";
 import { getDb } from "@/lib/db";
 import { resolveCoordinates } from "@/lib/geocode";
@@ -124,6 +125,110 @@ function getAttraction(idOrSlug: string): AttractionDetail | null {
     photos: typeof row.photos === "string" ? JSON.parse(row.photos) : (row.photos as string[] || []),
     lat: row.lat !== null && row.lat !== undefined ? Number(row.lat) : undefined,
     lng: row.lng !== null && row.lng !== undefined ? Number(row.lng) : undefined,
+  };
+}
+
+function shuffleArray<T>(items: T[]): T[] {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getNearbyPlaces(params: {
+  lat?: number;
+  lng?: number;
+  slug: string;
+  county?: string;
+  area?: string;
+}): {
+  attractions: NearbyItem[];
+  eat: NearbyItem[];
+  stay: NearbyItem[];
+} {
+  const { lat, lng, slug, county, area } = params;
+  const db = getDb();
+  const hasCoords = typeof lat === "number" && typeof lng === "number";
+
+  let rows: Array<{
+    slug: string;
+    title: string;
+    image_url: string | null;
+    town: string | null;
+    area: string | null;
+    categories: string | null;
+    lat: number | null;
+    lng: number | null;
+    dist_sq: number;
+  }> = [];
+
+  if (hasCoords) {
+    const query = `
+      SELECT slug, title, image_url, town, area, categories, lat, lng,
+             ((lat - ?) * (lat - ?) * 4761 + (lng - ?) * (lng - ?) * 1849) AS dist_sq
+      FROM attractions
+      WHERE lat IS NOT NULL AND lng IS NOT NULL AND slug != ? AND slug != '' AND image_url IS NOT NULL AND image_url != ''
+      GROUP BY slug
+      ORDER BY dist_sq ASC
+      LIMIT 100
+    `;
+    rows = db.prepare(query).all(lat, lat, lng, lng, slug) as typeof rows;
+  }
+
+  if (rows.length < 25 && (county || area)) {
+    const fallbackQuery = `
+      SELECT slug, title, image_url, town, area, categories, lat, lng,
+             0 AS dist_sq
+      FROM attractions
+      WHERE (county = ? OR area = ?) AND slug != ? AND slug != '' AND image_url IS NOT NULL AND image_url != ''
+      GROUP BY slug
+      ORDER BY RANDOM()
+      LIMIT 80
+    `;
+    const fallbackRows = db.prepare(fallbackQuery).all(county || "", area || "", slug) as typeof rows;
+    rows = [...rows, ...fallbackRows];
+  }
+
+  const EATING_OUT_KEYWORDS = ["eating out", "restaurant", "pub", "cafe", "dining", "bistro"];
+  const ACCOMMODATION_KEYWORDS = ["accommodation", "hotel", "b&b", "bed and breakfast", "guest house", "camping", "caravan", "inn", "stay"];
+  const ATTRACTION_KEYWORDS = ["attractions", "museum", "garden", "castle", "park", "historic", "zoo", "theatre", "landmark"];
+
+  const attractionPool: NearbyItem[] = [];
+  const eatPool: NearbyItem[] = [];
+  const stayPool: NearbyItem[] = [];
+  const seenSlugs = new Set<string>([slug]);
+
+  for (const r of rows) {
+    if (!r.slug || seenSlugs.has(r.slug)) continue;
+    seenSlugs.add(r.slug);
+
+    const lower = (r.categories || "").toLowerCase();
+    const isEat = EATING_OUT_KEYWORDS.some((k) => lower.includes(k));
+    const isStay = ACCOMMODATION_KEYWORDS.some((k) => lower.includes(k));
+    const isAttraction = ATTRACTION_KEYWORDS.some((k) => lower.includes(k)) || (!isEat && !isStay);
+
+    const miles = r.dist_sq ? Math.max(1, Math.round(Math.sqrt(r.dist_sq))) : undefined;
+    const item: NearbyItem = {
+      slug: r.slug,
+      title: r.title,
+      imageUrl: r.image_url || undefined,
+      town: r.town || r.area || undefined,
+      distanceMiles: miles,
+    };
+
+    if (isAttraction && attractionPool.length < 8) attractionPool.push(item);
+    else if (isEat && eatPool.length < 8) eatPool.push(item);
+    else if (isStay && stayPool.length < 8) stayPool.push(item);
+
+    if (attractionPool.length >= 8 && eatPool.length >= 8 && stayPool.length >= 8) break;
+  }
+
+  return {
+    attractions: shuffleArray(attractionPool).slice(0, 3),
+    eat: shuffleArray(eatPool).slice(0, 3),
+    stay: shuffleArray(stayPool).slice(0, 3),
   };
 }
 
@@ -339,6 +444,14 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
     }
   }
 
+  const nearbyPlaces = getNearbyPlaces({
+    lat: finalLat,
+    lng: finalLng,
+    slug: attraction.slug,
+    county: attraction.county,
+    area: attraction.area,
+  });
+
   return (
     <>
       <Navbar />
@@ -394,6 +507,9 @@ export default async function DetailDynamicPage({ params, searchParams }: Detail
           hideEatNearby={hideEatNearby}
           hideAttractionsNearby={hideAttractionsNearby}
           sectionOrder={sectionOrder}
+          attractions={nearbyPlaces.attractions}
+          eat={nearbyPlaces.eat}
+          stay={nearbyPlaces.stay}
         />
       </main>
       <Footer />
