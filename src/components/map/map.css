@@ -1591,7 +1591,8 @@ body[data-dir="logo"] .drawer .df .p {
         display: flex
     }
     .popcard {
-        display: none
+        z-index: 550;
+        width: min(280px, calc(100vw - 24px));
     }
 }
 

@@ -311,7 +311,7 @@ export function MapPage() {
     };
 
     const showPop = (p: Place) => {
-      if (window.innerWidth <= 900 || !leafletMap) return;
+      if (!leafletMap) return;
       const el = document.getElementById("pop");
       if (!el) return;
       const pt = leafletMap.latLngToContainerPoint([p.lat, p.lng]);
@@ -331,14 +331,16 @@ export function MapPage() {
         };
       }
 
-      const w = 272;
-      const mw = document.getElementById("map")?.clientWidth || 800;
-      const mh = document.getElementById("map")?.clientHeight || 600;
-      const x = Math.min(Math.max(pt.x - w / 2, 16), mw - w - 16);
+      const mw = document.getElementById("map")?.clientWidth || window.innerWidth;
+      const mh = document.getElementById("map")?.clientHeight || window.innerHeight;
+      const isMobile = window.innerWidth <= 760;
+      const w = isMobile ? Math.min(280, mw - 24) : 272;
+      const x = Math.min(Math.max(pt.x - w / 2, 12), mw - w - 12);
       let y = pt.y + 14;
-      if (y + 190 > mh) y = pt.y - 200;
+      const bottomLimit = isMobile ? mh - 110 : mh;
+      if (y + 190 > bottomLimit) y = pt.y - 200;
       el.style.left = x + "px";
-      el.style.top = Math.max(16, y) + "px";
+      el.style.top = Math.max(isMobile ? 64 : 16, y) + "px";
       el.classList.add("on");
     };
 
@@ -944,6 +946,10 @@ export function MapPage() {
           } else {
             render();
           }
+        });
+
+        leafletMap.on("movestart", () => {
+          hidePop();
         });
 
         leafletMap.on("moveend", () => {
