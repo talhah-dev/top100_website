@@ -10,34 +10,34 @@ export interface DestinationItem {
 
 export const DESTINATIONS: DestinationItem[] = [
   {
-    id: "british-isles",
-    name: "British Isles",
-    flagUrl: "https://flagcdn.com/w40/gb.png",
+    id: "all",
+    name: "All Countries",
+    flagUrl: "/flags/gb.svg",
   },
   {
     id: "england",
     name: "England",
-    flagUrl: "https://flagcdn.com/w40/gb-eng.png",
-  },
-  {
-    id: "island-of-ireland",
-    name: "Island of Ireland",
-    flagUrl: "https://flagcdn.com/w40/ie.png",
+    flagUrl: "/flags/england.svg",
   },
   {
     id: "scotland",
     name: "Scotland",
-    flagUrl: "https://flagcdn.com/w40/gb-sct.png",
+    flagUrl: "/flags/scotland.svg",
   },
   {
     id: "wales",
     name: "Wales",
-    flagUrl: "https://flagcdn.com/w40/gb-wls.png",
+    flagUrl: "/flags/wales.svg",
+  },
+  {
+    id: "ireland",
+    name: "Ireland",
+    flagUrl: "/flags/ireland.svg",
   },
   {
     id: "northern-ireland",
     name: "Northern Ireland",
-    flagUrl: "https://flagcdn.com/w40/gb-nir.png",
+    flagUrl: "/flags/northern-ireland.svg",
   },
 ];
 
@@ -89,7 +89,7 @@ export function WhereToGoDropdown({
   };
 
   return (
-    <div ref={containerRef} className="search-input-field">
+    <div ref={containerRef} className="search-dest-field">
       <input
         type="text"
         value={value}
@@ -104,7 +104,7 @@ export function WhereToGoDropdown({
       {isOpen && (
         <div className="search-dropdown-menu left-0 min-w-[280px] sm:min-w-[320px]">
           <div className="px-3 py-2 text-[11px] font-bold text-[#FABF33] uppercase tracking-wider border-b border-white/5">
-            Popular Destinations
+            Select Country
           </div>
           <div className="search-dropdown-list mt-1">
             {filtered.length > 0 ? (

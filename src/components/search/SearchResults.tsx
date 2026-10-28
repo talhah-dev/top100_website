@@ -27,6 +27,8 @@ interface SearchResultsProps {
   searchQuery?: string;
   selectedCategory?: string;
   onCategoryChange?: (category: string) => void;
+  selectedRegion?: string;
+  onRegionChange?: (region: string) => void;
 }
 
 const REGION_OPTIONS = [
@@ -101,8 +103,16 @@ export function SearchResults({
   searchQuery = "",
   selectedCategory = "All",
   onCategoryChange,
+  selectedRegion = "All",
+  onRegionChange,
 }: SearchResultsProps) {
-  const [activeRegion, setActiveRegion] = useState("All");
+  const [activeRegion, setActiveRegion] = useState(selectedRegion || "All");
+
+  useEffect(() => {
+    if (selectedRegion !== undefined) {
+      setActiveRegion(selectedRegion);
+    }
+  }, [selectedRegion]);
   const [activeSubRegion, setActiveSubRegion] = useState("");
   const [attractions, setAttractions] = useState<AttractionItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -195,13 +205,8 @@ export function SearchResults({
   return (
     <section className="results" id="results">
       <div className="wrap">
-        <div className="toolbar rv in flex flex-col items-start gap-4">
-          <div className="w-full flex items-center justify-between gap-4 flex-wrap">
-            <div className="tcount">
-              {loading && attractions.length === 0
-                ? "Searching places..."
-                : `Showing ${attractions.length} of ${total.toLocaleString()} places`}
-            </div>
+        <div className="toolbar rv in flex flex-col items-start gap-3 w-full">
+          <div className="filter-row filter-row-countries w-full flex items-center justify-between gap-4 flex-wrap">
             <div className="tchips flex-wrap">
               {REGION_OPTIONS.map((region) => (
                 <button
@@ -211,37 +216,51 @@ export function SearchResults({
                   onClick={() => {
                     setActiveRegion(region);
                     setActiveSubRegion("");
+                    onRegionChange?.(region);
                   }}
                 >
                   {region}
                 </button>
               ))}
-              <div className="flex items-center gap-1 flex-wrap">
-                {CORE_CATEGORIES.map((cat) => {
-                  const isGroupActive =
-                    selectedCategory === cat.value ||
-                    CATEGORY_GROUPS.find((g) => g.value === cat.value)?.subcategories.some(
-                      (s) => s.value === selectedCategory
-                    );
-                  return (
-                    <button
-                      type="button"
-                      key={cat.value}
-                      className={`fchip ${isGroupActive ? "on" : ""}`}
-                      onClick={() =>
-                        onCategoryChange?.(isGroupActive ? "All" : cat.value)
-                      }
-                    >
-                      {cat.label}
-                    </button>
-                  );
-                })}
-              </div>
+            </div>
+            <div className="tcount shrink-0">
+              {loading && attractions.length === 0
+                ? "Searching places..."
+                : `Showing ${attractions.length} of ${total.toLocaleString()} places`}
             </div>
           </div>
 
+          <div className="filter-row filter-row-categories w-full flex items-center gap-2 flex-wrap pt-1">
+            <button
+              type="button"
+              className={`fchip ${selectedCategory === "All" || !selectedCategory ? "on" : ""}`}
+              onClick={() => onCategoryChange?.("All")}
+            >
+              All Categories
+            </button>
+            {CORE_CATEGORIES.map((cat) => {
+              const isGroupActive =
+                selectedCategory === cat.value ||
+                CATEGORY_GROUPS.find((g) => g.value === cat.value)?.subcategories.some(
+                  (s) => s.value === selectedCategory
+                );
+              return (
+                <button
+                  type="button"
+                  key={cat.value}
+                  className={`fchip ${isGroupActive ? "on" : ""}`}
+                  onClick={() =>
+                    onCategoryChange?.(isGroupActive ? "All" : cat.value)
+                  }
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+
           {(activeCategoryGroup || (activeRegion !== "All" && REGION_SUB_OPTIONS[activeRegion])) && (
-            <div className="subfilters-container w-full flex flex-col gap-2.5 pt-3 border-t border-[rgba(185,193,212,0.12)]">
+            <div className="subfilters-container w-full flex flex-col gap-2.5 pt-2 border-t border-[rgba(185,193,212,0.12)]">
               {activeCategoryGroup && (
                 <div className="subfilters-row flex items-center gap-2 flex-wrap">
                   <button

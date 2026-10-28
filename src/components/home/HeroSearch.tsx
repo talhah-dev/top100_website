@@ -15,58 +15,41 @@ export interface DestinationItem {
 
 export const DESTINATIONS: DestinationItem[] = [
   {
-    id: "british-isles",
-    name: "British Isles",
-    flagUrl: "https://flagcdn.com/w40/gb.png",
+    id: "all",
+    name: "All Countries",
+    flagUrl: "/flags/gb.svg",
   },
   {
     id: "england",
     name: "England",
-    flagUrl: "https://flagcdn.com/w40/gb-eng.png",
-  },
-  {
-    id: "island-of-ireland",
-    name: "Island of Ireland",
-    flagUrl: "https://flagcdn.com/w40/ie.png",
+    flagUrl: "/flags/england.svg",
   },
   {
     id: "scotland",
     name: "Scotland",
-    flagUrl: "https://flagcdn.com/w40/gb-sct.png",
+    flagUrl: "/flags/scotland.svg",
   },
   {
     id: "wales",
     name: "Wales",
-    flagUrl: "https://flagcdn.com/w40/gb-wls.png",
+    flagUrl: "/flags/wales.svg",
+  },
+  {
+    id: "ireland",
+    name: "Ireland",
+    flagUrl: "/flags/ireland.svg",
   },
   {
     id: "northern-ireland",
     name: "Northern Ireland",
-    flagUrl: "https://flagcdn.com/w40/gb-nir.png",
+    flagUrl: "/flags/northern-ireland.svg",
   },
-];
-
-export interface CategoryItem {
-  label: string;
-  value: string;
-}
-
-export const CATEGORIES: CategoryItem[] = [
-  { label: "All Categories", value: "All" },
-  { label: "Attractions", value: "Attractions" },
-  { label: "Historical Places", value: "Historical Places" },
-  { label: "Gardens", value: "Garden" },
-  { label: "Museums", value: "Museums" },
-  { label: "Accommodation", value: "Accommodation" },
-  { label: "Hotels", value: "Hotels" },
-  { label: "Eating Out", value: "Eating Out" },
-  { label: "Iconic", value: "Iconic" },
-  { label: "Pet Friendly", value: "Pet Friendly" },
 ];
 
 export function HeroSearch() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [destination, setDestination] = useState("All");
   const [category, setCategory] = useState("All");
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
 
@@ -98,27 +81,21 @@ export function HeroSearch() {
     setIsDestOpen(false);
     setIsCatOpen(false);
 
-    const params = new URLSearchParams();
-    if (query.trim()) params.set("q", query.trim());
-    if (category && category !== "All") params.set("category", category);
-
     if (viewMode === "map") {
       router.push("/map");
       return;
     }
 
+    const params = new URLSearchParams();
+    if (query.trim()) params.set("q", query.trim());
+    if (destination && destination !== "All") params.set("area", destination);
+    if (category && category !== "All") params.set("category", category);
+
     const qs = params.toString();
     router.push(qs ? `/search?${qs}` : "/search");
   };
 
-  const filteredDestinations = query.trim()
-    ? DESTINATIONS.filter((d) =>
-        d.name.toLowerCase().includes(query.toLowerCase())
-      )
-    : DESTINATIONS;
-
-  const currentCategory =
-    CATEGORIES.find((c) => c.value === category) || CATEGORIES[0];
+  const selectedDest = DESTINATIONS.find((d) => d.name === destination);
 
   return (
     <form
@@ -126,51 +103,82 @@ export function HeroSearch() {
       className="search rv in"
       style={{ "--d": "1.15s" } as React.CSSProperties}
     >
-      <div ref={destRef} className="search-input-box">
+      <div className="search-keyword-box">
         <input
           type="text"
           value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            if (!isDestOpen) setIsDestOpen(true);
-          }}
-          onFocus={() => setIsDestOpen(true)}
-          placeholder="Where would you like to go?"
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="What would you like to search?"
         />
+      </div>
+
+      <div ref={destRef} className="search-dest-box">
+        <button
+          type="button"
+          onClick={() => {
+            setIsDestOpen((prev) => !prev);
+            setIsCatOpen(false);
+          }}
+          className="w-full flex items-center justify-between bg-transparent border-none text-[var(--cream,#F6EFDF)] text-sm cursor-pointer outline-none font-sans"
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            {selectedDest && destination !== "All" ? (
+              <img
+                src={selectedDest.flagUrl}
+                alt=""
+                width={20}
+                height={14}
+                className="w-5 h-3.5 object-cover rounded shrink-0 border border-white/10"
+              />
+            ) : null}
+            <span className="truncate">
+              {destination && destination !== "All"
+                ? destination
+                : "Where would you like to go?"}
+            </span>
+          </div>
+          <ChevronDown
+            className={`size-4 text-[#FABF33] transition-transform duration-200 shrink-0 ml-2 ${
+              isDestOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
         {isDestOpen && (
-          <div className="hero-dropdown-menu left-0 min-w-[280px] sm:min-w-[320px]">
+          <div className="hero-dropdown-menu left-0 min-w-[240px] sm:min-w-[270px]">
             <div className="px-3 py-2 text-[11px] font-bold text-[#FABF33] uppercase tracking-wider border-b border-white/5">
-              Popular Destinations
+              Select Country
             </div>
             <div className="hero-dropdown-list mt-1">
-              {filteredDestinations.length > 0 ? (
-                filteredDestinations.map((dest) => (
+              {DESTINATIONS.map((dest) => {
+                const isSelected =
+                  (dest.id === "all" && (!destination || destination === "All")) ||
+                  destination === dest.name;
+                return (
                   <button
                     key={dest.id}
                     type="button"
                     onClick={() => {
-                      setQuery(dest.name);
+                      setDestination(dest.id === "all" ? "All" : dest.name);
                       setIsDestOpen(false);
                     }}
-                    className="hero-dropdown-item"
+                    className={`hero-dropdown-item ${isSelected ? "active" : ""}`}
                   >
                     <img
                       src={dest.flagUrl}
                       alt={dest.name}
-                      width={28}
-                      height={20}
-                      className="w-7 h-5 object-cover rounded shadow-xs border border-white/10 shrink-0"
+                      width={24}
+                      height={16}
+                      className="w-6 h-4 object-cover rounded shadow-xs border border-white/10 shrink-0"
                       loading="lazy"
                     />
-                    <span>{dest.name}</span>
+                    <span className="flex-1 text-left">{dest.name}</span>
+                    {isSelected && (
+                      <Check className="size-3.5 text-[#FABF33] shrink-0 ml-2" />
+                    )}
                   </button>
-                ))
-              ) : (
-                <div className="px-3 py-3 text-xs text-[#B9C1D4] italic">
-                  Press search or enter to find &ldquo;{query}&rdquo;
-                </div>
-              )}
+                );
+              })}
             </div>
           </div>
         )}

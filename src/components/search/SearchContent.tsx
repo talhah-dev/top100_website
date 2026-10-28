@@ -10,9 +10,11 @@ export function SearchContent() {
   const searchParams = useSearchParams();
   const urlCategory = searchParams.get("category");
   const urlQuery = searchParams.get("q");
+  const urlArea = searchParams.get("area") || searchParams.get("destination");
   const urlView = searchParams.get("view");
 
   const [query, setQuery] = useState(urlQuery || "");
+  const [destination, setDestination] = useState(urlArea || "All");
   const [category, setCategory] = useState(urlCategory || "All");
   const [viewMode, setViewMode] = useState<"grid" | "map">(
     urlView === "map" ? "map" : "grid"
@@ -27,6 +29,10 @@ export function SearchContent() {
       setQuery(urlQuery);
     }
   }, [urlQuery]);
+
+  useEffect(() => {
+    setDestination(urlArea || "All");
+  }, [urlArea]);
 
   useEffect(() => {
     if (urlView === "map" || urlView === "grid") {
@@ -58,6 +64,18 @@ export function SearchContent() {
     window.history.replaceState(null, "", qs ? `/search?${qs}` : "/search");
   };
 
+  const handleDestinationChange = (newDest: string) => {
+    setDestination(newDest);
+    const params = new URLSearchParams(window.location.search);
+    if (newDest && newDest !== "All") {
+      params.set("area", newDest);
+    } else {
+      params.delete("area");
+    }
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `/search?${qs}` : "/search");
+  };
+
   const handleViewModeChange = (newView: "grid" | "map") => {
     if (newView === "map") {
       router.push("/map");
@@ -79,6 +97,8 @@ export function SearchContent() {
       <SearchHero
         query={query}
         onQueryChange={handleQueryChange}
+        destination={destination}
+        onDestinationChange={handleDestinationChange}
         category={category}
         onCategoryChange={handleCategoryChange}
         viewMode={viewMode}
@@ -88,6 +108,8 @@ export function SearchContent() {
         searchQuery={query}
         selectedCategory={category}
         onCategoryChange={handleCategoryChange}
+        selectedRegion={destination}
+        onRegionChange={handleDestinationChange}
       />
     </main>
   );
