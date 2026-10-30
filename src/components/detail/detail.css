@@ -178,7 +178,7 @@
     isolation: isolate;
 }
 
-.vmap svg {
+.vmap > svg {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -655,9 +655,16 @@
     --keyline-col: #F6EFDF;
 }
 
+.detail-leaflet-map.leaflet-container,
 .detail-leaflet-map .leaflet-container {
     background: #f2efe9;
     font-family: var(--body);
+}
+
+.detail-leaflet-map .leaflet-tile {
+    image-rendering: -webkit-optimize-contrast;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .detail-leaflet-map .pin {

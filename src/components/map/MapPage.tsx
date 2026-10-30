@@ -345,7 +345,7 @@ export function MapPage() {
 
       const mw = document.getElementById("map")?.clientWidth || window.innerWidth;
       const mh = document.getElementById("map")?.clientHeight || window.innerHeight;
-      const isMobile = window.innerWidth <= 760;
+      const isMobile = window.innerWidth <= 900;
       const w = isMobile ? Math.min(280, mw - 24) : 272;
       const x = Math.min(Math.max(pt.x - w / 2, 12), mw - w - 12);
       let y = pt.y + 14;
@@ -355,6 +355,8 @@ export function MapPage() {
       el.style.top = Math.max(isMobile ? 64 : 16, y) + "px";
       el.classList.add("on");
     };
+
+    let isSelecting = false;
 
     const select = (slug: string, fromMap?: boolean) => {
       S.sel = slug;
@@ -373,14 +375,28 @@ export function MapPage() {
           behavior: RM.matches ? "auto" : "smooth",
         });
       }
+
+      if (window.innerWidth <= 900) {
+        const panel = document.querySelector(".panel") as HTMLElement | null;
+        if (panel) {
+          panel.style.setProperty("--sheet-h", "96px");
+        }
+      }
+
       if (p) {
         if (!fromMap && leafletMap) {
+          isSelecting = true;
           leafletMap.panTo([p.lat, p.lng], {
             animate: !RM.matches,
             duration: 0.42,
           });
+          setTimeout(() => {
+            isSelecting = false;
+            showPop(p);
+          }, 450);
+        } else {
+          showPop(p);
         }
-        showPop(p);
       }
     };
 
@@ -1006,9 +1022,10 @@ export function MapPage() {
           fadeAnimation: !RM.matches,
         }).setView([53.21, -3.8], 11.6);
 
-        L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}", {
+        L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&scale=2", {
           maxZoom: 20,
           subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          tileSize: 256,
           attribution: "&copy; Google Maps",
         }).addTo(leafletMap);
 
@@ -1027,7 +1044,9 @@ export function MapPage() {
         });
 
         leafletMap.on("movestart", () => {
-          hidePop();
+          if (!isSelecting) {
+            hidePop();
+          }
         });
 
         leafletMap.on("moveend", () => {

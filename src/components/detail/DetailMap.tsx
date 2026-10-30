@@ -48,6 +48,9 @@ export function DetailMap({
     let leafletMap: import("leaflet").Map | null = null;
     let customMarker: import("leaflet").Marker | null = null;
 
+    let resizeObserver: ResizeObserver | null = null;
+    let timer: NodeJS.Timeout | null = null;
+
     async function initMap() {
       try {
         const L = await import("leaflet");
@@ -57,13 +60,31 @@ export function DetailMap({
           zoomControl: true,
           attributionControl: false,
           scrollWheelZoom: false,
-          zoomSnap: 0.25,
+          zoomSnap: 1,
+          zoomDelta: 1,
+          fadeAnimation: true,
         }).setView([latitude!, longitude!], 15);
 
-        L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}", {
+        L.tileLayer("https://{s}.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&scale=2", {
           maxZoom: 20,
           subdomains: ["mt0", "mt1", "mt2", "mt3"],
+          tileSize: 256,
         }).addTo(leafletMap);
+
+        if (typeof ResizeObserver !== "undefined" && containerRef.current) {
+          resizeObserver = new ResizeObserver(() => {
+            if (leafletMap) {
+              leafletMap.invalidateSize();
+            }
+          });
+          resizeObserver.observe(containerRef.current);
+        }
+
+        timer = setTimeout(() => {
+          if (leafletMap) {
+            leafletMap.invalidateSize();
+          }
+        }, 300);
 
         let iconsMap: Record<string, { colour?: string; file?: string }> = {};
         try {
@@ -194,6 +215,8 @@ export function DetailMap({
 
     return () => {
       isMounted = false;
+      if (timer) clearTimeout(timer);
+      if (resizeObserver) resizeObserver.disconnect();
       if (leafletMap) {
         leafletMap.remove();
         leafletMap = null;
