@@ -966,6 +966,7 @@ body::after {
 }
 
 .entry .frame {
+    display: block;
     position: relative;
     border-radius: 26px;
     overflow: hidden;

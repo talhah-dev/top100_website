@@ -92,7 +92,7 @@ export function Footer() {
         </div>
       </div>
       <div className="base">
-        &copy; 2026 Ryvel &middot; Founder Muhammad Afaq, design concept for Top&nbsp;100 Attractions
+        &copy; 2026  Top&nbsp;100 Attractions &middot; Company Registration Number: 07327527
       </div>
     </footer>
   );
