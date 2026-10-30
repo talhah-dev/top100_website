@@ -569,6 +569,11 @@
 }
 
 @media (max-width: 860px) {
+    .ghost100 {
+        display: none !important;
+        opacity: 0 !important;
+    }
+
     .search-bar-wrap {
         flex-direction: column;
         gap: 12px;

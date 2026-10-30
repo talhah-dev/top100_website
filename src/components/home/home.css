@@ -2140,6 +2140,11 @@ body::after {
 }
 
 @media (max-width: 860px) {
+    .hundred {
+        display: none !important;
+        opacity: 0 !important;
+    }
+
     .search {
         flex-direction: column;
         gap: 12px;
