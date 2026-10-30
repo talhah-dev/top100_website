@@ -560,7 +560,8 @@
     }
 
     .ghost100 {
-        font-size: 230px;
+        display: none !important;
+        opacity: 0 !important;
     }
 
     .shero {

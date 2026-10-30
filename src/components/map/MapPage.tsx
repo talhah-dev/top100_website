@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import "./map.css";
@@ -194,7 +194,19 @@ function typeWords(t: string) {
 }
 
 export function MapPage() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     document.body.setAttribute("data-base", "daylight");
@@ -874,43 +886,109 @@ export function MapPage() {
     const setupSheet = () => {
       const grab = document.getElementById("grab");
       const panel = document.querySelector(".panel") as HTMLElement | null;
-      if (!grab || !panel) return;
+      if (!panel) return;
+      const list = document.getElementById("list");
+
       const detents = () => {
         const h = window.innerHeight - 56;
         return [96, Math.round(h * 0.55), h - 8];
       };
-      let start: number | null = null;
+      let startY: number | null = null;
+      let startX: number | null = null;
       let startH = 0;
+      let activePointerId: number | null = null;
+      let isDraggingSheet = false;
+      let isListDrag = false;
 
       const setH = (px: number) => panel.style.setProperty("--sheet-h", px + "px");
       setH(detents()[1]);
 
-      grab.addEventListener("pointerdown", (e: PointerEvent) => {
-        start = e.clientY;
+      const onPointerDown = (e: PointerEvent) => {
+        if (window.innerWidth > 900) return;
+        const target = e.target as HTMLElement | null;
+        if (!target) return;
+
+        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.closest("input, textarea")) {
+          return;
+        }
+
+        isListDrag = !!target.closest("#list");
+        startY = e.clientY;
+        startX = e.clientX;
         startH = panel.getBoundingClientRect().height;
-        panel.classList.add("dragging");
-        grab.setPointerCapture(e.pointerId);
-      });
-      grab.addEventListener("pointermove", (e: PointerEvent) => {
-        if (start === null) return;
-        setH(Math.max(60, startH + (start - e.clientY)));
-      });
-      grab.addEventListener("pointerup", (e: PointerEvent) => {
-        if (start === null) return;
-        const h = panel.getBoundingClientRect().height;
-        const v = start - e.clientY;
-        start = null;
+        activePointerId = e.pointerId;
+        isDraggingSheet = false;
+      };
+
+      const onPointerMove = (e: PointerEvent) => {
+        if (startY === null || activePointerId !== e.pointerId) return;
+        const dy = startY - e.clientY;
+        const dx = Math.abs((startX ?? e.clientX) - e.clientX);
+
+        if (!isDraggingSheet) {
+          if (Math.abs(dy) > 8 && Math.abs(dy) > dx) {
+            const d = detents();
+            const isFullHeight = startH >= d[2] - 25;
+
+            if (isListDrag) {
+              if (isFullHeight) {
+                if (dy < 0 && (list?.scrollTop || 0) <= 0) {
+                  isDraggingSheet = true;
+                } else {
+                  return;
+                }
+              } else {
+                isDraggingSheet = true;
+              }
+            } else {
+              isDraggingSheet = true;
+            }
+
+            if (isDraggingSheet) {
+              panel.classList.add("dragging");
+              try {
+                panel.setPointerCapture(e.pointerId);
+              } catch (_) {}
+            }
+          }
+        }
+
+        if (isDraggingSheet) {
+          setH(Math.max(60, startH + dy));
+        }
+      };
+
+      const onPointerUp = (e: PointerEvent) => {
+        if (startY === null || (activePointerId !== null && activePointerId !== e.pointerId)) return;
+        const currentH = panel.getBoundingClientRect().height;
+        const wasDragging = isDraggingSheet;
+        startY = null;
+        startX = null;
+        activePointerId = null;
+        isDraggingSheet = false;
         panel.classList.remove("dragging");
-        const d = detents();
-        const target = d.reduce((a, b) => (Math.abs(b - h) < Math.abs(a - h) ? b : a));
-        setH(target);
-      });
-      grab.addEventListener("click", () => {
-        const d = detents();
-        const h = panel.getBoundingClientRect().height;
-        const i = d.reduce((a, b, j) => (Math.abs(d[j] - h) < Math.abs(d[a] - h) ? j : a), 0);
-        setH(d[(i + 1) % d.length]);
-      });
+
+        if (wasDragging) {
+          const d = detents();
+          const target = d.reduce((a, b) => (Math.abs(b - currentH) < Math.abs(a - currentH) ? b : a));
+          setH(target);
+        }
+      };
+
+      panel.addEventListener("pointerdown", onPointerDown);
+      panel.addEventListener("pointermove", onPointerMove);
+      panel.addEventListener("pointerup", onPointerUp);
+      panel.addEventListener("pointercancel", onPointerUp);
+
+      if (grab) {
+        grab.addEventListener("click", () => {
+          const d = detents();
+          const h = panel.getBoundingClientRect().height;
+          const i = d.reduce((a, b, j) => (Math.abs(d[j] - h) < Math.abs(d[a] - h) ? j : a), 0);
+          setH(d[(i + 1) % d.length]);
+        });
+      }
+
       window.addEventListener("resize", () => setH(detents()[1]));
     };
 
@@ -921,7 +999,7 @@ export function MapPage() {
 
         leafletMap = L.map(mapContainerRef.current, {
           zoomControl: false,
-          attributionControl: true,
+          attributionControl: false,
           zoomSnap: 0.25,
           minZoom: 5,
           maxZoom: 18,
@@ -1017,7 +1095,72 @@ export function MapPage() {
         <Link className="cta" href="/app">
           GET THE APP
         </Link>
+        <button
+          className="burger"
+          id="burger"
+          aria-label="Open menu"
+          type="button"
+          onClick={() => setMenuOpen(true)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </header>
+
+      <div id="mnav" className={menuOpen ? "open" : ""}>
+        <button
+          className="close"
+          id="mclose"
+          aria-label="Close menu"
+          type="button"
+          onClick={() => setMenuOpen(false)}
+        >
+          &times;
+        </button>
+        <Link href="/search?category=Attractions" onClick={() => setMenuOpen(false)}>Attractions</Link>
+        <Link href="/search?category=Accommodation" onClick={() => setMenuOpen(false)}>Places to Stay</Link>
+        <Link href="/search?category=Eating+Out" onClick={() => setMenuOpen(false)}>Places to Eat</Link>
+        <Link href="/map" onClick={() => setMenuOpen(false)}>Map</Link>
+        <Link href="/book" onClick={() => setMenuOpen(false)}>The Book</Link>
+        <Link href="/app" onClick={() => setMenuOpen(false)} style={{ color: "var(--gold)" }}>
+          Get the App
+        </Link>
+        <span className="foot-soc">
+          <a
+            href="https://www.facebook.com/Top100AttractionsUKIRELAND"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13.6 21v-7.6h2.5l.4-3h-2.9V8.5c0-.9.3-1.5 1.6-1.5h1.4V4.3c-.3 0-1.1-.1-2.1-.1-2.2 0-3.6 1.3-3.6 3.8v2.4H8.4v3h2.5V21z" />
+            </svg>
+          </a>
+          <a
+            href="https://x.com/top100attractio"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="X, formerly Twitter"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4.5 4l6 8.1L4.8 20h2.3l4.5-5.7L15.8 20h4.1l-6.3-8.5L19.5 4h-2.3l-4.2 5.3L9 4z" />
+            </svg>
+          </a>
+          <a
+            href="https://www.instagram.com/top100attractions"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+        </span>
+      </div>
 
       <div className="stage">
         <section className="panel" aria-label="Places in view">

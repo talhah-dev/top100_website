@@ -822,14 +822,7 @@ body[data-dir="logo"] .mapwrap::before {
 }
 
 .leaflet-control-attribution {
-    background: rgba(6, 11, 22, .78) !important;
-    color: var(--dim) !important;
-    font-size: 10.5px !important;
-    border-radius: 8px 0 0 0
-}
-
-.leaflet-control-attribution a {
-    color: var(--mist) !important
+    display: none !important;
 }
 
 /* altitude rail ------------------------------------------------------ */
@@ -1492,24 +1485,114 @@ body[data-dir="logo"] .drawer .df .p {
 
 .sheetgrab,
 .mobonly {
-    display: none
+    display: none;
+}
+
+.burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.burger span {
+    width: 26px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--gold);
+}
+
+#mnav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 84vw);
+    z-index: 10000;
+    background: rgba(7, 12, 24, .97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: calc(70px + env(safe-area-inset-top, 0px)) 34px calc(34px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    transform: translateX(105%);
+    transition: transform .5s var(--ease);
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 22px;
+    border-left: 1px solid rgba(var(--gold-rgb), .3);
+}
+
+#mnav.open {
+    transform: none;
+}
+
+#mnav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#mnav a:hover {
+    color: var(--gold);
+}
+
+#mnav .close {
+    position: absolute;
+    top: max(22px, calc(10px + env(safe-area-inset-top, 0px)));
+    right: max(22px, env(safe-area-inset-right, 0px));
+    font-size: 30px;
+    color: var(--gold);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.foot-soc {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.foot-soc a {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(var(--gold-rgb), .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    transition: border-color .3s var(--ease), background .3s var(--ease), transform .3s var(--ease);
+}
+
+.foot-soc a:hover {
+    border-color: var(--gold);
+    background: rgba(var(--gold-rgb), .12);
+    transform: translateY(-2px);
 }
 
 @media(max-width:900px) {
     .map-nav nav {
-        display: none
+        display: none;
     }
     .map-nav {
         gap: 12px;
-        padding: 0 12px
+        padding: 0 16px;
+        justify-content: space-between;
     }
     .map-nav .brand b {
-        font-size: 13.5px
+        display: none !important;
     }
     .map-nav .cta {
-        font-size: 10.5px;
-        padding: 0 12px;
-        height: 32px
+        display: none !important;
+    }
+    .map-nav .burger {
+        display: flex;
     }
     .stage {
         grid-template-columns: 1fr;
@@ -1537,6 +1620,18 @@ body[data-dir="logo"] .drawer .df .p {
     .panel.dragging {
         transition: none
     }
+    .sheetgrab,
+    .psearch,
+    .verdict,
+    .ptools,
+    .prail,
+    .frow,
+    .prule {
+        touch-action: none;
+    }
+    .psearch input {
+        touch-action: auto;
+    }
     .sheetgrab {
         display: block;
         width: 100%;
@@ -1544,7 +1639,7 @@ body[data-dir="logo"] .drawer .df .p {
         background: none;
         border: 0;
         position: relative;
-        touch-action: none
+        touch-action: none;
     }
     .sheetgrab::before {
         content: "";
@@ -1587,7 +1682,7 @@ body[data-dir="logo"] .drawer .df .p {
     .basesw {
         display: none
     }
-    .mobonly {
+.mobonly {
         display: flex
     }
     .popcard {

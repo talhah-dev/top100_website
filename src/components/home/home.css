@@ -2122,7 +2122,8 @@ body::after {
     }
 
     .hundred {
-        font-size: clamp(180px, 42vw, 260px)
+        display: none !important;
+        opacity: 0 !important;
     }
 
     .interlude {
