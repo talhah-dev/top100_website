@@ -284,6 +284,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 22px;
+    margin-bottom: 96px;
 }
 
 .areas .imgcard {
@@ -485,6 +486,7 @@
 
     .areas {
         grid-template-columns: 1fr;
+        margin-bottom: 64px;
     }
 
     .areas .imgcard {

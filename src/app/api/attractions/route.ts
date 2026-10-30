@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
     const params: (string | number)[] = []
 
     if (q) {
-      conditions.push("(title LIKE ? OR town LIKE ? OR county LIKE ? OR summary LIKE ?)")
+      conditions.push("(title LIKE ? OR town LIKE ? OR county LIKE ? OR summary LIKE ? OR area LIKE ?)")
       const pattern = `%${q}%`
-      params.push(pattern, pattern, pattern, pattern)
+      params.push(pattern, pattern, pattern, pattern, pattern)
     }
 
     if (category && category !== "All") {

@@ -15,34 +15,46 @@ export function FiguresSection() {
   const animatedRef = useRef(false);
 
   useEffect(() => {
+    let rafId: number | null = null;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && !animatedRef.current) {
-          animatedRef.current = true;
-          const startTime = performance.now();
-          const duration = 1400;
+        if (entry.isIntersecting) {
+          if (!animatedRef.current) {
+            animatedRef.current = true;
+            if (rafId) cancelAnimationFrame(rafId);
+            const startTime = performance.now();
+            const duration = 1400;
 
-          const animate = (now: number) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(1, elapsed / duration);
-            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const animate = (now: number) => {
+              const elapsed = now - startTime;
+              const progress = Math.min(1, elapsed / duration);
+              const easeOut = 1 - Math.pow(1 - progress, 3);
 
-            setCounts(statsData.map((s) => Math.round(s.target * easeOut)));
+              setCounts(statsData.map((s) => Math.round(s.target * easeOut)));
 
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            }
-          };
+              if (progress < 1) {
+                rafId = requestAnimationFrame(animate);
+              }
+            };
 
-          requestAnimationFrame(animate);
+            rafId = requestAnimationFrame(animate);
+          }
+        } else {
+          if (rafId) cancelAnimationFrame(rafId);
+          animatedRef.current = false;
+          setCounts([0, 0, 0, 0]);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      observer.disconnect();
+    };
   }, []);
 
   return (

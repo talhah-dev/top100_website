@@ -22,9 +22,15 @@ export const COUNTRY_AREAS: Record<string, string[]> = {
     "Scottish Borders",
     "Ayrshire & Arran",
     "Dumfries & Galloway",
-    "Edinburgh",
-    "Glasgow",
-    "Highlands"
+    "Loch Lomond, The Trossachs, Stirling and The Forth Valley",
+    "Highlands",
+    "Edinburgh & The Lothians",
+    "Greater Glasgow and The  Clyde Valley",
+    "Perthshire",
+    "Dundee & Angus",
+    "Isle of Skye",
+    "Aberdeenshire",
+    "Orkney Islands"
   ],
   "northern-ireland": [
     "Causeway Coast & Countryside",
@@ -33,26 +39,37 @@ export const COUNTRY_AREAS: Record<string, string[]> = {
     "Co. Derry/Londonderry/",
     "Co. Derry/Londonderry",
     "Co. Tyrone",
-    "Co. Antrim"
+    "Co. Antrim",
+    "Co. Fermanagh",
+    "Co. Armagh"
   ],
   ireland: [
-    "Causeway Coast & Countryside",
     "Co. Galway",
     "Co. Kerry",
-    "Co. Down",
     "Dublin City & Region",
     "Co. Clare",
     "Co. Wicklow",
     "Co. Cork",
-    "Co. Derry/Londonderry/",
-    "Co. Derry/Londonderry",
     "Co. Mayo",
-    "Belfast",
     "Co. Wexford",
     "Co. Waterford",
-    "Co. Tyrone",
     "Co. Meath",
-    "Co. Limerick"
+    "Co. Limerick",
+    "Co. Donegal",
+    "Co. Westmeath",
+    "Co. Sligo",
+    "Co. Kilkenny",
+    "Co. Kildare",
+    "Co. Roscommon",
+    "Co. Louth",
+    "Co. Tipperary",
+    "Co. Leitrim",
+    "Co. Cavan",
+    "Co. Offaly",
+    "Co. Monaghan",
+    "Co. Carlow",
+    "Co. Laois",
+    "Co. Longford"
   ],
   england: [
     "North Yorkshire",
@@ -62,11 +79,62 @@ export const COUNTRY_AREAS: Record<string, string[]> = {
     "West Yorkshire",
     "Gloucestershire",
     "Shropshire",
-    "Derbyshire"
+    "Derbyshire",
+    "Devon",
+    "Oxfordshire",
+    "Cornwall",
+    "Worcestershire",
+    "Greater Manchester",
+    "Herefordshire",
+    "East Riding, Hull & The Wolds",
+    "Dorset",
+    "Staffordshire",
+    "Liverpool",
+    "Warwickshire",
+    "Somerset",
+    "Lincolnshire",
+    "Nottinghamshire",
+    "Suffolk",
+    "Durham",
+    "Norfolk",
+    "Leicestershire",
+    "Hampshire",
+    "Kent",
+    "Bath, Bristol City & Region",
+    "Yorkshire NW",
+    "Wirral Peninsula",
+    "Isle of Wight",
+    "West Midlands & The Black Country"
   ]
 };
 
-const AREA_IMAGES: Record<string, string> = {
+const AREA_BADGES: Record<string, string> = {
+  "Snowdonia Mountain & Coast": "National Park & Peaks",
+  "Conwy Valley & Denbighshire": "Castles & Valleys",
+  "Anglesey": "Coastal Isle",
+  "North Yorkshire": "Moors & Coast",
+  "Cumbria": "Lake District Fells",
+  "Lancashire": "Heritage & Coast",
+  "Scottish Borders": "Historic Borderlands",
+  "Ayrshire & Arran": "Island & Coast",
+  "Dumfries & Galloway": "Forests & Solway Coast",
+  "Causeway Coast & Countryside": "Giant's Coast",
+  "Co. Down": "Mourne Mountains & Coast",
+  "Co. Derry/Londonderry": "Historic Walled City",
+  "Co. Galway": "Wild Atlantic Coast",
+  "Co. Kerry": "Lakes & Mountains",
+  "Dublin City & Region": "Capital & Heritage",
+  "Co. Clare": "Cliffs & Burren",
+  "Co. Cork": "Harbours & Coastal Haven",
+  "Highlands": "Highland Glens",
+  "Edinburgh & The Lothians": "Royal Heritage",
+  "Pembrokeshire": "Coastal National Park",
+  "Belfast": "Maritime & Culture",
+  "Cornwall": "Coves & Coast",
+  "Devon": "Moors & Rivieras"
+};
+
+const AREA_FALLBACK_IMAGES: Record<string, string> = {
   "Snowdonia Mountain & Coast": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=70",
   "Conwy Valley & Denbighshire": "https://images.unsplash.com/photo-1445964047600-cdbdb873673d?w=800&q=70",
   "Anglesey": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=70",
@@ -104,15 +172,31 @@ export function getDynamicCountryData(slug: string): CountryData | undefined {
     `).all(...targetAreas) as Array<{ area: string; total: number }>;
 
     const dynamicAreas: CountryArea[] = areaRows.map((row, idx) => {
-      const cleanArea = row.area.replace(/\\'/g, "'");
-      const existingArea = base.areas[idx];
+      const cleanArea = row.area.replace(/\\'/g, "'").replace(/\/+$/, "").trim();
+
+      const photoRow = db.prepare(`
+        SELECT image_url
+        FROM attractions
+        WHERE (area = ? OR area = ?)
+          AND image_url IS NOT NULL 
+          AND image_url != '' 
+          AND image_url NOT LIKE '%logo%'
+        ORDER BY (CASE WHEN featured = 1 THEN 0 ELSE 1 END),
+                 (CASE WHEN image_url LIKE '%.jpg%' OR image_url LIKE '%.jpeg%' OR image_url LIKE '%.png%' OR image_url LIKE '%.avif%' THEN 0 ELSE 1 END),
+                 id DESC
+        LIMIT 1
+      `).get(row.area, cleanArea) as { image_url: string } | undefined;
+
+      const badge = AREA_BADGES[cleanArea] || (idx === 0 ? "Top Destination" : idx === 1 ? "Featured Region" : "Must-Visit Area");
+      const img = photoRow?.image_url || AREA_FALLBACK_IMAGES[cleanArea] || base.areas[idx]?.img || "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=70";
+
       return {
-        badge: existingArea?.badge || "Featured Region",
+        badge,
         title: cleanArea,
         subtitle: `${row.total.toLocaleString()} curated attractions`,
-        img: AREA_IMAGES[cleanArea] || existingArea?.img || "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=70",
+        img,
         alt: cleanArea,
-        link: `/search?q=${encodeURIComponent(cleanArea)}`
+        link: `/search?area=${encodeURIComponent(cleanArea)}&q=${encodeURIComponent(cleanArea)}`
       };
     });
 
@@ -161,7 +245,7 @@ export function getDynamicCountryData(slug: string): CountryData | undefined {
       const existingPick = base.picks[idx];
 
       return {
-        badge: row.area.replace(/\\'/g, "'") || `${base.name}`,
+        badge: row.area.replace(/\\'/g, "'").replace(/\/+$/, "").trim() || `${base.name}`,
         title: row.title,
         quote: quoteText,
         img: row.image_url || existingPick?.img || "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&q=70",
