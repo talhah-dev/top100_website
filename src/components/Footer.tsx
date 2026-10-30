@@ -88,11 +88,12 @@ export function Footer() {
             <li><Link href="/book">Buy the Book</Link></li>
             <li><Link href="/app">Get the Free App</Link></li>
             <li><Link href="/contact">Contact Us</Link></li>
+            <li><Link href="/privacy">Privacy Policy</Link></li>
           </ul>
         </div>
       </div>
       <div className="base">
-        &copy; 2026  Top&nbsp;100 Attractions &middot; Company Registration Number: 07327527
+        &copy; 2026  Top&nbsp;100 Attractions &middot; Company Registration Number: 07327527 &middot; <Link href="/privacy" style={{ color: "inherit", textDecoration: "underline" }}>Privacy Policy</Link>
       </div>
     </footer>
   );

@@ -1,0 +1,220 @@
+.shero {
+    position: relative;
+    min-height: 48vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 190px 24px 70px;
+    background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 100%);
+}
+
+.shero::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -8%;
+    width: 860px;
+    height: 460px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse, rgba(250, 191, 51, .1), transparent 65%);
+    pointer-events: none;
+}
+
+.ghost100 {
+    position: absolute;
+    left: 50%;
+    top: 54%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(220px, 26vw, 420px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2.5px rgba(250, 191, 51, .3);
+    filter: drop-shadow(0 0 30px rgba(250, 191, 51, .18));
+    pointer-events: none;
+    user-select: none;
+}
+
+.shero .inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 24px;
+    max-width: 1000px;
+    width: 100%;
+}
+
+.shero h1 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(38px, 5.2vw, 72px);
+    line-height: 1.08;
+    margin: 16px 0 10px;
+    color: #fff;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, .5);
+}
+
+.shero .ssub {
+    color: var(--mist);
+    font-size: 17px;
+    max-width: 680px;
+    margin: 10px auto 0;
+    line-height: 1.6;
+}
+
+.privacy-section {
+    padding: 20px 24px 100px;
+    position: relative;
+}
+
+.privacy-container {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.privacy-card {
+    background: linear-gradient(135deg, rgba(20, 27, 46, 0.72) 0%, rgba(10, 17, 34, 0.85) 100%);
+    border: 1px solid rgba(250, 191, 51, 0.18);
+    border-radius: 22px;
+    padding: 38px 42px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.privacy-card:hover {
+    border-color: rgba(250, 191, 51, 0.35);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.55);
+}
+
+.privacy-card h2 {
+    font-family: var(--display);
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.privacy-card h2::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 22px;
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+.privacy-card p {
+    color: var(--mist, #B9C1D4);
+    font-size: 15.5px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+.privacy-card p:last-child {
+    margin-bottom: 0;
+}
+
+.privacy-list {
+    list-style: none;
+    padding: 0;
+    margin: 18px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.privacy-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--cream, #F6EFDF);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.privacy-list li::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 10px rgba(250, 191, 51, 0.6);
+}
+
+.privacy-action-bar {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.privacy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-decoration: none;
+    transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.privacy-btn-gold {
+    background: linear-gradient(110deg, var(--gold, #FABF33), #D99A00);
+    color: #141B2E;
+}
+
+.privacy-btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(250, 191, 51, 0.35);
+}
+
+.privacy-btn-outline {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(250, 191, 51, 0.4);
+    color: var(--gold);
+}
+
+.privacy-btn-outline:hover {
+    background: rgba(250, 191, 51, 0.12);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 860px) {
+    .ghost100 {
+        display: none !important;
+        opacity: 0 !important;
+    }
+
+    .shero {
+        padding: 150px 20px 50px;
+    }
+
+    .privacy-card {
+        padding: 28px 22px;
+        border-radius: 18px;
+    }
+
+    .privacy-card h2 {
+        font-size: 22px;
+    }
+
+    .privacy-card p {
+        font-size: 14.5px;
+    }
+}
+
