@@ -2068,8 +2068,18 @@ body::after {
     }
 
     .nav .links,
+    .nav .actions .nav-search,
+    .nav .actions .cta {
+        display: none !important;
+    }
+
     .nav .actions {
-        display: none
+        flex: unset !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin-left: auto !important;
+        margin-right: 8px !important;
     }
 
     .nav .burger {

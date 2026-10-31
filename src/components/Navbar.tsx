@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { LanguageSelector } from "./LanguageSelector";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -108,6 +109,7 @@ export function Navbar() {
           <Link className="cta" href="/app">
             GET THE APP
           </Link>
+          <LanguageSelector />
         </div>
 
         <button

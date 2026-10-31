@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { LanguageSelector } from "../LanguageSelector";
 import "./map.css";
 
 interface Place {
@@ -1114,6 +1115,7 @@ export function MapPage() {
         <Link className="cta" href="/app">
           GET THE APP
         </Link>
+        <LanguageSelector />
         <button
           className="burger"
           id="burger"

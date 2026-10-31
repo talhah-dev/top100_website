@@ -89,11 +89,12 @@ export function Footer() {
             <li><Link href="/app">Get the Free App</Link></li>
             <li><Link href="/contact">Contact Us</Link></li>
             <li><Link href="/privacy">Privacy Policy</Link></li>
+            <li><Link href="/sitemap">Sitemap</Link></li>
           </ul>
         </div>
       </div>
       <div className="base">
-        &copy; 2026  Top&nbsp;100 Attractions &middot; Company Registration Number: 07327527 &middot; <Link href="/privacy" style={{ color: "inherit", textDecoration: "underline" }}>Privacy Policy</Link>
+        &copy; 2026  Top&nbsp;100 Attractions &middot; Company Registration Number: 07327527 &middot; <Link href="/privacy" style={{ color: "inherit", textDecoration: "underline" }}>Privacy Policy</Link> &middot; <Link href="/sitemap" style={{ color: "inherit", textDecoration: "underline" }}>Sitemap</Link>
       </div>
     </footer>
   );

@@ -1591,6 +1591,9 @@ body[data-dir="logo"] .drawer .df .p {
     .map-nav .cta {
         display: none !important;
     }
+    .map-nav .language-selector-wrap {
+        margin-left: auto !important;
+    }
     .map-nav .burger {
         display: flex;
     }

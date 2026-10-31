@@ -168,3 +168,104 @@
 .category-clean-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(250, 191, 51, 0.65) !important;
 }
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+}
+
+#goog-gt-tt {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.language-selector-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.goog-te-gadget {
+  font-size: 0px !important;
+  color: transparent !important;
+  line-height: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+}
+
+.goog-te-gadget > span,
+.goog-te-gadget div {
+  font-size: 0px !important;
+  color: transparent !important;
+  line-height: 0 !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+  display: inline-block !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  color: #F6EFDF !important;
+  background-color: #0E1628 !important;
+  border: 1px solid rgba(250, 191, 51, 0.45) !important;
+  border-radius: 999px !important;
+  padding: 6px 12px !important;
+  font-weight: 700 !important;
+  font-family: 'Raleway', sans-serif !important;
+  letter-spacing: 0.03em !important;
+  outline: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.25s ease !important;
+  height: 38px !important;
+  width: 140px !important;
+  max-width: 140px !important;
+  text-overflow: ellipsis !important;
+}
+
+.goog-te-gadget .goog-te-combo:hover,
+.goog-te-gadget .goog-te-combo:focus {
+  border-color: #FABF33 !important;
+  box-shadow: 0 0 0 2px rgba(250, 191, 51, 0.25), 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+.goog-te-gadget .goog-te-combo option {
+  background-color: #0E1628 !important;
+  color: #F6EFDF !important;
+  padding: 8px !important;
+  font-size: 13px !important;
+}
+
+.goog-te-gadget .goog-logo-link,
+.goog-te-gadget img,
+.goog-logo-link,
+.goog-te-gadget a,
+.goog-te-gadget > span:last-child {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  font-size: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .goog-te-gadget .goog-te-combo {
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+    height: 34px !important;
+    width: 120px !important;
+    max-width: 120px !important;
+  }
+}
