@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { GoogleTranslateProvider } from "@/components/GoogleTranslateProvider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -35,7 +36,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <GoogleTranslateProvider />
+      </body>
     </html>
   );
 }

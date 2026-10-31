@@ -260,12 +260,54 @@ iframe.goog-te-banner-frame {
   font-size: 0 !important;
 }
 
+.lang-select-custom {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #0E1628;
+  color: #F6EFDF;
+  border: 1px solid rgba(250, 191, 51, 0.45);
+  border-radius: 999px;
+  padding: 6px 28px 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Raleway', sans-serif;
+  letter-spacing: 0.03em;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
+  height: 38px;
+  width: 140px;
+  max-width: 140px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23F6EFDF' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.lang-select-custom:hover,
+.lang-select-custom:focus {
+  border-color: #FABF33;
+  box-shadow: 0 0 0 2px rgba(250, 191, 51, 0.25), 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.lang-select-custom option {
+  background-color: #0E1628;
+  color: #F6EFDF;
+  padding: 8px;
+  font-size: 13px;
+}
+
 @media (max-width: 600px) {
-  .goog-te-gadget .goog-te-combo {
-    padding: 5px 10px !important;
+  .goog-te-gadget .goog-te-combo,
+  .lang-select-custom {
+    padding: 5px 24px 5px 10px !important;
     font-size: 11px !important;
     height: 34px !important;
     width: 120px !important;
     max-width: 120px !important;
+    background-position: right 8px center !important;
   }
 }
