@@ -33,8 +33,8 @@ export function BookNavbar() {
   return (
     <>
       <nav className={`nav book-nav ${scrolled ? "scrolled" : ""}`} id="bookNav">
-        <div className="brand">
-          <Link href="/">
+        <div className="brand" style={{ flexShrink: 0 }}>
+          <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
             <Image
               className="logo"
               src="/images/logo.png"
@@ -42,6 +42,7 @@ export function BookNavbar() {
               width={160}
               height={70}
               priority
+              style={{ flexShrink: 0, width: "auto", height: "70px", objectFit: "contain" }}
             />
           </Link>
           <span className="bcol">

@@ -35,8 +35,8 @@ export function Navbar() {
   return (
     <>
       <nav className={`nav ${scrolled ? "scrolled" : ""}`} id="nav">
-        <div className="brand">
-          <Link href="/">
+        <div className="brand" style={{ flexShrink: 0 }}>
+          <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
             <Image
               className="logo"
               src="/images/logo.png"
@@ -44,6 +44,7 @@ export function Navbar() {
               width={160}
               height={70}
               priority
+              style={{ flexShrink: 0, width: "auto", height: "70px", objectFit: "contain" }}
             />
           </Link>
           <span className="bcol">

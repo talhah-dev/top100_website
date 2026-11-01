@@ -1099,8 +1099,8 @@ export function MapPage() {
   return (
     <>
       <header className="map-nav">
-        <Link className="brand" href="/">
-          <Image src="/images/logo.png" alt="Logo" width={120} height={34} style={{ height: "34px", width: "auto" }} />
+        <Link className="brand" href="/" style={{ flexShrink: 0 }}>
+          <Image src="/images/logo.png" alt="Logo" width={120} height={34} style={{ height: "34px", width: "auto", flexShrink: 0, objectFit: "contain" }} />
           <b>Stevenson&apos;s Top 100</b>
         </Link>
         <nav aria-label="Sections">
