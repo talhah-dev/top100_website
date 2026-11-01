@@ -11,8 +11,8 @@ export function Footer() {
             src="/images/logo.png"
             id="footLogo"
             alt="Top 100 Attractions badge"
-            width={180}
-            height={180}
+            width={80}
+            height={80}
             className="flogo"
           />
           <div>

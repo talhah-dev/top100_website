@@ -16,12 +16,13 @@ export function GoogleTranslateProvider() {
         };
       };
       googleTranslateElementInit?: () => void;
+      googleTranslator?: unknown;
     };
 
     win.googleTranslateElementInit = () => {
       if (win.google?.translate?.TranslateElement) {
         try {
-          new win.google.translate.TranslateElement(
+          win.googleTranslator = new win.google.translate.TranslateElement(
             {
               pageLanguage: "en",
               autoDisplay: false,
@@ -55,12 +56,15 @@ export function GoogleTranslateProvider() {
       );
       iframes.forEach((el) => {
         const item = el as HTMLElement;
-        item.style.setProperty("display", "none", "important");
+        item.style.setProperty("position", "fixed", "important");
+        item.style.setProperty("top", "-9999px", "important");
+        item.style.setProperty("left", "-9999px", "important");
         item.style.setProperty("visibility", "hidden", "important");
-        item.style.setProperty("height", "0px", "important");
-        item.style.setProperty("width", "0px", "important");
+        item.style.setProperty("height", "1px", "important");
+        item.style.setProperty("width", "1px", "important");
         item.style.setProperty("opacity", "0", "important");
         item.style.setProperty("pointer-events", "none", "important");
+        item.style.setProperty("z-index", "-99999", "important");
       });
     };
 

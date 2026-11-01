@@ -188,8 +188,6 @@ body {
 iframe.skiptranslate,
 iframe.goog-te-banner-frame,
 .goog-te-banner-frame,
-#goog-gt-tt,
-.goog-te-balloon-frame,
 div.skiptranslate iframe,
 body>.skiptranslate,
 iframe[id*=":1.container"],
@@ -197,7 +195,21 @@ iframe[id*=":2.container"],
 iframe[class*="skiptranslate"],
 iframe[class*="goog-te-banner-frame"],
 iframe[style*="z-index: 2147483647"],
-iframe[style*="z-index: 10000000"],
+iframe[style*="z-index: 10000000"] {
+  position: fixed !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  visibility: hidden !important;
+  height: 1px !important;
+  width: 1px !important;
+  border: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -99999 !important;
+}
+
+#goog-gt-tt,
+.goog-te-balloon-frame,
 .VIpgJd-ZVi9od-ORHb-OEVmcb,
 .VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
   display: none !important;

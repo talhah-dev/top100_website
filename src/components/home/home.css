@@ -1626,36 +1626,38 @@ body::after {
 
 .fbrand {
     position: relative;
-    padding-left: 196px
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding-left: 0;
 }
 
 .flogo {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
+    position: static;
+    height: 75px;
     width: auto;
     object-fit: contain;
-    object-position: left top;
-    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, .5))
+    object-position: left center;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, .5));
 }
 
 @media (max-width:640px) {
     .fbrand {
-        padding-left: 116px
+        padding-left: 0;
     }
 
     .flogo {
-        height: 96px
+        height: 65px;
     }
 
     .brandbar {
-        flex-wrap: wrap
+        flex-wrap: wrap;
     }
 
     .brandbar em {
         white-space: normal;
-        letter-spacing: .1em
+        letter-spacing: .1em;
     }
 }
 
