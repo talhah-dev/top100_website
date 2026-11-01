@@ -1,102 +1,147 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import * as Flags from "country-flag-icons/react/3x2";
 
-const LANGUAGES = [
-  { value: "", label: "Select Language" },
-  { value: "af", label: "Afrikaans" },
-  { value: "sq", label: "Albanian" },
-  { value: "am", label: "Amharic" },
-  { value: "ar", label: "Arabic" },
-  { value: "hy", label: "Armenian" },
-  { value: "az", label: "Azerbaijani" },
-  { value: "eu", label: "Basque" },
-  { value: "be", label: "Belarusian" },
-  { value: "bn", label: "Bengali" },
-  { value: "bs", label: "Bosnian" },
-  { value: "bg", label: "Bulgarian" },
-  { value: "ca", label: "Catalan" },
-  { value: "zh-CN", label: "Chinese (Simplified)" },
-  { value: "zh-TW", label: "Chinese (Traditional)" },
-  { value: "hr", label: "Croatian" },
-  { value: "cs", label: "Czech" },
-  { value: "da", label: "Danish" },
-  { value: "nl", label: "Dutch" },
-  { value: "en", label: "English" },
-  { value: "et", label: "Estonian" },
-  { value: "tl", label: "Filipino" },
-  { value: "fi", label: "Finnish" },
-  { value: "fr", label: "French" },
-  { value: "gl", label: "Galician" },
-  { value: "ka", label: "Georgian" },
-  { value: "de", label: "German" },
-  { value: "el", label: "Greek" },
-  { value: "gu", label: "Gujarati" },
-  { value: "ht", label: "Haitian Creole" },
-  { value: "iw", label: "Hebrew" },
-  { value: "hi", label: "Hindi" },
-  { value: "hu", label: "Hungarian" },
-  { value: "is", label: "Icelandic" },
-  { value: "id", label: "Indonesian" },
-  { value: "ga", label: "Irish" },
-  { value: "it", label: "Italian" },
-  { value: "ja", label: "Japanese" },
-  { value: "jw", label: "Javanese" },
-  { value: "kn", label: "Kannada" },
-  { value: "kk", label: "Kazakh" },
-  { value: "km", label: "Khmer" },
-  { value: "ko", label: "Korean" },
-  { value: "la", label: "Latin" },
-  { value: "lv", label: "Latvian" },
-  { value: "lt", label: "Lithuanian" },
-  { value: "mk", label: "Macedonian" },
-  { value: "ms", label: "Malay" },
-  { value: "ml", label: "Malayalam" },
-  { value: "mt", label: "Maltese" },
-  { value: "mr", label: "Marathi" },
-  { value: "mn", label: "Mongolian" },
-  { value: "ne", label: "Nepali" },
-  { value: "no", label: "Norwegian" },
-  { value: "fa", label: "Persian" },
-  { value: "pl", label: "Polish" },
-  { value: "pt", label: "Portuguese" },
-  { value: "pa", label: "Punjabi" },
-  { value: "ro", label: "Romanian" },
-  { value: "ru", label: "Russian" },
-  { value: "sr", label: "Serbian" },
-  { value: "si", label: "Sinhala" },
-  { value: "sk", label: "Slovak" },
-  { value: "sl", label: "Slovenian" },
-  { value: "so", label: "Somali" },
-  { value: "es", label: "Spanish" },
-  { value: "sw", label: "Swahili" },
-  { value: "sv", label: "Swedish" },
-  { value: "ta", label: "Tamil" },
-  { value: "te", label: "Telugu" },
-  { value: "th", label: "Thai" },
-  { value: "tr", label: "Turkish" },
-  { value: "uk", label: "Ukrainian" },
-  { value: "ur", label: "Urdu" },
-  { value: "vi", label: "Vietnamese" },
-  { value: "cy", label: "Welsh" },
-  { value: "yi", label: "Yiddish" },
-  { value: "zu", label: "Zulu" },
+interface LangDef {
+  value: string;
+  label: string;
+  flag: string;
+}
+
+const LANGUAGES: LangDef[] = [
+  { value: "en", label: "English", flag: "GB" },
+  { value: "fr", label: "French", flag: "FR" },
+  { value: "es", label: "Spanish", flag: "ES" },
+  { value: "de", label: "German", flag: "DE" },
+  { value: "it", label: "Italian", flag: "IT" },
+  { value: "nl", label: "Dutch", flag: "NL" },
+  { value: "zh-CN", label: "Chinese (Simplified)", flag: "CN" },
+  { value: "zh-TW", label: "Chinese (Traditional)", flag: "TW" },
+  { value: "ja", label: "Japanese", flag: "JP" },
+  { value: "ko", label: "Korean", flag: "KR" },
+  { value: "ar", label: "Arabic", flag: "SA" },
+  { value: "ru", label: "Russian", flag: "RU" },
+  { value: "pt", label: "Portuguese", flag: "PT" },
+  { value: "pl", label: "Polish", flag: "PL" },
+  { value: "tr", label: "Turkish", flag: "TR" },
+  { value: "el", label: "Greek", flag: "GR" },
+  { value: "sv", label: "Swedish", flag: "SE" },
+  { value: "no", label: "Norwegian", flag: "NO" },
+  { value: "da", label: "Danish", flag: "DK" },
+  { value: "fi", label: "Finnish", flag: "FI" },
+  { value: "cs", label: "Czech", flag: "CZ" },
+  { value: "ro", label: "Romanian", flag: "RO" },
+  { value: "hu", label: "Hungarian", flag: "HU" },
+  { value: "uk", label: "Ukrainian", flag: "UA" },
+  { value: "vi", label: "Vietnamese", flag: "VN" },
+  { value: "th", label: "Thai", flag: "TH" },
+  { value: "id", label: "Indonesian", flag: "ID" },
+  { value: "ms", label: "Malay", flag: "MY" },
+  { value: "hi", label: "Hindi", flag: "IN" },
+  { value: "bn", label: "Bengali", flag: "BD" },
+  { value: "ur", label: "Urdu", flag: "PK" },
+  { value: "fa", label: "Persian", flag: "IR" },
+  { value: "iw", label: "Hebrew", flag: "IL" },
+  { value: "bg", label: "Bulgarian", flag: "BG" },
+  { value: "hr", label: "Croatian", flag: "HR" },
+  { value: "sk", label: "Slovak", flag: "SK" },
+  { value: "sl", label: "Slovenian", flag: "SI" },
+  { value: "et", label: "Estonian", flag: "EE" },
+  { value: "lv", label: "Latvian", flag: "LV" },
+  { value: "lt", label: "Lithuanian", flag: "LT" },
+  { value: "ga", label: "Irish", flag: "IE" },
+  { value: "cy", label: "Welsh", flag: "GB" },
+  { value: "is", label: "Icelandic", flag: "IS" },
+  { value: "af", label: "Afrikaans", flag: "ZA" },
+  { value: "sq", label: "Albanian", flag: "AL" },
+  { value: "am", label: "Amharic", flag: "ET" },
+  { value: "hy", label: "Armenian", flag: "AM" },
+  { value: "az", label: "Azerbaijani", flag: "AZ" },
+  { value: "eu", label: "Basque", flag: "ES" },
+  { value: "be", label: "Belarusian", flag: "BY" },
+  { value: "bs", label: "Bosnian", flag: "BA" },
+  { value: "ca", label: "Catalan", flag: "ES" },
+  { value: "gl", label: "Galician", flag: "ES" },
+  { value: "ka", label: "Georgian", flag: "GE" },
+  { value: "gu", label: "Gujarati", flag: "IN" },
+  { value: "ht", label: "Haitian Creole", flag: "HT" },
+  { value: "jw", label: "Javanese", flag: "ID" },
+  { value: "kn", label: "Kannada", flag: "IN" },
+  { value: "kk", label: "Kazakh", flag: "KZ" },
+  { value: "km", label: "Khmer", flag: "KH" },
+  { value: "la", label: "Latin", flag: "VA" },
+  { value: "mk", label: "Macedonian", flag: "MK" },
+  { value: "ml", label: "Malayalam", flag: "IN" },
+  { value: "mt", label: "Maltese", flag: "MT" },
+  { value: "mr", label: "Marathi", flag: "IN" },
+  { value: "mn", label: "Mongolian", flag: "MN" },
+  { value: "ne", label: "Nepali", flag: "NP" },
+  { value: "pa", label: "Punjabi", flag: "IN" },
+  { value: "sr", label: "Serbian", flag: "RS" },
+  { value: "si", label: "Sinhala", flag: "LK" },
+  { value: "so", label: "Somali", flag: "SO" },
+  { value: "sw", label: "Swahili", flag: "KE" },
+  { value: "ta", label: "Tamil", flag: "IN" },
+  { value: "te", label: "Telugu", flag: "IN" },
+  { value: "tl", label: "Filipino", flag: "PH" },
+  { value: "yi", label: "Yiddish", flag: "IL" },
+  { value: "zu", label: "Zulu", flag: "ZA" },
 ];
 
+function FlagIcon({ code }: { code?: string }) {
+  if (!code) {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ width: 20, height: 14, flexShrink: 0 }}
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    );
+  }
+
+  const FlagComponent = (Flags as Record<string, React.ComponentType<{ style?: React.CSSProperties }> | undefined>)[code];
+  if (!FlagComponent) return null;
+
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        width: 20,
+        height: 14,
+        overflow: "hidden",
+        borderRadius: 2,
+        flexShrink: 0,
+        boxShadow: "0 1px 3px rgba(0,0,0,0.4)",
+      }}
+    >
+      <FlagComponent style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    </span>
+  );
+}
+
 function getSavedLanguage(): string {
-  if (typeof document === "undefined") return "";
+  if (typeof document === "undefined") return "en";
   const match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
   if (match) {
     const parts = match[1].split("/");
-    return parts[2] || parts[1] || "";
+    return parts[2] || parts[1] || "en";
   }
-  return "";
+  return "en";
 }
 
 function applyGoogleLanguage(langCode: string) {
   const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
   if (combo) {
-    combo.value = langCode;
+    combo.value = langCode === "en" ? "" : langCode;
     combo.dispatchEvent(new Event("change"));
   }
 
@@ -111,13 +156,16 @@ function applyGoogleLanguage(langCode: string) {
 }
 
 export function LanguageSelector() {
-  const [currentLang, setCurrentLang] = useState("");
+  const [currentLang, setCurrentLang] = useState("en");
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const [mounted, setMounted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
     const active = getSavedLanguage();
-    if (active) {
+    if (active && active !== "en") {
       setCurrentLang(active);
       const applyWhenReady = () => {
         const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
@@ -131,29 +179,115 @@ export function LanguageSelector() {
         }
       };
       applyWhenReady();
+    } else {
+      setCurrentLang("en");
     }
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lang = e.target.value;
-    setCurrentLang(lang);
-    applyGoogleLanguage(lang);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const handleSelect = (val: string) => {
+    setCurrentLang(val);
+    applyGoogleLanguage(val);
+    setIsOpen(false);
+    setSearch("");
   };
 
+  const currentObj = LANGUAGES.find((l) => l.value === currentLang) || LANGUAGES[0];
+
+  const filtered = LANGUAGES.filter((l) =>
+    l.label.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="language-selector-wrap">
-      <select
+    <div className="language-selector-wrap" ref={containerRef}>
+      <button
+        type="button"
         aria-label="Select Language"
+        title={currentObj.label}
+        aria-expanded={isOpen}
         className="lang-select-custom notranslate"
-        value={mounted ? currentLang : ""}
-        onChange={handleChange}
+        onClick={() => setIsOpen(!isOpen)}
       >
-        {LANGUAGES.map((l) => (
-          <option key={l.value} value={l.value}>
-            {l.label}
-          </option>
-        ))}
-      </select>
+        <FlagIcon code={currentObj.flag} />
+        <svg
+          className={`lang-chevron ${isOpen ? "open" : ""}`}
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="lang-dropdown-menu notranslate">
+          <div className="lang-search-box">
+            <input
+              type="text"
+              placeholder="Search language..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="lang-search-input"
+              autoFocus
+            />
+          </div>
+          <div className="lang-options-list category-clean-scrollbar">
+            {filtered.map((l) => (
+              <button
+                key={l.value}
+                type="button"
+                className={`lang-option-item ${currentLang === l.value ? "active" : ""}`}
+                onClick={() => handleSelect(l.value)}
+              >
+                <FlagIcon code={l.flag} />
+                <span className="lang-option-name">{l.label.toUpperCase()}</span>
+                {currentLang === l.value && (
+                  <svg
+                    className="lang-check"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FABF33"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
