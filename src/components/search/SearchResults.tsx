@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
@@ -53,19 +53,15 @@ export function SearchResults({
   selectedRegion = "All",
   onRegionChange,
 }: SearchResultsProps) {
-  const [activeRegion, setActiveRegion] = useState(selectedRegion || "All");
-
-  useEffect(() => {
-    if (selectedRegion !== undefined) {
-      setActiveRegion(selectedRegion);
-    }
-  }, [selectedRegion]);
   const [attractions, setAttractions] = useState<AttractionItem[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [navigatingSlug, setNavigatingSlug] = useState<string | number | null>(null);
+
+  const abortRef = useRef<AbortController | null>(null);
+  const reqIdRef = useRef<number>(0);
 
   useEffect(() => {
     const handleReset = () => setNavigatingSlug(null);
@@ -88,6 +84,16 @@ export function SearchResults({
 
   const fetchResults = useCallback(
     async (pageToFetch: number, append: boolean = false) => {
+      if (!append && abortRef.current) {
+        abortRef.current.abort();
+      }
+      const controller = new AbortController();
+      if (!append) {
+        abortRef.current = controller;
+      }
+
+      const currentReqId = ++reqIdRef.current;
+
       if (append) {
         setLoadingMore(true);
       } else {
@@ -98,14 +104,18 @@ export function SearchResults({
         const params = new URLSearchParams();
         if (searchQuery.trim()) params.set("q", searchQuery.trim());
         if (selectedCategory && selectedCategory !== "All") params.set("category", selectedCategory);
-        if (activeRegion && activeRegion !== "All") params.set("area", activeRegion);
+        if (selectedRegion && selectedRegion !== "All") params.set("area", selectedRegion);
         params.set("page", pageToFetch.toString());
         params.set("limit", "12");
 
-        const res = await fetch(`/api/attractions?${params.toString()}`);
+        const res = await fetch(`/api/attractions?${params.toString()}`, {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error("Failed to load attractions");
 
         const data = await res.json();
+        if (currentReqId !== reqIdRef.current) return;
+
         setTotal(data.total || 0);
 
         if (append) {
@@ -119,14 +129,19 @@ export function SearchResults({
         } else {
           setAttractions(data.attractions || []);
         }
-      } catch (err) {
-        console.error(err);
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        if (currentReqId === reqIdRef.current) {
+          console.error(err);
+        }
       } finally {
-        setLoading(false);
-        setLoadingMore(false);
+        if (currentReqId === reqIdRef.current) {
+          setLoading(false);
+          setLoadingMore(false);
+        }
       }
     },
-    [searchQuery, selectedCategory, activeRegion]
+    [searchQuery, selectedCategory, selectedRegion]
   );
 
   useEffect(() => {
@@ -157,9 +172,8 @@ export function SearchResults({
                 <button
                   type="button"
                   key={region}
-                  className={`fchip ${activeRegion === region ? "on" : ""}`}
+                  className={`fchip ${selectedRegion === region ? "on" : ""}`}
                   onClick={() => {
-                    setActiveRegion(region);
                     onRegionChange?.(region);
                   }}
                 >

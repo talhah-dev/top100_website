@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, MapPin, Search } from "lucide-react";
 import { CategoryTreeDropdown } from "./CategoryTreeDropdown";
 import { getCategoryLabel, getCategoryIcon } from "./category-data";
 
@@ -45,6 +45,27 @@ export const DESTINATIONS: DestinationItem[] = [
   },
 ];
 
+export const POPULAR_TOWNS = [
+  "London",
+  "Edinburgh",
+  "Cardiff",
+  "Belfast",
+  "Dublin",
+  "Bath",
+  "York",
+  "Conwy",
+  "Llandudno",
+  "Galway",
+  "Chester",
+  "Liverpool",
+  "Swansea",
+  "Windsor",
+  "Oxford",
+  "Cambridge",
+  "Inverness",
+  "Tenby",
+];
+
 interface SearchHeroProps {
   query?: string;
   onQueryChange?: (val: string) => void;
@@ -70,6 +91,7 @@ export function SearchHero({
 }: SearchHeroProps) {
   const [isDestOpen, setIsDestOpen] = useState(false);
   const [isCatOpen, setIsCatOpen] = useState(false);
+  const [destSearch, setDestSearch] = useState("");
 
   const destRef = useRef<HTMLDivElement>(null);
   const catRef = useRef<HTMLDivElement>(null);
@@ -99,6 +121,18 @@ export function SearchHero({
   };
 
   const selectedDest = DESTINATIONS.find((d) => d.name === destination);
+
+  const filteredCountries = DESTINATIONS.filter((d) =>
+    destSearch.trim() ? d.name.toLowerCase().includes(destSearch.toLowerCase()) : true
+  );
+
+  const filteredTowns = POPULAR_TOWNS.filter((t) =>
+    destSearch.trim() ? t.toLowerCase().includes(destSearch.toLowerCase()) : true
+  );
+
+  const exactMatch =
+    DESTINATIONS.some((d) => d.name.toLowerCase() === destSearch.trim().toLowerCase()) ||
+    POPULAR_TOWNS.some((t) => t.toLowerCase() === destSearch.trim().toLowerCase());
 
   return (
     <header className="shero">
@@ -144,6 +178,8 @@ export function SearchHero({
                     height={14}
                     className="w-5 h-3.5 object-cover rounded shrink-0 border border-white/10"
                   />
+                ) : destination && destination !== "All" ? (
+                  <MapPin className="size-3.5 text-[#FABF33] shrink-0" />
                 ) : null}
                 <span className="truncate">
                   {destination && destination !== "All"
@@ -159,40 +195,107 @@ export function SearchHero({
             </button>
 
             {isDestOpen && (
-              <div className="search-dropdown-menu left-0 min-w-[240px] sm:min-w-[270px]">
-                <div className="px-3 py-2 text-[11px] font-bold text-[#FABF33] uppercase tracking-wider border-b border-white/5">
-                  Select Country
+              <div className="search-dropdown-menu left-0 min-w-[260px] sm:min-w-[290px] max-h-[380px] overflow-hidden flex flex-col">
+                <div className="p-2 border-b border-white/10 shrink-0">
+                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 focus-within:border-[#FABF33]/60 transition-colors">
+                    <Search className="size-3.5 text-[#FABF33] shrink-0" />
+                    <input
+                      type="text"
+                      placeholder="Search town, city or country..."
+                      value={destSearch}
+                      onChange={(e) => setDestSearch(e.target.value)}
+                      className="w-full bg-transparent border-none text-xs text-[#F6EFDF] placeholder-[#B9C1D4]/60 outline-none font-sans"
+                      autoFocus
+                    />
+                  </div>
                 </div>
-                <div className="search-dropdown-list mt-1">
-                  {DESTINATIONS.map((dest) => {
-                    const isSelected =
-                      (dest.id === "all" && (!destination || destination === "All")) ||
-                      destination === dest.name;
-                    return (
+
+                <div className="search-dropdown-list flex-1 overflow-y-auto category-clean-scrollbar p-1">
+                  {filteredCountries.length > 0 && (
+                    <>
+                      <div className="px-3 py-1.5 text-[10px] font-bold text-[#FABF33] uppercase tracking-wider">
+                        Countries
+                      </div>
+                      {filteredCountries.map((dest) => {
+                        const isSelected =
+                          (dest.id === "all" && (!destination || destination === "All")) ||
+                          destination === dest.name;
+                        return (
+                          <button
+                            key={dest.id}
+                            type="button"
+                            onClick={() => {
+                              onDestinationChange?.(dest.id === "all" ? "All" : dest.name);
+                              setIsDestOpen(false);
+                              setDestSearch("");
+                            }}
+                            className={`search-dropdown-item ${isSelected ? "active" : ""}`}
+                          >
+                            <img
+                              src={dest.flagUrl}
+                              alt={dest.name}
+                              width={24}
+                              height={16}
+                              className="w-6 h-4 object-cover rounded shadow-xs border border-white/10 shrink-0"
+                              loading="lazy"
+                            />
+                            <span className="flex-1 text-left">{dest.name}</span>
+                            {isSelected && (
+                              <Check className="size-3.5 text-[#FABF33] shrink-0 ml-2" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </>
+                  )}
+
+                  {filteredTowns.length > 0 && (
+                    <>
+                      <div className="px-3 py-1.5 text-[10px] font-bold text-[#FABF33] uppercase tracking-wider mt-1 border-t border-white/5 pt-2">
+                        Popular Towns & Cities
+                      </div>
+                      {filteredTowns.map((town) => {
+                        const isSelected = destination === town;
+                        return (
+                          <button
+                            key={town}
+                            type="button"
+                            onClick={() => {
+                              onDestinationChange?.(town);
+                              setIsDestOpen(false);
+                              setDestSearch("");
+                            }}
+                            className={`search-dropdown-item ${isSelected ? "active" : ""}`}
+                          >
+                            <MapPin className="size-3.5 text-[#FABF33] shrink-0 mr-1" />
+                            <span className="flex-1 text-left">{town}</span>
+                            {isSelected && (
+                              <Check className="size-3.5 text-[#FABF33] shrink-0 ml-2" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </>
+                  )}
+
+                  {destSearch.trim() && !exactMatch && (
+                    <div className="border-t border-white/5 mt-1 pt-1">
                       <button
-                        key={dest.id}
                         type="button"
                         onClick={() => {
-                          onDestinationChange?.(dest.id === "all" ? "All" : dest.name);
+                          onDestinationChange?.(destSearch.trim());
                           setIsDestOpen(false);
+                          setDestSearch("");
                         }}
-                        className={`search-dropdown-item ${isSelected ? "active" : ""}`}
+                        className="search-dropdown-item text-[#FABF33]"
                       >
-                        <img
-                          src={dest.flagUrl}
-                          alt={dest.name}
-                          width={24}
-                          height={16}
-                          className="w-6 h-4 object-cover rounded shadow-xs border border-white/10 shrink-0"
-                          loading="lazy"
-                        />
-                        <span className="flex-1 text-left">{dest.name}</span>
-                        {isSelected && (
-                          <Check className="size-3.5 text-[#FABF33] shrink-0 ml-2" />
-                        )}
+                        <MapPin className="size-3.5 text-[#FABF33] shrink-0 mr-1" />
+                        <span className="flex-1 text-left">
+                          Search in &ldquo;{destSearch.trim()}&rdquo;
+                        </span>
                       </button>
-                    );
-                  })}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

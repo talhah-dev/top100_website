@@ -18,9 +18,16 @@ export async function GET(request: NextRequest) {
     const params: (string | number)[] = []
 
     if (q) {
-      conditions.push("(title LIKE ? OR town LIKE ? OR county LIKE ? OR summary LIKE ? OR area LIKE ?)")
-      const pattern = `%${q}%`
-      params.push(pattern, pattern, pattern, pattern, pattern)
+      const words = q.split(/\s+/).filter(Boolean)
+      if (words.length > 0) {
+        words.forEach((word) => {
+          conditions.push(
+            "(title LIKE ? OR town LIKE ? OR county LIKE ? OR area LIKE ? OR address LIKE ? OR address2 LIKE ? OR postcode LIKE ? OR summary LIKE ? OR description LIKE ? OR categories LIKE ?)"
+          )
+          const pattern = `%${word}%`
+          params.push(pattern, pattern, pattern, pattern, pattern, pattern, pattern, pattern, pattern, pattern)
+        })
+      }
     }
 
     if (category && category !== "All") {
@@ -28,18 +35,141 @@ export async function GET(request: NextRequest) {
       params.push(`%"${category}"%`)
     }
 
+    const SCOTLAND_AREAS = [
+      "Scottish Borders",
+      "Ayrshire & Arran",
+      "Dumfries & Galloway",
+      "Loch Lomond, The Trossachs, Stirling and The Forth Valley",
+      "Highlands",
+      "Highland",
+      "Edinburgh & The Lothians",
+      "Greater Glasgow and The  Clyde Valley",
+      "Perthshire",
+      "Dundee & Angus",
+      "Isle of Skye",
+      "Aberdeenshire",
+      "Orkney Islands",
+      "Argyll & The Islands",
+      "Fife"
+    ]
+
+    const WALES_AREAS = [
+      "Snowdonia Mountain & Coast",
+      "Conwy Valley & Denbighshire",
+      "Anglesey",
+      "Mid Wales & Brecon",
+      "Pembrokeshire",
+      "Ceredigion / Cardigan Bay",
+      "North East Wales",
+      "Carmarthenshire",
+      "Wye Valley & Vale of Usk",
+      "Glamorgan's Coast & Countryside",
+      "Glamorgan\\'s Coast & Countryside",
+      "Cardiff",
+      "South Wales Valleys",
+      "Swansea & Gower Coast"
+    ]
+
+    const NI_AREAS = [
+      "Causeway Coast & Countryside",
+      "Belfast",
+      "Co. Down",
+      "Co. Derry/Londonderry/",
+      "Co. Derry/Londonderry",
+      "Co. Tyrone",
+      "Co. Antrim",
+      "Co. Fermanagh",
+      "Co. Armagh",
+      "Northern Ireland"
+    ]
+
+    const IRELAND_AREAS = [
+      "Co. Galway",
+      "Co. Kerry",
+      "Dublin City & Region",
+      "Co. Clare",
+      "Co. Wicklow",
+      "Co. Cork",
+      "Co. Mayo",
+      "Co. Wexford",
+      "Co. Waterford",
+      "Co. Meath",
+      "Co. Limerick",
+      "Co. Donegal",
+      "Co. Westmeath",
+      "Co. Sligo",
+      "Co. Kilkenny",
+      "Co. Kildare",
+      "Co. Roscommon",
+      "Co. Louth",
+      "Co. Tipperary",
+      "Co. Leitrim",
+      "Co. Cavan",
+      "Co. Offaly",
+      "Co. Monaghan",
+      "Co. Carlow",
+      "Co. Laois",
+      "Co. Longford",
+      "Ireland's Islands",
+      "Ireland\\'s Islands"
+    ]
+
+    const ENGLAND_AREAS = [
+      "North Yorkshire",
+      "Cumbria",
+      "Lancashire",
+      "Cheshire",
+      "West Yorkshire",
+      "Gloucestershire",
+      "Shropshire",
+      "Derbyshire",
+      "Devon",
+      "Oxfordshire",
+      "Cornwall",
+      "Worcestershire",
+      "Greater Manchester",
+      "Herefordshire",
+      "East Riding, Hull & The Wolds",
+      "Dorset",
+      "Staffordshire",
+      "Liverpool",
+      "Warwickshire",
+      "Somerset",
+      "Lincolnshire",
+      "Nottinghamshire",
+      "Suffolk",
+      "Durham",
+      "Norfolk",
+      "Leicestershire",
+      "Hampshire",
+      "Kent",
+      "Bath, Bristol City & Region",
+      "Yorkshire NW",
+      "Wirral Peninsula",
+      "Isle of Wight",
+      "West Midlands & The Black Country",
+      "South Yorkshire",
+      "East Sussex",
+      "Northumberland",
+      "Wiltshire",
+      "Yorkshire Borderlands",
+      "London"
+    ]
+
+    const toInList = (items: string[]) => items.map((s) => `'${s.replace(/'/g, "''")}'`).join(",")
+
     const REGION_CLAUSES: Record<string, string> = {
       England:
-        "(area LIKE '%England%' OR county IN ('North Yorkshire','West Yorkshire','South Yorkshire','Yorkshire','Cumbria','Lancashire','Cheshire','Derbyshire','Shropshire','Cornwall','Devon','Dorset','Somerset','Gloucestershire','Hampshire','Kent','East Sussex','West Sussex','Surrey','Berkshire','Oxfordshire','Buckinghamshire','Bedfordshire','Hertfordshire','Essex','Suffolk','Norfolk','Cambridgeshire','Northamptonshire','Warwickshire','Worcestershire','Herefordshire','Staffordshire','Leicestershire','Rutland','Lincolnshire','Nottinghamshire','Northumberland','County Durham','Tyne and Wear','Greater Manchester','Merseyside','London','Greater London','Wiltshire','Bristol') OR area IN ('North Yorkshire','West Yorkshire','South Yorkshire','Yorkshire Borderlands','Yorkshire NW','Cumbria','Lancashire','Cheshire','Derbyshire','Shropshire','Cornwall','Devon','Dorset','Somerset','Gloucestershire','Bath, Bristol City & Region','Hampshire','Kent','East Sussex','West Sussex','Berkshire','Oxfordshire','Essex','Suffolk','Norfolk','Cambridgeshire','Northamptonshire','Warwickshire','Worcestershire','Herefordshire','Staffordshire','Leicestershire','Lincolnshire','Nottinghamshire','Northumberland','County Durham','Durham','East Riding, Hull & The Wolds','Greater Manchester','Liverpool','Wirral Peninsula','Isle of Wight','West Midlands & The Black Country') OR town LIKE '%London%')",
+        `(area IN (${toInList(ENGLAND_AREAS)}) OR area LIKE '%England%' OR town LIKE '%London%' OR address LIKE '%London%' OR county IN ('North Yorkshire','West Yorkshire','South Yorkshire','Yorkshire','Cumbria','Lancashire','Cheshire','Derbyshire','Shropshire','Cornwall','Devon','Dorset','Somerset','Gloucestershire','Hampshire','Kent','East Sussex','West Sussex','Surrey','Berkshire','Oxfordshire','Buckinghamshire','Bedfordshire','Hertfordshire','Essex','Suffolk','Norfolk','Cambridgeshire','Northamptonshire','Warwickshire','Worcestershire','Herefordshire','Staffordshire','Leicestershire','Rutland','Lincolnshire','Nottinghamshire','Northumberland','County Durham','Tyne and Wear','Greater Manchester','Merseyside','London','Greater London','Wiltshire','Bristol'))`,
       Wales:
-        "(area LIKE '%Wales%' OR county IN ('Gwynedd','Conwy','Anglesey','Powys','Pembrokeshire','Ceredigion','Carmarthenshire','Denbighshire','Flintshire','Wrexham','Monmouthshire','Newport','Cardiff','Swansea','Neath Port Talbot','Bridgend','Rhondda Cynon Taf','Merthyr Tydfil','Caerphilly','Blaenau Gwent','Torfaen','Vale of Glamorgan') OR area IN ('Snowdonia Mountain & Coast','Anglesey','Mid Wales & Brecon','North East Wales','Pembrokeshire','Ceredigion / Cardigan Bay','Carmarthenshire','Wye Valley & Vale of Usk','Conwy Valley & Denbighshire'))",
+        `(area IN (${toInList(WALES_AREAS)}) OR area LIKE '%Wales%' OR county IN ('Gwynedd','Conwy','Anglesey','Powys','Pembrokeshire','Ceredigion','Carmarthenshire','Denbighshire','Flintshire','Wrexham','Monmouthshire','Newport','Cardiff','Swansea','Neath Port Talbot','Bridgend','Rhondda Cynon Taf','Merthyr Tydfil','Caerphilly','Blaenau Gwent','Torfaen','Vale of Glamorgan'))`,
       "Northern Ireland":
-        "(area LIKE '%Causeway Coast%' OR area LIKE '%Belfast%' OR area LIKE '%Northern Ireland%' OR county IN ('Co. Antrim','Co. Down','Co. Londonderry','Co. Tyrone','Co. Armagh','Co. Fermanagh'))",
+        `(area IN (${toInList(NI_AREAS)}) OR area LIKE '%Northern Ireland%' OR county IN ('Co. Antrim','Co. Down','Co. Londonderry','Co. Tyrone','Co. Armagh','Co. Fermanagh'))`,
       Ireland:
-        "(area LIKE '%Ireland%' OR area LIKE '%Dublin%' OR county IN ('Co. Galway','Co. Kerry','Co. Cork','Co. Clare','Co. Mayo','Co. Meath','Co. Waterford','Co. Dublin','Co. Wicklow','Co. Donegal','Co. Wexford','Co. Kilkenny','Co. Limerick','Co. Sligo','Co. Tipperary','Co. Kildare','Co. Louth','Co. Westmeath','Co. Cavan','Co. Monaghan','Co. Roscommon','Co. Leitrim','Co. Laois','Co. Offaly','Co. Carlow','Co. Longford'))",
+        `(area IN (${toInList(IRELAND_AREAS)}) OR area LIKE '%Ireland%' OR area LIKE '%Dublin%')`,
       Scotland:
-        "(area LIKE '%Scotland%' OR area LIKE '%Highland%' OR area LIKE '%Edinburgh%' OR area LIKE '%Glasgow%' OR county IN ('Dumfries & Galloway','Scottish Borders','Highland','Highlands','Aberdeenshire','Fife','Perth & Kinross','Stirling','Argyll & Bute','City of Edinburgh','Glasgow City','Angus','Moray','South Ayrshire','North Ayrshire','East Lothian','Midlothian','West Lothian'))",
-      London: "(area LIKE '%London%' OR county LIKE '%London%' OR town LIKE '%London%')",
+        `(area IN (${toInList(SCOTLAND_AREAS)}) OR area LIKE '%Scotland%' OR county IN ('Dumfries & Galloway','Scottish Borders','Highland','Highlands','Aberdeenshire','Fife','Perth & Kinross','Stirling','Argyll & Bute','City of Edinburgh','Glasgow City','Angus','Moray','South Ayrshire','North Ayrshire','East Lothian','Midlothian','West Lothian'))`,
+      London: "(area LIKE '%London%' OR county LIKE '%London%' OR town LIKE '%London%' OR address LIKE '%London%')",
       Cornwall: "(area LIKE '%Cornwall%' OR county LIKE '%Cornwall%')",
       Cumbria: "(area LIKE '%Cumbria%' OR county LIKE '%Cumbria%')",
       Devon: "(area LIKE '%Devon%' OR county LIKE '%Devon%')",
@@ -51,9 +181,9 @@ export async function GET(request: NextRequest) {
       if (REGION_CLAUSES[area]) {
         conditions.push(REGION_CLAUSES[area])
       } else {
-        conditions.push("(area LIKE ? OR county LIKE ? OR town LIKE ?)")
+        conditions.push("(area LIKE ? OR county LIKE ? OR town LIKE ? OR address LIKE ? OR address2 LIKE ? OR postcode LIKE ?)")
         const pattern = `%${area}%`
-        params.push(pattern, pattern, pattern)
+        params.push(pattern, pattern, pattern, pattern, pattern, pattern)
       }
     }
 

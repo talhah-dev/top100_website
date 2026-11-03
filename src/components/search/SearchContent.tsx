@@ -14,6 +14,7 @@ export function SearchContent() {
   const urlView = searchParams.get("view");
 
   const [query, setQuery] = useState(urlQuery || "");
+  const [debouncedQuery, setDebouncedQuery] = useState(urlQuery || "");
   const [destination, setDestination] = useState(urlArea || "All");
   const [category, setCategory] = useState(urlCategory || "All");
   const [viewMode, setViewMode] = useState<"grid" | "map">(
@@ -21,24 +22,35 @@ export function SearchContent() {
   );
 
   useEffect(() => {
-    setCategory(urlCategory || "All");
-  }, [urlCategory]);
+    const q = searchParams.get("q") || "";
+    const a = searchParams.get("area") || searchParams.get("destination") || "All";
+    const c = searchParams.get("category") || "All";
+    const v = searchParams.get("view");
 
-  useEffect(() => {
-    if (urlQuery !== null) {
-      setQuery(urlQuery);
+    setQuery(q);
+    setDebouncedQuery(q);
+    setDestination(a);
+    setCategory(c);
+    if (v === "map" || v === "grid") {
+      setViewMode(v);
     }
-  }, [urlQuery]);
+  }, [searchParams]);
 
   useEffect(() => {
-    setDestination(urlArea || "All");
-  }, [urlArea]);
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+      const params = new URLSearchParams(window.location.search);
+      if (query.trim()) {
+        params.set("q", query.trim());
+      } else {
+        params.delete("q");
+      }
+      const qs = params.toString();
+      window.history.replaceState(null, "", qs ? `/search?${qs}` : "/search");
+    }, 250);
 
-  useEffect(() => {
-    if (urlView === "map" || urlView === "grid") {
-      setViewMode(urlView);
-    }
-  }, [urlView]);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const handleCategoryChange = (newCat: string) => {
     setCategory(newCat);
@@ -54,14 +66,6 @@ export function SearchContent() {
 
   const handleQueryChange = (newQuery: string) => {
     setQuery(newQuery);
-    const params = new URLSearchParams(window.location.search);
-    if (newQuery.trim()) {
-      params.set("q", newQuery.trim());
-    } else {
-      params.delete("q");
-    }
-    const qs = params.toString();
-    window.history.replaceState(null, "", qs ? `/search?${qs}` : "/search");
   };
 
   const handleDestinationChange = (newDest: string) => {
@@ -74,6 +78,24 @@ export function SearchContent() {
     }
     const qs = params.toString();
     window.history.replaceState(null, "", qs ? `/search?${qs}` : "/search");
+  };
+
+  const handleSearchSubmit = () => {
+    setDebouncedQuery(query);
+    const params = new URLSearchParams(window.location.search);
+    if (query.trim()) params.set("q", query.trim());
+    else params.delete("q");
+    if (destination && destination !== "All") params.set("area", destination);
+    else params.delete("area");
+    if (category && category !== "All") params.set("category", category);
+    else params.delete("category");
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `/search?${qs}` : "/search");
+
+    const el = document.getElementById("results");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleViewModeChange = (newView: "grid" | "map") => {
@@ -103,9 +125,10 @@ export function SearchContent() {
         onCategoryChange={handleCategoryChange}
         viewMode={viewMode}
         onViewModeChange={handleViewModeChange}
+        onSearch={handleSearchSubmit}
       />
       <SearchResults
-        searchQuery={query}
+        searchQuery={debouncedQuery}
         selectedCategory={category}
         onCategoryChange={handleCategoryChange}
         selectedRegion={destination}
