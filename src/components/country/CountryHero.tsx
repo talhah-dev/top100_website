@@ -60,7 +60,7 @@ export function CountryHero({ country }: CountryHeroProps) {
           {country.subheadline}
         </p>
         <div className="hbtns rv in" style={{ "--d": ".55s" } as React.CSSProperties}>
-          <Link className="hbtn line" href="/map">
+          <Link className="hbtn line" href={`/map?area=${encodeURIComponent(country.name)}`}>
             OPEN THE MAP
           </Link>
         </div>

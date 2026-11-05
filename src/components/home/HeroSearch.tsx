@@ -54,6 +54,7 @@ export const POPULAR_TOWNS = [
   "Dublin",
   "Bath",
   "York",
+  "Halifax",
   "Conwy",
   "Llandudno",
   "Galway",
@@ -103,17 +104,17 @@ export function HeroSearch() {
     setIsDestOpen(false);
     setIsCatOpen(false);
 
+    const params = new URLSearchParams();
+    if (query.trim()) params.set("q", query.trim());
+    if (destination && destination !== "All" && destination !== "All Countries") params.set("area", destination);
+    if (category && category !== "All") params.set("category", category);
+    const qs = params.toString();
+
     if (viewMode === "map") {
-      router.push("/map");
+      router.push(qs ? `/map?${qs}` : "/map");
       return;
     }
 
-    const params = new URLSearchParams();
-    if (query.trim()) params.set("q", query.trim());
-    if (destination && destination !== "All") params.set("area", destination);
-    if (category && category !== "All") params.set("category", category);
-
-    const qs = params.toString();
     router.push(qs ? `/search?${qs}` : "/search");
   };
 
@@ -340,7 +341,14 @@ export function HeroSearch() {
         <button
           type="button"
           className={`segbtn ${viewMode === "map" ? "on" : ""}`}
-          onClick={() => router.push("/map")}
+          onClick={() => {
+            const params = new URLSearchParams();
+            if (query.trim()) params.set("q", query.trim());
+            if (destination && destination !== "All" && destination !== "All Countries") params.set("area", destination);
+            if (category && category !== "All") params.set("category", category);
+            const qs = params.toString();
+            router.push(qs ? `/map?${qs}` : "/map");
+          }}
         >
           &#8982; Map
         </button>

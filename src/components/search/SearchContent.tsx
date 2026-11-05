@@ -81,6 +81,15 @@ export function SearchContent() {
   };
 
   const handleSearchSubmit = () => {
+    if (viewMode === "map") {
+      const params = new URLSearchParams();
+      if (query.trim()) params.set("q", query.trim());
+      if (destination && destination !== "All" && destination !== "All Countries") params.set("area", destination);
+      if (category && category !== "All") params.set("category", category);
+      const qs = params.toString();
+      router.push(qs ? `/map?${qs}` : "/map");
+      return;
+    }
     setDebouncedQuery(query);
     const params = new URLSearchParams(window.location.search);
     if (query.trim()) params.set("q", query.trim());
@@ -100,7 +109,12 @@ export function SearchContent() {
 
   const handleViewModeChange = (newView: "grid" | "map") => {
     if (newView === "map") {
-      router.push("/map");
+      const params = new URLSearchParams();
+      if (query.trim()) params.set("q", query.trim());
+      if (destination && destination !== "All" && destination !== "All Countries") params.set("area", destination);
+      if (category && category !== "All") params.set("category", category);
+      const qs = params.toString();
+      router.push(qs ? `/map?${qs}` : "/map");
       return;
     }
     setViewMode(newView);

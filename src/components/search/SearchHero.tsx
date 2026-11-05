@@ -53,6 +53,7 @@ export const POPULAR_TOWNS = [
   "Dublin",
   "Bath",
   "York",
+  "Halifax",
   "Conwy",
   "Llandudno",
   "Galway",

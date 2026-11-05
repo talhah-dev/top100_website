@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LanguageSelector } from "../LanguageSelector";
 import "./map.css";
 
@@ -132,6 +133,12 @@ const TOWNS: [string, number, number][] = [
   ["Oxford", 51.752, -1.257],
   ["Cambridge", 52.205, 0.121],
   ["Leeds", 53.800, -1.549],
+  ["Halifax", 53.722, -1.856],
+  ["Windsor", 51.483, -0.604],
+  ["Harrogate", 53.992, -1.537],
+  ["Huddersfield", 53.645, -1.785],
+  ["Bradford", 53.795, -1.759],
+  ["Sheffield", 53.381, -1.470],
   ["Keswick", 54.601, -3.136],
   ["Windermere", 54.380, -2.906],
   ["Exeter", 50.718, -3.533],
@@ -195,6 +202,11 @@ function typeWords(t: string) {
 }
 
 export function MapPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const qParam = searchParams.get("q") || "";
+  const areaParam = searchParams.get("area") || "";
+  const categoryParam = searchParams.get("category") || "";
   const [menuOpen, setMenuOpen] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
@@ -255,10 +267,10 @@ export function MapPage() {
       if (!okCat) return false;
       if (S.subs && p.t.indexOf("a") > -1 && !S.subs[p.st]) return false;
       if (S.query) {
-        const q = S.query.toLowerCase();
-        const nm = p.n && p.n.toLowerCase().includes(q);
-        const tm = p.town && p.town.toLowerCase().includes(q);
-        if (!nm && !tm) return false;
+        const terms = S.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+        const targetStr = `${p.n || ""} ${p.town || ""} ${p.summary || ""}`.toLowerCase();
+        const matchesAll = terms.every((term) => targetStr.includes(term));
+        if (!matchesAll) return false;
       }
       return true;
     };
@@ -843,10 +855,54 @@ export function MapPage() {
         });
       });
 
+      const flyToQuery = async (val: string) => {
+        if (!val || !leafletMap) return;
+        const matched = S.places.filter(passes);
+        if (matched.length === 1) {
+          leafletMap.flyTo([matched[0].lat, matched[0].lng], 14, { duration: RM.matches ? 0 : 0.62 });
+        } else if (matched.length > 1) {
+          const L = await import("leaflet");
+          const bounds = L.latLngBounds(matched.map((p) => [p.lat, p.lng]));
+          leafletMap.flyToBounds(bounds, { padding: [50, 50], maxZoom: 14, duration: RM.matches ? 0 : 0.62 });
+        } else {
+          const townMatch = TOWNS.find(
+            (t) => t[0].toLowerCase() === val.toLowerCase() || val.toLowerCase().includes(t[0].toLowerCase())
+          );
+          if (townMatch) {
+            leafletMap.flyTo([townMatch[1], townMatch[2]], 12.5, { duration: RM.matches ? 0 : 0.62 });
+          } else {
+            const regMatch = REGIONS.find(
+              (r) => r.name.toLowerCase() === val.toLowerCase() || r.k === val.toLowerCase()
+            );
+            if (regMatch) {
+              leafletMap.flyTo([regMatch.lat, regMatch.lng], 8.2, { duration: RM.matches ? 0 : 0.62 });
+            }
+          }
+        }
+      };
+
       const qInput = document.getElementById("q") as HTMLInputElement | null;
       qInput?.addEventListener("input", (e) => {
         S.query = (e.target as HTMLInputElement).value.trim();
+        const url = new URL(window.location.href);
+        if (S.query) {
+          url.searchParams.set("q", S.query);
+        } else {
+          url.searchParams.delete("q");
+        }
+        window.history.replaceState(null, "", url.toString());
         render();
+      });
+
+      qInput?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          flyToQuery(S.query);
+        }
+      });
+
+      document.querySelector(".psearch .mag")?.addEventListener("click", () => {
+        flyToQuery(S.query);
       });
 
       const drawer = document.getElementById("drawer");
@@ -1071,6 +1127,63 @@ export function MapPage() {
         iconsRes.forEach((i: IconDef) => {
           S.icons[i.slug] = i;
         });
+
+        const initialQuery = qParam.trim() || (areaParam && areaParam !== "All" && areaParam !== "All Countries" ? areaParam.trim() : "");
+        S.query = initialQuery;
+
+        if (categoryParam) {
+          const catLower = categoryParam.toLowerCase();
+          if (catLower === "attraction" || catLower === "attractions") {
+            S.cats = { a: true, e: false, s: false };
+          } else if (catLower === "eat" || catLower === "food" || catLower === "places-to-eat") {
+            S.cats = { a: false, e: true, s: false };
+          } else if (catLower === "stay" || catLower === "places-to-stay") {
+            S.cats = { a: false, e: false, s: true };
+          } else {
+            S.subs = { [categoryParam]: 1 };
+          }
+          ["a", "e", "s"].forEach((k) => {
+            document.getElementById("tab-" + k)?.setAttribute("aria-pressed", String(S.cats[k]));
+          });
+        }
+
+        const qInput = document.getElementById("q") as HTMLInputElement | null;
+        if (qInput && S.query) {
+          qInput.value = S.query;
+        }
+
+        if (S.query) {
+          const matched = S.places.filter(passes);
+          if (matched.length === 1) {
+            leafletMap.setView([matched[0].lat, matched[0].lng], 14);
+          } else if (matched.length > 1) {
+            const bounds = L.latLngBounds(matched.map((p) => [p.lat, p.lng]));
+            leafletMap.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+          } else {
+            const townMatch = TOWNS.find(
+              (t) => t[0].toLowerCase() === S.query.toLowerCase() || S.query.toLowerCase().includes(t[0].toLowerCase())
+            );
+            if (townMatch) {
+              leafletMap.setView([townMatch[1], townMatch[2]], 12.5);
+            } else {
+              const regMatch = REGIONS.find(
+                (r) => r.name.toLowerCase() === S.query.toLowerCase() || r.k === S.query.toLowerCase()
+              );
+              if (regMatch) {
+                leafletMap.setView([regMatch.lat, regMatch.lng], 8.2);
+              }
+            }
+          }
+        } else if (areaParam && areaParam !== "All" && areaParam !== "All Countries") {
+          const regMatch = REGIONS.find(
+            (r) => r.name.toLowerCase() === areaParam.toLowerCase() || r.k === areaParam.toLowerCase()
+          );
+          if (regMatch) {
+            leafletMap.setView([regMatch.lat, regMatch.lng], 8.2);
+          }
+        }
+
+        S.band = bandFor(leafletMap.getZoom());
 
         buildDrawer();
         wireControls();
@@ -1299,7 +1412,18 @@ export function MapPage() {
           </div>
 
           <div className="pfoot">
-            <Link href="/search">OPEN AS A GRID &rarr;</Link>
+            <Link
+              href={qParam ? `/search?q=${encodeURIComponent(qParam)}` : "/search"}
+              onClick={(e) => {
+                const q = (document.getElementById("q") as HTMLInputElement)?.value?.trim();
+                if (q) {
+                  e.preventDefault();
+                  router.push(`/search?q=${encodeURIComponent(q)}`);
+                }
+              }}
+            >
+              OPEN AS A GRID &rarr;
+            </Link>
             <em>Not a list. A verdict.</em>
           </div>
         </section>
