@@ -17,6 +17,7 @@ interface Place {
   ic: number;
   town?: string;
   summary?: string;
+  pc?: string;
 }
 
 interface IconDef {
@@ -268,7 +269,12 @@ export function MapPage() {
       if (S.subs && p.t.indexOf("a") > -1 && !S.subs[p.st]) return false;
       if (S.query) {
         const terms = S.query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-        const targetStr = `${p.n || ""} ${p.town || ""} ${p.summary || ""}`.toLowerCase();
+        const cleanQuery = S.query.toLowerCase().replace(/\s+/g, "");
+        const cleanPc = (p.pc || "").toLowerCase().replace(/\s+/g, "");
+        if (cleanPc && (cleanPc.includes(cleanQuery) || cleanQuery.includes(cleanPc))) {
+          return true;
+        }
+        const targetStr = `${p.n || ""} ${p.town || ""} ${p.summary || ""} ${p.pc || ""}`.toLowerCase();
         const matchesAll = terms.every((term) => targetStr.includes(term));
         if (!matchesAll) return false;
       }
@@ -863,7 +869,7 @@ export function MapPage() {
         } else if (matched.length > 1) {
           const L = await import("leaflet");
           const bounds = L.latLngBounds(matched.map((p) => [p.lat, p.lng]));
-          leafletMap.flyToBounds(bounds, { padding: [50, 50], maxZoom: 14, duration: RM.matches ? 0 : 0.62 });
+          leafletMap.flyToBounds(bounds, { padding: [60, 60], maxZoom: 14, duration: RM.matches ? 0 : 0.62 });
         } else {
           const townMatch = TOWNS.find(
             (t) => t[0].toLowerCase() === val.toLowerCase() || val.toLowerCase().includes(t[0].toLowerCase())
@@ -876,6 +882,17 @@ export function MapPage() {
             );
             if (regMatch) {
               leafletMap.flyTo([regMatch.lat, regMatch.lng], 8.2, { duration: RM.matches ? 0 : 0.62 });
+            } else {
+              const pcMatch = val.match(/^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?/);
+              if (pcMatch) {
+                try {
+                  const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(val.trim())}`);
+                  const d = await res.json();
+                  if (d.result && d.result.latitude && d.result.longitude) {
+                    leafletMap.flyTo([d.result.latitude, d.result.longitude], 13.5, { duration: RM.matches ? 0 : 0.62 });
+                  }
+                } catch {}
+              }
             }
           }
         }
@@ -1158,7 +1175,7 @@ export function MapPage() {
             leafletMap.setView([matched[0].lat, matched[0].lng], 14);
           } else if (matched.length > 1) {
             const bounds = L.latLngBounds(matched.map((p) => [p.lat, p.lng]));
-            leafletMap.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+            leafletMap.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
           } else {
             const townMatch = TOWNS.find(
               (t) => t[0].toLowerCase() === S.query.toLowerCase() || S.query.toLowerCase().includes(t[0].toLowerCase())
@@ -1171,6 +1188,17 @@ export function MapPage() {
               );
               if (regMatch) {
                 leafletMap.setView([regMatch.lat, regMatch.lng], 8.2);
+              } else {
+                const pcMatch = S.query.match(/^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?/);
+                if (pcMatch) {
+                  try {
+                    const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(S.query.trim())}`);
+                    const d = await res.json();
+                    if (d.result && d.result.latitude && d.result.longitude) {
+                      leafletMap.setView([d.result.latitude, d.result.longitude], 13.5);
+                    }
+                  } catch {}
+                }
               }
             }
           }

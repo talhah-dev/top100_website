@@ -13,9 +13,9 @@ export async function GET(request: NextRequest) {
     const params: (string | number)[] = [];
 
     if (q) {
-      conditions.push("(name LIKE ? OR town LIKE ? OR summary LIKE ?)");
+      conditions.push("(name LIKE ? OR town LIKE ? OR summary LIKE ? OR postcode LIKE ?)");
       const pattern = `%${q}%`;
-      params.push(pattern, pattern, pattern);
+      params.push(pattern, pattern, pattern, pattern);
     }
 
     if (type) {
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
     const query = `
-      SELECT slug as s, name as n, lat, lng, type as t, subtype as st, iconic as ic, town, summary
+      SELECT slug as s, name as n, lat, lng, type as t, subtype as st, iconic as ic, town, summary, postcode as pc
       FROM map_places
       ${whereClause}
       ORDER BY iconic DESC, name ASC

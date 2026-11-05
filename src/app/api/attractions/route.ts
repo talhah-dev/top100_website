@@ -18,14 +18,16 @@ export async function GET(request: NextRequest) {
     const params: (string | number)[] = []
 
     if (q) {
+      const cleanQ = q.replace(/\s+/g, "")
       const words = q.split(/\s+/).filter(Boolean)
       if (words.length > 0) {
         words.forEach((word) => {
           conditions.push(
-            "(title LIKE ? OR town LIKE ? OR county LIKE ? OR area LIKE ? OR address LIKE ? OR address2 LIKE ? OR postcode LIKE ? OR summary LIKE ? OR description LIKE ? OR categories LIKE ?)"
+            "(title LIKE ? OR town LIKE ? OR county LIKE ? OR area LIKE ? OR address LIKE ? OR address2 LIKE ? OR postcode LIKE ? OR REPLACE(postcode, ' ', '') LIKE ? OR summary LIKE ? OR description LIKE ? OR categories LIKE ?)"
           )
           const pattern = `%${word}%`
-          params.push(pattern, pattern, pattern, pattern, pattern, pattern, pattern, pattern, pattern, pattern)
+          const cleanPattern = `%${cleanQ}%`
+          params.push(pattern, pattern, pattern, pattern, pattern, pattern, pattern, cleanPattern, pattern, pattern, pattern)
         })
       }
     }
@@ -208,17 +210,47 @@ export async function GET(request: NextRequest) {
     `
     const rows = db.prepare(selectQuery).all(...params, limit, offset) as Record<string, unknown>[]
 
-    const attractions = rows.map((row) => ({
+    let finalTotal = total
+    let finalRows = rows
+
+    if (total === 0 && q) {
+      const pcMatch = q.trim().match(/^([A-Za-z]{1,2}[0-9][A-Za-z0-9]?)/)
+      if (pcMatch) {
+        const outcode = pcMatch[1].toUpperCase()
+        const fbCond = ["REPLACE(postcode, ' ', '') LIKE ?"]
+        const fbParams: (string | number)[] = [`${outcode}%`]
+        if (category && category !== "All") {
+          fbCond.push("categories LIKE ?")
+          fbParams.push(`%"${category}"%`)
+        }
+        const fbWhere = `WHERE ${fbCond.join(" AND ")}`
+        const fbCountRes = db.prepare(`SELECT COUNT(DISTINCT slug) as count FROM attractions ${fbWhere}`).get(...fbParams) as { count: number }
+        if (fbCountRes?.count > 0) {
+          finalTotal = fbCountRes.count
+          finalRows = db.prepare(`
+            SELECT id, title, slug, uri, summary, town, county, area,
+                   image, image_url, categories, lat, lng, MAX(featured) as featured
+            FROM attractions
+            ${fbWhere}
+            GROUP BY slug
+            ORDER BY featured DESC, order_priority ASC, title ASC
+            LIMIT ? OFFSET ?
+          `).all(...fbParams, limit, offset) as Record<string, unknown>[]
+        }
+      }
+    }
+
+    const attractions = finalRows.map((row) => ({
       ...row,
       categories: typeof row.categories === "string" ? JSON.parse(row.categories) : row.categories,
       featured: Boolean(row.featured),
     }))
 
     return NextResponse.json({
-      total,
+      total: finalTotal,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(finalTotal / limit),
       attractions,
     })
   } catch (error) {
