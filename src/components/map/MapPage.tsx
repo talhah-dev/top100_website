@@ -488,7 +488,7 @@ export function MapPage() {
     const medalEl = (r: (typeof REGIONS)[0]) => {
       const b = document.createElement("button");
       b.className = "medal";
-      b.style.setProperty("--mcol", r.col + "38");
+      b.style.setProperty("--mcol", r.col + "66");
       b.style.setProperty("--mring", r.col);
       const count = S.places.filter((p) => nearestRegion(p.lat, p.lng).k === r.k).length;
       const n = count.toLocaleString();
@@ -567,11 +567,10 @@ export function MapPage() {
 
       b.innerHTML = `
         <span class="tile">
-          ${
-            mask
-              ? `<span class="gl" style="-webkit-mask-image:url(${mask});mask-image:url(${mask})"></span>`
-              : `<span class="gl" style="-webkit-mask-image:var(--m-${p.t.indexOf("e") > -1 ? "eat" : "stay"});mask-image:var(--m-${p.t.indexOf("e") > -1 ? "eat" : "stay"})"></span>`
-          }
+          ${mask
+          ? `<span class="gl" style="-webkit-mask-image:url(${mask});mask-image:url(${mask})"></span>`
+          : `<span class="gl" style="-webkit-mask-image:var(--m-${p.t.indexOf("e") > -1 ? "eat" : "stay"});mask-image:var(--m-${p.t.indexOf("e") > -1 ? "eat" : "stay"})"></span>`
+        }
         </span>
         <span class="tx">
           <span class="kick">${lab}${p.ic ? " &middot; ICONIC" : ""}</span>
@@ -753,9 +752,9 @@ export function MapPage() {
         d.innerHTML = `
           <button type="button" aria-expanded="false">
             <span class="fg">${subs
-              .slice(0, 3)
-              .map((s) => `<i style="-webkit-mask-image:url(${glyphMask(s)});mask-image:url(${glyphMask(s)})"></i>`)
-              .join("")}</span>
+            .slice(0, 3)
+            .map((s) => `<i style="-webkit-mask-image:url(${glyphMask(s)});mask-image:url(${glyphMask(s)})"></i>`)
+            .join("")}</span>
             <span class="fn">${name}</span><span class="fc">${n}</span>
             <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
           </button>
@@ -891,11 +890,43 @@ export function MapPage() {
                   if (d.result && d.result.latitude && d.result.longitude) {
                     leafletMap.flyTo([d.result.latitude, d.result.longitude], 13.5, { duration: RM.matches ? 0 : 0.62 });
                   }
-                } catch {}
+                } catch { }
               }
             }
           }
         }
+      };
+
+      const performMapSearch = async (val: string) => {
+        S.query = val;
+        const url = new URL(window.location.href);
+        if (val) {
+          url.searchParams.set("q", val);
+        } else {
+          url.searchParams.delete("q");
+        }
+        window.history.replaceState(null, "", url.toString());
+
+        try {
+          const fresh = await fetch(`/api/map/places?q=${encodeURIComponent(val)}`).then((r) => r.json());
+          if (Array.isArray(fresh) && fresh.length > 0) {
+            S.places = fresh;
+            if (leafletMap) {
+              const L = await import("leaflet");
+              if (fresh.length === 1) {
+                leafletMap.flyTo([fresh[0].lat, fresh[0].lng], 14, { duration: RM.matches ? 0 : 0.62 });
+              } else {
+                const bounds = L.latLngBounds(fresh.map((p: Place) => [p.lat, p.lng]));
+                leafletMap.flyToBounds(bounds, { padding: [60, 60], maxZoom: 14, duration: RM.matches ? 0 : 0.62 });
+              }
+            }
+            render();
+            return;
+          }
+        } catch { }
+
+        flyToQuery(val);
+        render();
       };
 
       const qInput = document.getElementById("q") as HTMLInputElement | null;
@@ -914,12 +945,12 @@ export function MapPage() {
       qInput?.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          flyToQuery(S.query);
+          performMapSearch(S.query);
         }
       });
 
       document.querySelector(".psearch .mag")?.addEventListener("click", () => {
-        flyToQuery(S.query);
+        performMapSearch(S.query);
       });
 
       const drawer = document.getElementById("drawer");
@@ -1038,7 +1069,7 @@ export function MapPage() {
               panel.classList.add("dragging");
               try {
                 panel.setPointerCapture(e.pointerId);
-              } catch (_) {}
+              } catch (_) { }
             }
           }
         }
@@ -1134,8 +1165,14 @@ export function MapPage() {
           }
         });
 
+        const mapParams = new URLSearchParams();
+        if (qParam) mapParams.set("q", qParam);
+        if (areaParam && areaParam !== "All" && areaParam !== "All Countries") mapParams.set("area", areaParam);
+        if (categoryParam && categoryParam !== "All") mapParams.set("category", categoryParam);
+        const mapUrl = mapParams.toString() ? `/api/map/places?${mapParams.toString()}` : "/api/map/places";
+
         const [placesRes, iconsRes] = await Promise.all([
-          fetch("/api/map/places").then((r) => r.json()),
+          fetch(mapUrl).then((r) => r.json()),
           fetch("/icons/icons.json").then((r) => r.json()),
         ]);
 
@@ -1169,36 +1206,35 @@ export function MapPage() {
           qInput.value = S.query;
         }
 
-        if (S.query) {
-          const matched = S.places.filter(passes);
-          if (matched.length === 1) {
-            leafletMap.setView([matched[0].lat, matched[0].lng], 14);
-          } else if (matched.length > 1) {
-            const bounds = L.latLngBounds(matched.map((p) => [p.lat, p.lng]));
-            leafletMap.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
+        if (S.places.length > 0 && (S.query || (areaParam && areaParam !== "All" && areaParam !== "All Countries"))) {
+          if (S.places.length === 1) {
+            leafletMap.setView([S.places[0].lat, S.places[0].lng], 14);
           } else {
-            const townMatch = TOWNS.find(
-              (t) => t[0].toLowerCase() === S.query.toLowerCase() || S.query.toLowerCase().includes(t[0].toLowerCase())
+            const bounds = L.latLngBounds(S.places.map((p) => [p.lat, p.lng]));
+            leafletMap.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
+          }
+        } else if (S.query) {
+          const townMatch = TOWNS.find(
+            (t) => t[0].toLowerCase() === S.query.toLowerCase() || S.query.toLowerCase().includes(t[0].toLowerCase())
+          );
+          if (townMatch) {
+            leafletMap.setView([townMatch[1], townMatch[2]], 12.5);
+          } else {
+            const regMatch = REGIONS.find(
+              (r) => r.name.toLowerCase() === S.query.toLowerCase() || r.k === S.query.toLowerCase()
             );
-            if (townMatch) {
-              leafletMap.setView([townMatch[1], townMatch[2]], 12.5);
+            if (regMatch) {
+              leafletMap.setView([regMatch.lat, regMatch.lng], 8.2);
             } else {
-              const regMatch = REGIONS.find(
-                (r) => r.name.toLowerCase() === S.query.toLowerCase() || r.k === S.query.toLowerCase()
-              );
-              if (regMatch) {
-                leafletMap.setView([regMatch.lat, regMatch.lng], 8.2);
-              } else {
-                const pcMatch = S.query.match(/^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?/);
-                if (pcMatch) {
-                  try {
-                    const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(S.query.trim())}`);
-                    const d = await res.json();
-                    if (d.result && d.result.latitude && d.result.longitude) {
-                      leafletMap.setView([d.result.latitude, d.result.longitude], 13.5);
-                    }
-                  } catch {}
-                }
+              const pcMatch = S.query.match(/^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?/);
+              if (pcMatch) {
+                try {
+                  const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(S.query.trim())}`);
+                  const d = await res.json();
+                  if (d.result && d.result.latitude && d.result.longitude) {
+                    leafletMap.setView([d.result.latitude, d.result.longitude], 13.5);
+                  }
+                } catch { }
               }
             }
           }

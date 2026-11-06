@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { ChevronDown, Check, MapPin, Search } from "lucide-react";
+import { ChevronDown, Check, MapPin } from "lucide-react";
 import { CategoryTreeDropdown } from "./CategoryTreeDropdown";
 import { getCategoryLabel, getCategoryIcon } from "./category-data";
 
@@ -45,27 +45,100 @@ export const DESTINATIONS: DestinationItem[] = [
   },
 ];
 
-export const POPULAR_TOWNS = [
-  "London",
-  "Edinburgh",
-  "Cardiff",
-  "Belfast",
-  "Dublin",
-  "Bath",
-  "York",
-  "Halifax",
-  "Conwy",
-  "Llandudno",
-  "Galway",
-  "Chester",
-  "Liverpool",
-  "Swansea",
-  "Windsor",
-  "Oxford",
-  "Cambridge",
-  "Inverness",
-  "Tenby",
-];
+export const POPULAR_TOWNS_BY_COUNTRY: Record<string, string[]> = {
+  All: [
+    "London",
+    "Edinburgh",
+    "Cardiff",
+    "Belfast",
+    "Dublin",
+    "Bath",
+    "York",
+    "Manchester",
+    "Liverpool",
+    "Birmingham",
+    "Glasgow",
+    "Galway",
+    "Conwy",
+    "Llandudno",
+    "Inverness",
+  ],
+  Scotland: [
+    "Edinburgh",
+    "Glasgow",
+    "Inverness",
+    "Aberdeen",
+    "Dundee",
+    "St Andrews",
+    "Stirling",
+    "Fort William",
+    "Perth",
+    "Oban",
+    "Isle of Skye",
+  ],
+  England: [
+    "London",
+    "Manchester",
+    "Liverpool",
+    "Birmingham",
+    "Bath",
+    "York",
+    "Oxford",
+    "Cambridge",
+    "Brighton",
+    "Bristol",
+    "Leeds",
+    "Bradford",
+    "Halifax",
+    "Chester",
+    "Windsor",
+    "Newcastle",
+    "Sheffield",
+  ],
+  Wales: [
+    "Cardiff",
+    "Swansea",
+    "Newport",
+    "Conwy",
+    "Llandudno",
+    "Bangor",
+    "Caernarfon",
+    "Tenby",
+    "Aberystwyth",
+    "Wrexham",
+    "St Davids",
+    "Betws-y-Coed",
+  ],
+  "Northern Ireland": [
+    "Belfast",
+    "Derry",
+    "Armagh",
+    "Lisburn",
+    "Newry",
+    "Bangor",
+    "Enniskillen",
+    "Coleraine",
+    "Portrush",
+    "Ballymena",
+  ],
+  Ireland: [
+    "Dublin",
+    "Galway",
+    "Cork",
+    "Limerick",
+    "Kilkenny",
+    "Waterford",
+    "Killarney",
+    "Sligo",
+    "Dingle",
+    "Westport",
+    "Wexford",
+  ],
+};
+
+export const POPULAR_TOWNS = Array.from(
+  new Set(Object.values(POPULAR_TOWNS_BY_COUNTRY).flat())
+);
 
 interface SearchHeroProps {
   query?: string;
@@ -92,7 +165,6 @@ export function SearchHero({
 }: SearchHeroProps) {
   const [isDestOpen, setIsDestOpen] = useState(false);
   const [isCatOpen, setIsCatOpen] = useState(false);
-  const [destSearch, setDestSearch] = useState("");
 
   const destRef = useRef<HTMLDivElement>(null);
   const catRef = useRef<HTMLDivElement>(null);
@@ -123,17 +195,16 @@ export function SearchHero({
 
   const selectedDest = DESTINATIONS.find((d) => d.name === destination);
 
-  const filteredCountries = DESTINATIONS.filter((d) =>
-    destSearch.trim() ? d.name.toLowerCase().includes(destSearch.toLowerCase()) : true
+  const isCountrySelected = Boolean(
+    destination &&
+      destination !== "All" &&
+      destination !== "All Countries" &&
+      destination in POPULAR_TOWNS_BY_COUNTRY
   );
 
-  const filteredTowns = POPULAR_TOWNS.filter((t) =>
-    destSearch.trim() ? t.toLowerCase().includes(destSearch.toLowerCase()) : true
-  );
-
-  const exactMatch =
-    DESTINATIONS.some((d) => d.name.toLowerCase() === destSearch.trim().toLowerCase()) ||
-    POPULAR_TOWNS.some((t) => t.toLowerCase() === destSearch.trim().toLowerCase());
+  const countryTowns = isCountrySelected
+    ? POPULAR_TOWNS_BY_COUNTRY[destination]
+    : [];
 
   return (
     <header className="shero">
@@ -197,65 +268,50 @@ export function SearchHero({
 
             {isDestOpen && (
               <div className="search-dropdown-menu left-0 min-w-[260px] sm:min-w-[290px] max-h-[380px] overflow-hidden flex flex-col">
-                <div className="p-2 border-b border-white/10 shrink-0">
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 focus-within:border-[#FABF33]/60 transition-colors">
-                    <Search className="size-3.5 text-[#FABF33] shrink-0" />
-                    <input
-                      type="text"
-                      placeholder="Search town, city or country..."
-                      value={destSearch}
-                      onChange={(e) => setDestSearch(e.target.value)}
-                      className="w-full bg-transparent border-none text-xs text-[#F6EFDF] placeholder-[#B9C1D4]/60 outline-none font-sans"
-                      autoFocus
-                    />
-                  </div>
-                </div>
-
                 <div className="search-dropdown-list flex-1 overflow-y-auto category-clean-scrollbar p-1">
-                  {filteredCountries.length > 0 && (
-                    <>
-                      <div className="px-3 py-1.5 text-[10px] font-bold text-[#FABF33] uppercase tracking-wider">
-                        Countries
-                      </div>
-                      {filteredCountries.map((dest) => {
-                        const isSelected =
-                          (dest.id === "all" && (!destination || destination === "All")) ||
-                          destination === dest.name;
-                        return (
-                          <button
-                            key={dest.id}
-                            type="button"
-                            onClick={() => {
-                              onDestinationChange?.(dest.id === "all" ? "All" : dest.name);
-                              setIsDestOpen(false);
-                              setDestSearch("");
-                            }}
-                            className={`search-dropdown-item ${isSelected ? "active" : ""}`}
-                          >
-                            <img
-                              src={dest.flagUrl}
-                              alt={dest.name}
-                              width={24}
-                              height={16}
-                              className="w-6 h-4 object-cover rounded shadow-xs border border-white/10 shrink-0"
-                              loading="lazy"
-                            />
-                            <span className="flex-1 text-left">{dest.name}</span>
-                            {isSelected && (
-                              <Check className="size-3.5 text-[#FABF33] shrink-0 ml-2" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </>
-                  )}
+                  <div className="px-3 py-1.5 text-[10px] font-bold text-[#FABF33] uppercase tracking-wider">
+                    Countries
+                  </div>
+                  {DESTINATIONS.map((dest) => {
+                    const isSelected =
+                      (dest.id === "all" && (!destination || destination === "All" || destination === "All Countries")) ||
+                      destination === dest.name;
+                    return (
+                      <button
+                        key={dest.id}
+                        type="button"
+                        onClick={() => {
+                          if (dest.id === "all") {
+                            onDestinationChange?.("All");
+                            setIsDestOpen(false);
+                          } else {
+                            onDestinationChange?.(dest.name);
+                          }
+                        }}
+                        className={`search-dropdown-item ${isSelected ? "active" : ""}`}
+                      >
+                        <img
+                          src={dest.flagUrl}
+                          alt={dest.name}
+                          width={24}
+                          height={16}
+                          className="w-6 h-4 object-cover rounded shadow-xs border border-white/10 shrink-0"
+                          loading="lazy"
+                        />
+                        <span className="flex-1 text-left">{dest.name}</span>
+                        {isSelected && (
+                          <Check className="size-3.5 text-[#FABF33] shrink-0 ml-2" />
+                        )}
+                      </button>
+                    );
+                  })}
 
-                  {filteredTowns.length > 0 && (
+                  {isCountrySelected && countryTowns.length > 0 && (
                     <>
                       <div className="px-3 py-1.5 text-[10px] font-bold text-[#FABF33] uppercase tracking-wider mt-1 border-t border-white/5 pt-2">
-                        Popular Towns & Cities
+                        Popular in {destination}
                       </div>
-                      {filteredTowns.map((town) => {
+                      {countryTowns.map((town) => {
                         const isSelected = destination === town;
                         return (
                           <button
@@ -264,7 +320,6 @@ export function SearchHero({
                             onClick={() => {
                               onDestinationChange?.(town);
                               setIsDestOpen(false);
-                              setDestSearch("");
                             }}
                             className={`search-dropdown-item ${isSelected ? "active" : ""}`}
                           >
@@ -277,25 +332,6 @@ export function SearchHero({
                         );
                       })}
                     </>
-                  )}
-
-                  {destSearch.trim() && !exactMatch && (
-                    <div className="border-t border-white/5 mt-1 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onDestinationChange?.(destSearch.trim());
-                          setIsDestOpen(false);
-                          setDestSearch("");
-                        }}
-                        className="search-dropdown-item text-[#FABF33]"
-                      >
-                        <MapPin className="size-3.5 text-[#FABF33] shrink-0 mr-1" />
-                        <span className="flex-1 text-left">
-                          Search in &ldquo;{destSearch.trim()}&rdquo;
-                        </span>
-                      </button>
-                    </div>
                   )}
                 </div>
               </div>

@@ -122,7 +122,7 @@ export function AnalyticsSection() {
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[rgba(185,193,212,0.1)]">
           <div className="flex items-center gap-3">
-            <div className="size-11 rounded-xl bg-gradient-to-br from-[#FABF33] via-[#F0607A] to-[#6E8BFF] p-0.5 shadow-md shrink-0">
+            <div className="size-11 rounded-xl bg-gradient-to-br from-[#FFD97A] to-[#D99A00] p-0.5 shadow-md shrink-0">
               <div className="size-full rounded-[10px] bg-[#0A1122] flex items-center justify-center">
                 <Activity className="size-5 text-[#FABF33]" />
               </div>

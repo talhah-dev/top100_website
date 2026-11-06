@@ -489,7 +489,7 @@ body::after {
     bottom: 0;
     height: 2.5px;
     pointer-events: none;
-    background: linear-gradient(90deg, rgba(0, 132, 61, .5), rgba(33, 69, 214, .45) 34%, rgba(195, 26, 53, .45) 66%, rgba(var(--gold-rgb), .55));
+    background: linear-gradient(90deg, var(--gold-soft), var(--gold-deep));
 }
 
 .eyebrow {
@@ -787,7 +787,7 @@ body::after {
 
 .search .go,
 .search-go-btn {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     color: #141B2E;
     font-family: var(--display);
     font-weight: 900;
@@ -873,7 +873,7 @@ body::after {
     padding: 26px 0;
     border-top: 1.5px solid;
     border-bottom: 1.5px solid;
-    border-image: linear-gradient(90deg, rgba(53, 179, 107, .65), rgba(110, 139, 255, .6) 34%, rgba(240, 96, 122, .6) 66%, rgba(var(--gold-rgb), .65)) 1;
+    border-image: linear-gradient(90deg, var(--gold-soft), var(--gold-deep)) 1;
     overflow: hidden;
     background: var(--bg-deep)
 }
@@ -1059,6 +1059,10 @@ body::after {
 
 .entry .chip {
     display: inline-block;
+    width: auto;
+    height: auto;
+    white-space: nowrap;
+    box-shadow: none;
     background: rgba(var(--gold-rgb), .12);
     border: 1px solid rgba(var(--gold-rgb), .4);
     color: var(--gold);
@@ -1271,7 +1275,7 @@ body::after {
 .stats {
     border: 1.5px solid transparent;
     border-radius: 28px;
-    background: linear-gradient(150deg, var(--panel), var(--panel-2)) padding-box, linear-gradient(100deg, rgba(53, 179, 107, .45), rgba(110, 139, 255, .45) 35%, rgba(240, 96, 122, .45) 65%, rgba(var(--gold-rgb), .5)) border-box;
+    background: linear-gradient(150deg, var(--panel), var(--panel-2)) padding-box, linear-gradient(110deg, rgba(255, 217, 122, .5), rgba(217, 154, 0, .5)) border-box;
     padding: 70px 50px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1413,7 +1417,7 @@ body::after {
 
 .panelcard.appp {
     border: 1.5px solid transparent;
-    background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(100deg, rgba(53, 179, 107, .45), rgba(110, 139, 255, .45) 35%, rgba(240, 96, 122, .45) 65%, rgba(var(--gold-rgb), .5)) border-box
+    background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(110deg, rgba(255, 217, 122, .5), rgba(217, 154, 0, .5)) border-box
 }
 
 .panelcard.appp h3 {
@@ -1498,7 +1502,7 @@ body::after {
     min-height: 300px;
     cursor: pointer;
     border: 1.5px solid transparent;
-    background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(100deg, rgba(53, 179, 107, .45), rgba(110, 139, 255, .45) 35%, rgba(240, 96, 122, .45) 65%, rgba(var(--gold-rgb), .5)) border-box;
+    background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(110deg, rgba(255, 217, 122, .5), rgba(217, 154, 0, .5)) border-box;
     box-shadow: 0 24px 60px rgba(0, 0, 0, .4)
 }
 
@@ -1589,7 +1593,7 @@ body::after {
     content: "";
     display: block;
     height: 3px;
-    background: linear-gradient(90deg, #00843D, #2145D6 34%, #C31A35 66%, #FABF33)
+    background: linear-gradient(90deg, var(--gold-soft), var(--gold-deep))
 }
 
 .brandbar {
@@ -2378,7 +2382,7 @@ body::after {
 
 
 .grad {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent
@@ -2386,60 +2390,45 @@ body::after {
 
 .cta,
 .search .go {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     color: #141B2E
 }
 
 .kicker .eyebrow {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent
 }
 
 .kicker .line {
-    background: linear-gradient(90deg, #6E8BFF, #35B36B 55%, transparent)
+    background: linear-gradient(90deg, var(--gold-soft), transparent)
 }
 
 
 
 .stat b {
-    background: none;
-    -webkit-background-clip: border-box;
-    background-clip: border-box;
-    color: #FABF33
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent
 }
 
-.stats .stat:nth-child(1) b {
-    color: #6E8BFF
-}
-
-.stats .stat:nth-child(2) b {
-    color: #35B36B
-}
-
-.stats .stat:nth-child(3) b {
-    color: #FABF33
-}
-
+.stats .stat:nth-child(1) b,
+.stats .stat:nth-child(2) b,
+.stats .stat:nth-child(3) b,
 .stats .stat:nth-child(4) b {
-    color: #F0607A
+    color: transparent
 }
 
 
 
-#featured {
-    --gold: #F0607A;
-    --gold-deep: #E85275;
-    --gold-soft: #FFA8BC;
-    --gold-rgb: 240, 96, 122
-}
-
+#featured,
 #regions {
-    --gold: #6E8BFF;
-    --gold-deep: #6480F5;
-    --gold-soft: #B8C6FF;
-    --gold-rgb: 110, 139, 255
+    --gold: #FABF33;
+    --gold-deep: #D99A00;
+    --gold-soft: #FFD97A;
+    --gold-rgb: 250, 191, 51;
 }
 
 
@@ -2479,7 +2468,7 @@ body::after {
 
 
 .grad {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent
@@ -2487,14 +2476,14 @@ body::after {
 
 .eyebrow,
 .kicker .eyebrow {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent
 }
 
 .kicker .line {
-    background: linear-gradient(90deg, #6E8BFF, #35B36B 55%, transparent)
+    background: linear-gradient(90deg, var(--gold-soft), transparent)
 }
 
 
@@ -2503,14 +2492,14 @@ body::after {
 .search .go,
 .vinfo .dirs,
 .loadmore:hover {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     color: #141B2E
 }
 
 
 
 .stats .stat:nth-child(n) b {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent
@@ -2541,10 +2530,10 @@ body::after {
 
 
 .vinfo {
-    --gold: #F0607A;
-    --gold-deep: #E85275;
-    --gold-soft: #FFA8BC;
-    --gold-rgb: 240, 96, 122
+    --gold: #FABF33;
+    --gold-deep: #D99A00;
+    --gold-soft: #FFD97A;
+    --gold-rgb: 250, 191, 51;
 }
 
 .fact .flabel {
@@ -2556,16 +2545,11 @@ body::after {
 
 
 
-.whys .why:nth-child(1) {
-    --gold: #6E8BFF
-}
-
-.whys .why:nth-child(2) {
-    --gold: #35B36B
-}
-
-.whys .why:nth-child(3) {
-    --gold: #F0607A
+.whys .why {
+    --gold: #FABF33;
+    --gold-deep: #D99A00;
+    --gold-soft: #FFD97A;
+    --gold-rgb: 250, 191, 51;
 }
 
 

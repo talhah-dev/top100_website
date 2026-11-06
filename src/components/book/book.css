@@ -12,7 +12,7 @@
 
 .book-nav .cta,
 .book-nav:not(.scrolled) .cta {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     color: #141B2E;
 }
 
@@ -54,7 +54,7 @@
 }
 
 .book-nav.scrolled .cta {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep));
     color: #141B2E;
 }
 
@@ -99,7 +99,7 @@
     right: 0;
     bottom: 0;
     height: 3px;
-    background: linear-gradient(90deg, #00843D, #2145D6 34%, #C31A35 66%, #FABF33);
+    background: linear-gradient(90deg, var(--gold-soft), var(--gold-deep));
 }
 
 .bhero .wrap {
@@ -407,7 +407,7 @@
 
 .panelcard.appp {
     border: 1.5px solid transparent;
-    background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(100deg, rgba(53, 179, 107, .45), rgba(110, 139, 255, .45) 35%, rgba(240, 96, 122, .45) 65%, rgba(250, 191, 51, .5)) border-box;
+    background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(110deg, rgba(255, 217, 122, .5), rgba(217, 154, 0, .5)) border-box;
 }
 
 .panelcard.appp h3 {

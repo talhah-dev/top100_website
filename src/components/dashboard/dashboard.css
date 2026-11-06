@@ -34,18 +34,18 @@
 .rainbow-bar {
   height: 2px;
   width: 100%;
-  background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+  background: linear-gradient(110deg, #FFD97A, #D99A00);
 }
 
 .rainbow-pill {
-  background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+  background: linear-gradient(110deg, #FFD97A, #D99A00);
   color: #0A1122;
   font-weight: 800;
   letter-spacing: 0.05em;
 }
 
 .rainbow-text {
-  background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+  background: linear-gradient(110deg, #FFD97A, #D99A00);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -54,7 +54,7 @@
 .rainbow-card {
   position: relative;
   border-radius: 18px;
-  background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(100deg, rgba(53, 179, 107, .45), rgba(110, 139, 255, .45) 35%, rgba(240, 96, 122, .45) 65%, rgba(250, 191, 51, .5)) border-box;
+  background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(110deg, rgba(255, 217, 122, .5), rgba(217, 154, 0, .5)) border-box;
   border: 1px solid transparent;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

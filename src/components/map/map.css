@@ -33,7 +33,7 @@
                                container mid-flight was the defect all three
                                reviewers flagged in the original concept. */
     --nav-h: 56px;
-    --mix: linear-gradient(90deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A);
+    --mix: linear-gradient(90deg, var(--gold-soft), var(--gold-deep));
     /* basemap-dependent pin tokens: the plate decides which way the
      neutral pin and its keyline have to read */
     --keyline-col: #F6EFDF;
@@ -183,7 +183,7 @@ body.map-route {
     align-items: center;
     padding: 0 20px;
     border-radius: 999px;
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A) !important;
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep)) !important;
     color: #141B2E !important;
     font-family: var(--display);
     font-weight: 900;
@@ -197,11 +197,11 @@ body.map-route {
 
 .map-nav .cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(110, 139, 255, .35);
+    box-shadow: 0 8px 24px rgba(var(--gold-rgb), .35);
 }
 
 body[data-dir="logo"] .map-nav .cta {
-    background: linear-gradient(110deg, #6E8BFF, #35B36B 34%, #FABF33 66%, #F0607A) !important;
+    background: linear-gradient(110deg, var(--gold-soft), var(--gold-deep)) !important;
     color: #141B2E !important;
 }
 
@@ -1110,26 +1110,32 @@ body[data-dir="logo"] .pinsw button.on {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 92px;
-    height: 92px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
-    background: var(--mcol);
+    background: linear-gradient(145deg, rgba(16, 26, 48, 0.88), rgba(6, 11, 22, 0.94));
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
     border: 3px solid var(--mring);
-    box-shadow: 0 0 0 1.5px var(--cream), 0 10px 26px rgba(0, 0, 0, .55);
-    color: var(--cream);
-    transition: transform .26s var(--ease)
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 12px 32px rgba(0, 0, 0, 0.65), inset 0 0 22px var(--mcol);
+    color: #fff;
+    cursor: pointer;
+    transition: transform .26s var(--ease), box-shadow .26s var(--ease);
 }
 
 .medal:hover {
-    transform: scale(1.06)
+    transform: scale(1.08);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 16px 36px rgba(0, 0, 0, 0.75), inset 0 0 26px var(--mcol);
 }
 
 .medal b {
     font-family: var(--display);
     font-weight: 900;
-    font-size: 19px;
-    line-height: 1;
-    color: var(--cream)
+    font-size: 18px;
+    line-height: 1.1;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    letter-spacing: 0.02em;
 }
 
 .medal i {
@@ -1137,9 +1143,10 @@ body[data-dir="logo"] .pinsw button.on {
     font-family: var(--display);
     font-weight: 900;
     font-size: 14px;
-    color: var(--gold);
-    margin-top: 3px;
-    font-variant-numeric: tabular-nums
+    color: var(--gold-soft);
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 .puck {

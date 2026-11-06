@@ -77,7 +77,7 @@ export function AppPhones() {
               </Link>
               <div className="pmeta">
                 <b
-                  className="chip"
+                  className="pmeta-chip"
                   style={{ background: nation.gradient }}
                 />
                 <div>

@@ -21,6 +21,7 @@ export interface AttractionItem {
   lat?: number;
   lng?: number;
   featured?: boolean;
+  distance?: number;
 }
 
 interface SearchResultsProps {
@@ -106,7 +107,7 @@ export function SearchResults({
         if (selectedCategory && selectedCategory !== "All") params.set("category", selectedCategory);
         if (selectedRegion && selectedRegion !== "All") params.set("area", selectedRegion);
         params.set("page", pageToFetch.toString());
-        params.set("limit", "12");
+        params.set("limit", "18");
 
         const res = await fetch(`/api/attractions?${params.toString()}`, {
           signal: controller.signal,
@@ -322,6 +323,7 @@ export function SearchResults({
                   <div className="rbody">
                     <span className="rchip">
                       {categoryLabel} &middot; {locationLabel}
+                      {place.distance !== undefined ? ` &middot; ${place.distance} mi away` : ""}
                     </span>
                     <h3>{place.title}</h3>
                     <p className="rquote">
